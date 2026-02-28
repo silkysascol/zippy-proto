@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zippy - Servicio Automotriz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            /* Slate 950 - Deepest blue, no black */
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .text-white {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .fill-white {
+            fill: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        /* Custom floating label transitions */
+        .peer:focus~label,
+        .peer:not(:placeholder-shown)~label {
+            transform: translateY(-1rem) scale(0.85);
+            color: #94a3b8;
+        }
+
+        /* Apple-style Portal Transition */
+        .portal-container {
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .portal-active-clientes {
+            background-color: #020617;
+            /* Deepest blue */
+        }
+
+        .portal-active-negocios {
+            background-color: #0f172a;
+            /* Slightly lighter slate */
+        }
+
+        .reveal-up {
+            opacity: 1 !important;
+            transform: none !important;
+            visibility: visible !important;
+        }
+
+        .glass-story-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-story-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Smooth scale for story images */
+        .story-img-container img {
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .story-img-container:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="text-slate-200 antialiased relative overflow-x-hidden selection:bg-blue-900 selection:text-white">
+
+    <!-- Seamless background layers -->
+    <div
+        class="fixed inset-0 pointer-events-none z-[-1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950">
+    </div>
+    <div
+        class="fixed top-[40%] left-[-10%] w-[50vw] h-[50vw] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none z-[-1]">
+    </div>
+
+    <!-- Background Watermark -->
+    <div
+        class="absolute top-[10%] left-1/2 -translate-x-1/2 opacity-[0.05] pointer-events-none z-[-1] flex items-center justify-center scale-[5]">
+        <div class="w-80 h-auto opacity-15 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[4]">
+            <svg viewBox="0 0 434 940" class="w-full h-full fill-white">
+                <path
+                    d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                <path
+                    d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-slate-950/50 backdrop-blur-xl border-b border-slate-400/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 h-24 flex items-center justify-between">
+            <div class="flex items-center gap-1">
+                <div class="h-14 w-auto scale-110">
+                    <svg viewBox="0 0 434 940" class="h-full w-auto fill-white">
+                        <path
+                            d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                        <path
+                            d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+                    </svg>
+                </div>
+                <span class="text-3xl font-medium tracking-tight text-white ml-1">Zippy</span>
+            </div>
+            <button
+                class="hidden md:flex items-center justify-center border border-white/20 hover:bg-white/10 hover:border-white/40 text-white rounded-full px-8 py-3 text-lg font-light transition-all duration-300">
+                Contactar por WhatsApp
+            </button>
+            <button class="md:hidden text-white p-2">
+                <i data-lucide="menu" class="w-8 h-8" stroke-width="1.5"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+        class="relative pt-48 pb-32 md:pt-64 md:pb-48 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <!-- Hero Logo -->
+        <div class="h-48 w-auto mb-10 opacity-90 transition-transform duration-700 hover:scale-110">
+            <svg viewBox="0 0 434 940" class="h-full w-auto fill-white">
+                <path
+                    d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                <path
+                    d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+            </svg>
+        </div>
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-8 leading-[1.1] max-w-5xl">
+            Transparencia y respaldo en tu servicio automotriz.
+        </h1>
+        <p class="text-xl md:text-2xl font-light text-slate-400 mb-14 max-w-3xl leading-relaxed">
+            Coordinamos talleres aliados verificados y te acompañamos de principio a fin.
+        </p>
+        <button
+            class="bg-white text-slate-950 hover:bg-slate-200 hover:scale-105 active:scale-95 rounded-full px-10 py-4 text-xl font-medium transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+            Contactar por WhatsApp
+        </button>
+    </section>
+
+    <!-- Qué es Zippy Section -->
+    <section class="py-32 relative px-6 md:px-12">
+        <div class="max-w-5xl mx-auto text-center flex flex-col items-center">
+            <div class="flex flex-col gap-2 mb-12">
+                <p class="line-through decoration-white/20 text-slate-500 font-light text-xl md:text-2xl">
+                    Zippy no es solo un comisionista.
+                </p>
+                <p class="line-through decoration-white/20 text-slate-500 font-light text-xl md:text-2xl">
+                    Zippy no es agencia de marketing.
+                </p>
+            </div>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.2] max-w-4xl">
+                Zippy es un centro de soluciones: coordinamos el servicio, documentamos cada paso y verificamos calidad
+                con protocolos claros.
+            </h2>
+        </div>
+    </section>
+
+    <!-- Beneficios Grid -->
+    <section class="py-32 px-6 md:px-12 relative max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <!-- Card 1 -->
+            <div
+                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
+                <div
+                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="file-text" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                </div>
+                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Cotización clara</h3>
+                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
+                    Desglosamos cada costo sin sorpresas ni letras pequeñas. Entiendes exactamente por qué estás
+                    pagando.
+                </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
+                <div
+                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="camera" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                </div>
+                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Evidencia y trazabilidad</h3>
+                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
+                    Recibe registro fotográfico y documental de cada intervención realizada a tu vehículo.
+                </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
+                <div
+                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="message-square" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                </div>
+                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Comunicación real</h3>
+                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
+                    Un solo canal, respuestas oportunas e información técnica traducida a términos sencillos.
+                </p>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
+                <div
+                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                </div>
+                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Acompañamiento</h3>
+                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
+                    Estamos contigo desde que entregas la llave hasta que recibes tu vehículo probado y verificado.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Soluciones para todos (Immersive Redesign) -->
+    <section class="py-48 px-6 md:px-12 relative overflow-hidden portal-container portal-active-clientes"
+        id="soluciones-todos">
+        <!-- New Space Background Overlay -->
+        <div class="absolute inset-0 bg-slate-950/40 z-[-1]"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-32">
+                <h2 class="text-5xl md:text-7xl font-medium tracking-tight text-white mb-12 reveal-up active">Soluciones
+                    para todos</h2>
+
+                <!-- Toggle Slider -->
+                <div
+                    class="inline-flex bg-slate-950/80 p-1.5 rounded-2xl border border-slate-500/10 relative shadow-2xl scale-110 md:scale-125">
+                    <div id="solutions-slider"
+                        class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-500 ease-out z-0 w-[calc(50%-6px)] shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    </div>
+                    <button onclick="switchSolution('clientes', 0)"
+                        class="solution-btn relative z-10 px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl font-medium text-white transition-colors duration-300">Clientes</button>
+                    <button onclick="switchSolution('negocios', 1)"
+                        class="solution-btn relative z-10 px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl font-medium text-slate-400 transition-colors duration-300">Negocios</button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="solutions-content" class="relative">
+
+                <!-- Clientes Content (Zippy Agent) -->
+                <div id="content-clientes" class="transition-all duration-300">
+                    <!-- Hero image: Professional Woman -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
+                        <div class="order-2 lg:order-1">
+                            <div class="flex items-center gap-4 mb-8">
+                                <span
+                                    class="px-5 py-2 rounded-full bg-blue-500/10 text-blue-400 text-sm font-semibold tracking-widest uppercase border border-blue-500/20">Zippy
+                                    Agent</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-medium tracking-tight text-white mb-10 leading-tight">
+                                Tu gestora personal, <br>en cada detalle.</h3>
+                            <p class="text-2xl font-light text-slate-400 leading-relaxed">
+                                Tu gestora personal se encarga de todo. Ella coordinará lavadas, mantenimientos y
+                                reparaciones, negociando siempre el mejor precio por ti.
+                            </p>
+                        </div>
+                        <div class="order-1 lg:order-2">
+                            <div
+                                class="story-img-container relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop"
+                                    alt="Zippy Manager" class="w-full h-full object-cover aspect-[4/3]">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4-Part Modular Storyteller -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Part 1 -->
+                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                            <div
+                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
+                                <img src="assets/images/whatsapp-order.png"
+                                    class="w-full h-full object-contain bg-[#f0f2f5]" alt="WhatsApp Order">
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Agendamiento inteligente</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Recibe tu orden de mantenimiento por WhatsApp. Tu agente agenda la cita perfecta por ti
+                                inmediatamente.
+                            </p>
+                        </div>
+                        <!-- Part 2 -->
+                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                            <div
+                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
+                                <img src="https://images.unsplash.com/photo-1530046339160-ce3e5b0c7a2f?q=80&w=2070&auto=format&fit=crop"
+                                    class="w-full h-full object-cover" alt="Supervisor Inventory">
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Seguimiento y Control</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Supervisor validando inventarios y procesos de tu vehículo en tiempo real en el taller.
+                            </p>
+                        </div>
+                        <!-- Part 3 -->
+                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                            <div
+                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
+                                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
+                                    class="w-full h-full object-cover" alt="Mechanics under lift">
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Calidad Verificada</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Mecánicos expertos verificando cada componente desde el elevador del taller con máxima
+                                precisión.
+                            </p>
+                        </div>
+                        <!-- Part 4 -->
+                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                            <div
+                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
+                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"
+                                    class="w-full h-full object-cover" alt="Human Support Agent">
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Atención Humana</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Siempre que sea necesario tendrás un agente humano a tu servicio.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Negocios Content (Aliados Zippy) -->
+                <div id="content-negocios" class="hidden transition-all duration-300">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
+                        <div>
+                            <div class="flex items-center gap-4 mb-8">
+                                <span
+                                    class="px-5 py-2 rounded-full bg-blue-500/10 text-blue-400 text-sm font-semibold tracking-widest uppercase border border-blue-500/20">Aliados
+                                    Zippy</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-medium tracking-tight text-white mb-10 leading-tight">
+                                Confianza y tranquilidad <br>para crecer.</h3>
+                            <p class="text-2xl font-light text-slate-400 leading-relaxed">
+                                Únete a la red de Zippy donde te ayudamos a gestionar el futuro de tu negocio.
+                                Digitalizamos tu operación y te conectamos con clientes que buscan excelencia.
+                            </p>
+                        </div>
+                        <div
+                            class="story-img-container relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1486006396193-471a41551bdf?q=80&w=2090&auto=format&fit=crop"
+                                alt="Premium Workshop" class="w-full h-full object-cover aspect-[4/3]">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div class="group relative rounded-[3rem] overflow-hidden border border-white/10">
+                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop"
+                                class="w-full h-full object-cover aspect-video grayscale-[0.2]" alt="Handshake">
+                            <div
+                                class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm p-14 flex flex-col justify-end text-left">
+                                <h4 class="text-4xl font-medium text-white mb-6">Más y mejores clientes</h4>
+                                <p class="text-xl font-light text-slate-300 leading-relaxed">
+                                    Nosotros nos encargamos del cliente, tú te encargas solo del servicio.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col justify-center items-center text-center p-14 bg-white/5 rounded-[3rem] border border-white/5">
+                            <i data-lucide="sparkles" class="w-16 h-16 text-blue-400 mb-10"></i>
+                            <h4 class="text-5xl font-medium text-white mb-8 max-w-md italic">"Donde todos ven problemas,
+                                nosotros somos la solución."</h4>
+                            <div class="h-[2px] w-20 bg-blue-500/50"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Cómo funciona Timeline -->
+    <section class="py-32 px-6 md:px-12 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24">
+                <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-white">Cómo funciona</h2>
+            </div>
+
+            <div class="relative">
+                <!-- Line Desktop -->
+                <div
+                    class="hidden md:block absolute top-24 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent">
+                </div>
+                <!-- Line Mobile -->
+                <div
+                    class="md:hidden absolute left-[39px] top-12 bottom-12 w-[1px] bg-gradient-to-b from-transparent via-white/30 to-transparent">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                        <div class="md:mb-8 flex-shrink-0">
+                            <i data-lucide="search" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
+                                stroke-width="1.5"></i>
+                            <div
+                                class="w-20 h-20 rounded-full bg-slate-900 border border-slate-400/30 flex items-center justify-center text-2xl font-medium text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                                1
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-medium tracking-tight text-white mb-3">Diagnóstico</h4>
+                            <p class="text-lg font-light text-slate-400">Revisión profesional y cotización
+                                transparente.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                        <div class="md:mb-8 flex-shrink-0">
+                            <i data-lucide="settings" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
+                                stroke-width="1.5"></i>
+                            <div
+                                class="w-20 h-20 rounded-full bg-slate-900 border border-slate-400/30 flex items-center justify-center text-2xl font-medium text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                                2
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-medium tracking-tight text-white mb-3">Coordinación</h4>
+                            <p class="text-lg font-light text-slate-400">Asignación al taller aliado especialista
+                                adecuado.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                        <div class="md:mb-8 flex-shrink-0">
+                            <i data-lucide="activity" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
+                                stroke-width="1.5"></i>
+                            <div
+                                class="w-20 h-20 rounded-full bg-slate-900 border border-slate-400/30 flex items-center justify-center text-2xl font-medium text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                                3
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-medium tracking-tight text-white mb-3">Seguimiento</h4>
+                            <p class="text-lg font-light text-slate-400">Documentación de cada paso y avance en tiempo
+                                real.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                        <div class="md:mb-8 flex-shrink-0">
+                            <i data-lucide="check-circle-2" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
+                                stroke-width="1.5"></i>
+                            <div
+                                class="w-20 h-20 rounded-full bg-slate-900 border border-slate-400/30 flex items-center justify-center text-2xl font-medium text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                                4
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-medium tracking-tight text-white mb-3">Entrega</h4>
+                            <p class="text-lg font-light text-slate-400">Verificación de calidad final y entrega con
+                                respaldo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario de contacto -->
+    <section class="py-32 px-6 md:px-12 relative">
+        <div
+            class="max-w-3xl mx-auto bg-slate-900/30 backdrop-blur-2xl border border-slate-400/20 rounded-[2.5rem] p-8 md:p-16 shadow-2xl relative overflow-hidden">
+            <!-- Subtle reflection highlight inside the form -->
+            <div
+                class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent">
+            </div>
+
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">Quiero saber más</h2>
+                <p class="text-xl font-light text-slate-400">Selecciona tu perfil y déjanos tus datos.</p>
+            </div>
+
+            <!-- User Type Slider -->
+            <div class="relative bg-slate-950/50 p-1.5 rounded-2xl flex mb-12 border border-slate-500/10">
+                <div id="slider-indicator"
+                    class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-300 ease-out z-0">
+                </div>
+                <button type="button" onclick="setFormType('client', 0)"
+                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-white transition-colors">Cliente</button>
+                <button type="button" onclick="setFormType('partner', 1)"
+                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Taller</button>
+                <button type="button" onclick="setFormType('partner', 2)"
+                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Lavadero</button>
+                <button type="button" onclick="setFormType('partner', 3)"
+                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Detailing</button>
+            </div>
+
+            <form id="contact-form" class="space-y-6">
+                <!-- Common Fields -->
+                <div class="relative">
+                    <input type="text" id="name" required
+                        class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                        placeholder="Nombre completo">
+                    <label id="name-label" for="name"
+                        class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">Nombre
+                        completo</label>
+                </div>
+
+                <div class="relative">
+                    <input type="tel" id="phone" required
+                        class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                        placeholder="Teléfono de contacto">
+                    <label for="phone"
+                        class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">Teléfono
+                        de contacto</label>
+                </div>
+
+                <div class="relative">
+                    <input type="email" id="email" required
+                        class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                        placeholder="Correo electrónico">
+                    <label for="email"
+                        class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">Correo
+                        electrónico</label>
+                </div>
+
+                <!-- Client Specific -->
+                <div id="client-fields" class="space-y-6">
+                    <div class="relative">
+                        <select id="vehicle-count" onchange="updateVehicleFields()"
+                            class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white appearance-none focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300">
+                            <option value="1">1 Vehículo</option>
+                            <option value="2">2 Vehículos</option>
+                            <option value="3">3 o más</option>
+                        </select>
+                        <label for="vehicle-count"
+                            class="absolute left-6 top-5 text-lg text-slate-400 font-light pointer-events-none">Número
+                            de vehículos</label>
+                    </div>
+                    <div id="vehicle-list" class="space-y-4">
+                        <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                            <p class="text-sm font-medium text-slate-500 mb-4 uppercase tracking-wider">Vehículo 1</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" placeholder="Marca"
+                                    class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                                <input type="text" placeholder="Modelo"
+                                    class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                                <input type="text" placeholder="Año"
+                                    class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partner Specific -->
+                <div id="partner-fields" class="hidden space-y-6">
+                    <div class="relative">
+                        <input type="text" id="business-name"
+                            class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                            placeholder="Razón Social">
+                        <label for="business-name"
+                            class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">Razón
+                            Social</label>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="nit"
+                            class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                            placeholder="NIT">
+                        <label for="nit"
+                            class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">NIT</label>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="address"
+                            class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
+                            placeholder="Dirección">
+                        <label for="address"
+                            class="absolute left-6 top-5 text-lg text-slate-400 font-light transition-all duration-300 pointer-events-none transform origin-left">Dirección</label>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-white text-slate-950 hover:bg-slate-200 rounded-2xl px-8 py-5 text-xl font-medium transition-all duration-300 mt-4 active:scale-95 shadow-lg shadow-white/5">
+                    Quiero saber más
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-400/10 pt-20 pb-12 px-6 md:px-12 relative z-10">
+        <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+            <div class="mb-8 opacity-40">
+                <div class="h-16 w-auto mx-auto">
+                    <svg viewBox="0 0 434 940" class="h-full w-auto mx-auto fill-white">
+                        <path
+                            d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                        <path
+                            d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="flex gap-8 mb-12">
+                <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
+                    <i data-lucide="instagram" class="w-7 h-7" stroke-width="1.5"></i>
+                </a>
+                <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
+                    <i data-lucide="message-circle" class="w-7 h-7" stroke-width="1.5"></i>
+                </a>
+                <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
+                    <i data-lucide="facebook" class="w-7 h-7" stroke-width="1.5"></i>
+                </a>
+            </div>
+
+            <p class="text-lg font-light text-slate-500 max-w-3xl leading-relaxed">
+                Zippy opera como coordinador logístico y de calidad. Los servicios mecánicos son ejecutados por la red
+                de talleres aliados bajo los estándares y protocolos documentados por Zippy.
+            </p>
+
+            <div
+                class="mt-16 pt-8 border-t border-slate-400/10 w-full flex flex-col md:flex-row items-center justify-between text-base font-light text-slate-600">
+                <p>© 2026 Zippy. Todos los derechos reservados.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-slate-300 transition-colors">Términos legales</a>
+                    <a href="#" class="hover:text-slate-300 transition-colors">Privacidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Form Logic
+        let currentFormType = 'client';
+        const sliderIndicator = document.getElementById('slider-indicator');
+        const buttons = document.querySelectorAll('.user-type-btn');
+        const clientFields = document.getElementById('client-fields');
+        const partnerFields = document.getElementById('partner-fields');
+        const nameLabel = document.getElementById('name-label');
+
+        function setFormType(type, index) {
+            currentFormType = type;
+
+            // Move slider
+            const width = 100 / buttons.length;
+            sliderIndicator.style.width = `calc(${width}% - 12px)`;
+            sliderIndicator.style.left = `calc(${index * width}% + 6px)`;
+
+            // Update text colors
+            buttons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.remove('text-slate-400');
+                    btn.classList.add('text-white');
+                } else {
+                    btn.classList.add('text-slate-400');
+                    btn.classList.remove('text-white');
+                }
+            });
+
+            // Toggle sections
+            if (type === 'client') {
+                clientFields.classList.remove('hidden');
+                partnerFields.classList.add('hidden');
+                nameLabel.innerText = 'Nombre completo';
+                document.getElementById('business-name').required = false;
+                document.getElementById('nit').required = false;
+                document.getElementById('address').required = false;
+            } else {
+                clientFields.classList.add('hidden');
+                partnerFields.classList.remove('hidden');
+                nameLabel.innerText = 'Nombre del contacto';
+                document.getElementById('business-name').required = true;
+                document.getElementById('nit').required = true;
+                document.getElementById('address').required = true;
+            }
+        }
+
+        function updateVehicleFields() {
+            const count = parseInt(document.getElementById('vehicle-count').value);
+            const list = document.getElementById('vehicle-list');
+            list.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                list.innerHTML += `
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                        <p class="text-sm font-medium text-slate-500 mb-4 uppercase tracking-wider">Vehículo ${i}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" placeholder="Marca" required class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                            <input type="text" placeholder="Modelo" required class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                            <input type="text" placeholder="Año" required class="bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white focus:border-white/40 outline-none">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize slider position
+        window.addEventListener('DOMContentLoaded', () => {
+            setFormType('client', 0);
+            updateVehicleFields();
+
+            // Initial solution setup
+            switchSolution('clientes', 0);
+        });
+
+        // Solutions Slider Logic
+        function switchSolution(type, index) {
+            const portal = document.getElementById('soluciones-todos');
+            const slider = document.getElementById('solutions-slider');
+            const btns = document.querySelectorAll('.solution-btn');
+            const contentClientes = document.getElementById('content-clientes');
+            const contentNegocios = document.getElementById('content-negocios');
+            const width = 100 / btns.length;
+
+            // Move indicator
+            slider.style.left = `calc(${index * width}% + 6px)`;
+
+            // Update portal background
+            if (type === 'clientes') {
+                portal.classList.add('portal-active-clientes');
+                portal.classList.remove('portal-active-negocios');
+            } else {
+                portal.classList.add('portal-active-negocios');
+                portal.classList.remove('portal-active-clientes');
+            }
+
+            // Update buttons
+            btns.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.remove('text-slate-400');
+                    btn.classList.add('text-white');
+                } else {
+                    btn.classList.add('text-slate-400');
+                    btn.classList.remove('text-white');
+                }
+            });
+
+            // Switch content
+            if (type === 'clientes') {
+                contentNegocios.classList.add('hidden');
+                contentClientes.classList.remove('hidden');
+            } else {
+                contentClientes.classList.add('hidden');
+                contentNegocios.classList.remove('hidden');
+            }
+        }
+
+        // Initialize reveal elements on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal-up').forEach(el => {
+                el.classList.add('active');
+            });
+        });
+
+        // Form Handling
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+
+            let details = `Pefil: ${currentFormType.toUpperCase()}\nNombre: ${name}\nTeléfono: ${phone}\nEmail: ${email}\n`;
+
+            if (currentFormType === 'client') {
+                const count = document.getElementById('vehicle-count').value;
+                details += `Nro Vehículos: ${count}\n`;
+                const vehicles = document.getElementById('vehicle-list').querySelectorAll('.p-6');
+                vehicles.forEach((v, i) => {
+                    const inputs = v.querySelectorAll('input');
+                    details += `Vehículo ${i + 1}: ${inputs[0].value} ${inputs[1].value} (${inputs[2].value})\n`;
+                });
+            } else {
+                details += `Razón Social: ${document.getElementById('business-name').value}\n`;
+                details += `NIT: ${document.getElementById('nit').value}\n`;
+                details += `Dirección: ${document.getElementById('address').value}\n`;
+            }
+
+            // Prepare WhatsApp
+            const whatsappNumber = "573000000000";
+            const message = `Hola Zippy! 👋\n${details}`;
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+            // Formspree
+            const formspreeId = "YOUR_FORMSPREE_ID";
+
+            if (formspreeId !== "YOUR_FORMSPREE_ID") {
+                fetch(`https://formspree.io/f/${formspreeId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, email, details })
+                }).finally(() => {
+                    window.location.href = whatsappUrl;
+                });
+            } else {
+                window.location.href = whatsappUrl;
+            }
+        });
+        // Diagnostic Script
+        window.addEventListener('load', () => {
+            console.log("Checking image status...");
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.complete || img.naturalHeight === 0) {
+                    console.error("Image failed to load:", img.src);
+                    img.style.border = "2px solid red";
+                } else {
+                    console.log("Image loaded OK:", img.src);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
