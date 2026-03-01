@@ -4,7 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zippy - Servicio Automotriz</title>
+    <title>Zippy | Tu máquina en manos expertas</title>
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Coordinamos y verificamos la calidad de tus servicios automotrices. Tranquilidad, transparencia y eficiencia para ti y tu vehículo.">
+    <meta name="keywords"
+        content="taller mecanico, mantenimiento automotriz, zippy, reparacion vehiculos, calidad automotriz">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zippy.la"> <!-- Cambiar por el dominio final -->
+    <meta property="og:title" content="Zippy | Tu máquina en manos expertas">
+    <meta property="og:description"
+        content="Coordinamos y verificamos la calidad de tus servicios automotrices con el respaldo de expertos.">
+    <meta property="og:image" content="assets/Adobe Express - file.png"> <!-- Imagen que saldrá en WA -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/Adobe Express - file.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
@@ -47,10 +65,69 @@
             /* Slightly lighter slate */
         }
 
-        .reveal-up {
-            opacity: 1 !important;
-            transform: none !important;
-            visibility: visible !important;
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* FAQ Accordion Styling */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .faq-button {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            text-align: left;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+            color: #94a3b8;
+            font-size: 1.125rem;
+            line-height: 1.75;
+        }
+
+        .faq-item.active .faq-content {
+            max-height: 500px;
+            padding-bottom: 2rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Partners Section Styling */
+        .partner-logo {
+            opacity: 0.9;
+            filter: grayscale(1);
+            transition: all 0.4s ease;
+        }
+
+        .partner-logo:hover {
+            opacity: 1;
+            filter: grayscale(0);
+            transform: translateY(-2px);
         }
 
         .glass-story-card {
@@ -72,6 +149,150 @@
 
         .story-img-container:hover img {
             transform: scale(1.05);
+        }
+
+        /* Floating Wizard Button */
+        .wizard-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fab-pulse 2s infinite;
+        }
+
+        .wizard-fab:hover {
+            transform: scale(1.05) translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes fab-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        /* Wizard Modal */
+        #zippy-wizard {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        #zippy-wizard.active {
+            display: flex;
+        }
+
+        .wizard-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .wizard-card {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3rem;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        /* Custom range slider */
+        .wizard-slider {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+            margin: 2rem 0;
+        }
+
+        .wizard-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .wizard-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .emoji-container {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hidden-step {
+            display: none;
+        }
+
+        /* Score Scale */
+        .score-scale-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+            position: relative;
+            margin: 2rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .score-scale-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6 0%, #ef4444 100%);
+            border-radius: 999px;
+            transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
         }
     </style>
 </head>
@@ -117,10 +338,10 @@
                 </div>
                 <span class="text-3xl font-medium tracking-tight text-white ml-1">Zippy</span>
             </div>
-            <button
+            <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
                 class="hidden md:flex items-center justify-center border border-white/20 hover:bg-white/10 hover:border-white/40 text-white rounded-full px-8 py-3 text-lg font-light transition-all duration-300">
                 Contactar por WhatsApp
-            </button>
+            </a>
             <button class="md:hidden text-white p-2">
                 <i data-lucide="menu" class="w-8 h-8" stroke-width="1.5"></i>
             </button>
@@ -139,90 +360,136 @@
                     d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
             </svg>
         </div>
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-8 leading-[1.1] max-w-5xl">
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-8 leading-[1.1] max-w-5xl reveal-on-scroll"
+            style="transition-delay: 100ms;">
             Transparencia y respaldo en tu servicio automotriz.
         </h1>
-        <p class="text-xl md:text-2xl font-light text-slate-400 mb-14 max-w-3xl leading-relaxed">
+        <p class="text-xl md:text-2xl font-light text-slate-400 mb-14 max-w-3xl leading-relaxed reveal-on-scroll"
+            style="transition-delay: 200ms;">
             Coordinamos talleres aliados verificados y te acompañamos de principio a fin.
         </p>
-        <button
-            class="bg-white text-slate-950 hover:bg-slate-200 hover:scale-105 active:scale-95 rounded-full px-10 py-4 text-xl font-medium transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+        <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
+            class="bg-white text-slate-950 hover:bg-slate-200 hover:scale-105 active:scale-95 rounded-full px-10 py-4 text-xl font-medium transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] reveal-on-scroll"
+            style="transition-delay: 300ms;">
             Contactar por WhatsApp
-        </button>
+        </a>
     </section>
 
-    <!-- Qué es Zippy Section -->
-    <section class="py-32 relative px-6 md:px-12">
-        <div class="max-w-5xl mx-auto text-center flex flex-col items-center">
-            <div class="flex flex-col gap-2 mb-12">
-                <p class="line-through decoration-white/20 text-slate-500 font-light text-xl md:text-2xl">
-                    Zippy no es solo un comisionista.
-                </p>
-                <p class="line-through decoration-white/20 text-slate-500 font-light text-xl md:text-2xl">
-                    Zippy no es agencia de marketing.
-                </p>
-            </div>
-            <h2 class="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.2] max-w-4xl">
-                Zippy es un centro de soluciones: coordinamos el servicio, documentamos cada paso y verificamos calidad
-                con protocolos claros.
-            </h2>
+
+
+    <!-- Crossed out text midway -->
+    <div class="py-16 md:py-24 px-6 relative max-w-5xl mx-auto flex flex-col items-center text-center">
+        <div class="flex flex-col gap-3">
+            <p class="line-through decoration-slate-600/50 text-slate-600 font-light text-xl md:text-2xl">
+                Zippy no es solo un comisionista.
+            </p>
+            <p class="line-through decoration-slate-600/50 text-slate-600 font-light text-xl md:text-2xl">
+                Zippy no es agencia de marketing.
+            </p>
         </div>
-    </section>
+    </div>
 
-    <!-- Beneficios Grid -->
-    <section class="py-32 px-6 md:px-12 relative max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            <!-- Card 1 -->
-            <div
-                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
-                <div
-                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
-                    <i data-lucide="file-text" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
-                </div>
-                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Cotización clara</h3>
-                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
-                    Desglosamos cada costo sin sorpresas ni letras pequeñas. Entiendes exactamente por qué estás
-                    pagando.
-                </p>
+    <!-- Qué es Zippy Section (Timeline Snake) -->
+    <section class="py-16 md:py-24 relative px-6 md:px-12 overflow-hidden reveal-on-scroll">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24 md:mb-32 reveal-on-scroll" style="transition-delay: 100ms;">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.2]">
+                    Zippy es un <span class="text-slate-200">centro de soluciones</span>.
+                </h2>
             </div>
 
-            <!-- Card 2 -->
-            <div
-                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
+            <div class="relative max-w-5xl mx-auto pl-8 md:pl-0">
+                <!-- Center Line for Desktop -->
                 <div
-                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
-                    <i data-lucide="camera" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                    class="absolute left-1/2 top-4 bottom-4 w-[1px] bg-gradient-to-b from-slate-700 via-slate-700 to-transparent -translate-x-1/2 hidden md:block">
                 </div>
-                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Evidencia y trazabilidad</h3>
-                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
-                    Recibe registro fotográfico y documental de cada intervención realizada a tu vehículo.
-                </p>
-            </div>
+                <!-- Left Line for Mobile -->
+                <div
+                    class="absolute left-0 top-4 bottom-4 w-[1px] bg-gradient-to-b from-slate-700 via-slate-700 to-transparent md:hidden">
+                </div>
 
-            <!-- Card 3 -->
-            <div
-                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
-                <div
-                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
-                    <i data-lucide="message-square" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                <!-- Step 1: Left -->
+                <div class="relative flex items-center justify-between mb-24 w-full flex-col md:flex-row group reveal-on-scroll"
+                    style="transition-delay: 200ms;">
+                    <div
+                        class="w-full md:w-5/12 text-left md:text-right pl-6 md:pl-0 md:pr-16 order-2 md:order-1 transition-all duration-500 hover:-translate-y-2 md:hover:-translate-x-2">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-700/50 flex items-center justify-center mb-6 md:ml-auto md:mr-0 mr-auto backdrop-blur-sm">
+                            <i data-lucide="file-text" class="w-8 h-8 text-blue-400"></i>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-medium tracking-tight text-white mb-4">Cotización clara
+                        </h3>
+                        <p class="text-lg font-light text-slate-400 leading-relaxed">Desglosamos cada costo sin
+                            sorpresas ni letras pequeñas. Entiendes exactamente por qué estás pagando.</p>
+                    </div>
+                    <!-- Node -->
+                    <div
+                        class="absolute -left-2 md:left-1/2 md:relative md:order-2 z-10 w-4 h-4 rounded-full bg-blue-500 md:-translate-x-1/2 shadow-[0_0_15px_rgba(59,130,246,0.6)] ring-8 ring-[#020617]">
+                    </div>
+                    <div class="w-full md:w-5/12 order-3 hidden md:block"></div>
                 </div>
-                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Comunicación real</h3>
-                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
-                    Un solo canal, respuestas oportunas e información técnica traducida a términos sencillos.
-                </p>
-            </div>
 
-            <!-- Card 4 -->
-            <div
-                class="group bg-slate-900/40 backdrop-blur-md border border-slate-400/20 hover:border-slate-400/40 rounded-[2rem] p-10 md:p-14 transition-all duration-500 hover:-translate-y-1">
-                <div
-                    class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center border border-white/5 mb-8 group-hover:scale-110 transition-transform duration-500">
-                    <i data-lucide="shield-check" class="w-8 h-8 text-slate-300" stroke-width="1.5"></i>
+                <!-- Step 2: Right -->
+                <div class="relative flex items-center justify-between mb-24 w-full flex-col md:flex-row group reveal-on-scroll"
+                    style="transition-delay: 300ms;">
+                    <div class="w-full md:w-5/12 order-1 hidden md:block"></div>
+                    <!-- Node -->
+                    <div
+                        class="absolute -left-2 md:left-1/2 md:relative md:order-2 z-10 w-4 h-4 rounded-full bg-indigo-500 md:-translate-x-1/2 shadow-[0_0_15px_rgba(99,102,241,0.6)] ring-8 ring-[#020617]">
+                    </div>
+                    <div
+                        class="w-full md:w-5/12 text-left pl-6 md:pl-16 order-2 md:order-3 transition-all duration-500 hover:-translate-y-2 md:hover:translate-x-2">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-700/50 flex items-center justify-center mb-6 backdrop-blur-sm">
+                            <i data-lucide="camera" class="w-8 h-8 text-indigo-400"></i>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-medium tracking-tight text-white mb-4">Evidencia y
+                            trazabilidad</h3>
+                        <p class="text-lg font-light text-slate-400 leading-relaxed">Recibe registro fotográfico y
+                            documental de las intervenciones realizadas a tu vehículo.</p>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-medium tracking-tight text-white mb-4">Acompañamiento</h3>
-                <p class="text-lg md:text-xl font-light text-slate-400 leading-relaxed">
-                    Estamos contigo desde que entregas la llave hasta que recibes tu vehículo probado y verificado.
-                </p>
+
+                <!-- Step 3: Left -->
+                <div class="relative flex items-center justify-between mb-24 w-full flex-col md:flex-row group reveal-on-scroll"
+                    style="transition-delay: 400ms;">
+                    <div
+                        class="w-full md:w-5/12 text-left md:text-right pl-6 md:pl-0 md:pr-16 order-2 md:order-1 transition-all duration-500 hover:-translate-y-2 md:hover:-translate-x-2">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-700/50 flex items-center justify-center mb-6 md:ml-auto md:mr-0 mr-auto backdrop-blur-sm">
+                            <i data-lucide="message-square" class="w-8 h-8 text-teal-400"></i>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-medium tracking-tight text-white mb-4">Comunicación real
+                        </h3>
+                        <p class="text-lg font-light text-slate-400 leading-relaxed">Un solo canal, respuestas oportunas
+                            e información técnica traducida a términos sencillos.</p>
+                    </div>
+                    <!-- Node -->
+                    <div
+                        class="absolute -left-2 md:left-1/2 md:relative md:order-2 z-10 w-4 h-4 rounded-full bg-teal-500 md:-translate-x-1/2 shadow-[0_0_15px_rgba(20,184,166,0.6)] ring-8 ring-[#020617]">
+                    </div>
+                    <div class="w-full md:w-5/12 order-3 hidden md:block"></div>
+                </div>
+
+                <!-- Step 4: Right -->
+                <div class="relative flex items-center justify-between w-full flex-col md:flex-row group reveal-on-scroll"
+                    style="transition-delay: 500ms;">
+                    <div class="w-full md:w-5/12 order-1 hidden md:block"></div>
+                    <!-- Node -->
+                    <div
+                        class="absolute -left-2 md:left-1/2 md:relative md:order-2 z-10 w-4 h-4 rounded-full bg-cyan-500 md:-translate-x-1/2 shadow-[0_0_15px_rgba(6,182,212,0.6)] ring-8 ring-[#020617]">
+                    </div>
+                    <div
+                        class="w-full md:w-5/12 text-left pl-6 md:pl-16 order-2 md:order-3 transition-all duration-500 hover:-translate-y-2 md:hover:translate-x-2">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-slate-900/80 border border-slate-700/50 flex items-center justify-center mb-6 backdrop-blur-sm">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-medium tracking-tight text-white mb-4">Acompañamiento</h3>
+                        <p class="text-lg font-light text-slate-400 leading-relaxed">Estamos contigo desde que entregas
+                            la llave hasta que recibes tu vehículo probado y verificado.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -235,12 +502,13 @@
 
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-32">
-                <h2 class="text-5xl md:text-7xl font-medium tracking-tight text-white mb-12 reveal-up active">Soluciones
+                <h2 class="text-5xl md:text-7xl font-medium tracking-tight text-white mb-12 reveal-on-scroll"
+                    style="transition-delay: 100ms;">Soluciones
                     para todos</h2>
 
                 <!-- Toggle Slider -->
-                <div
-                    class="inline-flex bg-slate-950/80 p-1.5 rounded-2xl border border-slate-500/10 relative shadow-2xl scale-110 md:scale-125">
+                <div class="inline-flex bg-slate-950/80 p-1.5 rounded-2xl border border-slate-500/10 relative shadow-2xl scale-110 md:scale-125 reveal-on-scroll"
+                    style="transition-delay: 200ms;">
                     <div id="solutions-slider"
                         class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-500 ease-out z-0 w-[calc(50%-6px)] shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                     </div>
@@ -265,18 +533,20 @@
                                     Agent</span>
                             </div>
                             <h3 class="text-5xl md:text-6xl font-medium tracking-tight text-white mb-10 leading-tight">
-                                Tu gestora personal, <br>en cada detalle.</h3>
+                                Tu gestor personal, <br>en cada detalle.</h3>
                             <p class="text-2xl font-light text-slate-400 leading-relaxed">
-                                Tu gestora personal se encarga de todo. Ella coordinará lavadas, mantenimientos y
-                                reparaciones, negociando siempre el mejor precio por ti.
+                                Tu gestor personal se encarga de todo. El coordinará lavadas, mantenimientos y
+                                reparaciones, buscando siempre el mejor servicio para ti.
                             </p>
                         </div>
                         <div class="order-1 lg:order-2">
                             <div
-                                class="story-img-container relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop"
-                                    alt="Zippy Manager" class="w-full h-full object-cover aspect-[4/3]">
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent"></div>
+                                class="story-img-container relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-slate-900/50">
+                                <img src="assets/agente.png" alt="Zippy Manager"
+                                    class="w-full h-[450px] lg:h-auto lg:aspect-[4/3] object-cover object-[center_20%] lg:object-center">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -284,53 +554,63 @@
                     <!-- 4-Part Modular Storyteller -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Part 1 -->
-                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 100ms;">
                             <div
-                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
-                                <img src="assets/images/whatsapp-order.png"
-                                    class="w-full h-full object-contain bg-[#f0f2f5]" alt="WhatsApp Order">
+                                class="story-img-container h-64 md:h-80 rounded-2xl overflow-hidden mb-6 border border-white/5 flex items-center justify-center bg-transparent">
+                                <img src="assets/orden 2.png"
+                                    class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700 drop-shadow-xl"
+                                    alt="WhatsApp Order">
                             </div>
                             <h4 class="text-xl font-medium text-white mb-3">Agendamiento inteligente</h4>
                             <p class="text-base font-light text-slate-400 leading-relaxed">
                                 Recibe tu orden de mantenimiento por WhatsApp. Tu agente agenda la cita perfecta por ti
-                                inmediatamente.
+                                tan pronto sea posible
                             </p>
                         </div>
                         <!-- Part 2 -->
-                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 200ms;">
                             <div
-                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
-                                <img src="https://images.unsplash.com/photo-1530046339160-ce3e5b0c7a2f?q=80&w=2070&auto=format&fit=crop"
-                                    class="w-full h-full object-cover" alt="Supervisor Inventory">
+                                class="story-img-container h-[300px] md:h-80 rounded-2xl overflow-hidden mb-6 border border-white/5 bg-transparent">
+                                <img src="assets/supervision.jpeg" class="w-full h-full object-cover"
+                                    alt="Supervisor Inventory">
                             </div>
                             <h4 class="text-xl font-medium text-white mb-3">Seguimiento y Control</h4>
                             <p class="text-base font-light text-slate-400 leading-relaxed">
-                                Supervisor validando inventarios y procesos de tu vehículo en tiempo real en el taller.
+                                Tu agente estara al pendiente de cualquier novedad de tu vehiculo y te infomara de los
+                                cambios de estado de servicio
                             </p>
                         </div>
                         <!-- Part 3 -->
-                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 300ms;">
                             <div
-                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
-                                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
-                                    class="w-full h-full object-cover" alt="Mechanics under lift">
+                                class="story-img-container h-[300px] md:h-80 rounded-2xl overflow-hidden mb-6 border border-white/5 flex items-center justify-center bg-transparent">
+                                <img src="assets/mecanico elevador.png"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 drop-shadow-xl"
+                                    alt="Mecánico Elevador">
                             </div>
                             <h4 class="text-xl font-medium text-white mb-3">Calidad Verificada</h4>
                             <p class="text-base font-light text-slate-400 leading-relaxed">
-                                Mecánicos expertos verificando cada componente desde el elevador del taller con máxima
-                                precisión.
+                                El equipo de Zippy se encarga de revisar y supervisar los procesos de cada taller para
+                                prestar el mejor servicio posible
                             </p>
                         </div>
                         <!-- Part 4 -->
-                        <div class="glass-story-card p-10 rounded-[2.5rem]">
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 400ms;">
                             <div
-                                class="story-img-container h-48 rounded-2xl overflow-hidden mb-6 border border-white/10">
-                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"
-                                    class="w-full h-full object-cover" alt="Human Support Agent">
+                                class="story-img-container h-[300px] md:h-80 rounded-2xl overflow-hidden mb-6 border border-white/5 bg-transparent">
+                                <img src="assets/atencion humana.png"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                    alt="Human Support Agent">
                             </div>
                             <h4 class="text-xl font-medium text-white mb-3">Atención Humana</h4>
                             <p class="text-base font-light text-slate-400 leading-relaxed">
-                                Siempre que sea necesario tendrás un agente humano a tu servicio.
+                                Siempre que sea necesario tendrás un agente humano a tu servicio para resolver tus dudas
+                                y
+                                solucionar tus problemas
                             </p>
                         </div>
                     </div>
@@ -354,22 +634,19 @@
                         </div>
                         <div
                             class="story-img-container relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
-                            <img src="https://images.unsplash.com/photo-1486006396193-471a41551bdf?q=80&w=2090&auto=format&fit=crop"
-                                alt="Premium Workshop" class="w-full h-full object-cover aspect-[4/3]">
+                            <img src="assets/taller.png" alt="Premium Workshop"
+                                class="w-full h-full object-cover aspect-[4/3] object-center">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                        <div class="group relative rounded-[3rem] overflow-hidden border border-white/10">
-                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop"
-                                class="w-full h-full object-cover aspect-video grayscale-[0.2]" alt="Handshake">
-                            <div
-                                class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm p-14 flex flex-col justify-end text-left">
-                                <h4 class="text-4xl font-medium text-white mb-6">Más y mejores clientes</h4>
-                                <p class="text-xl font-light text-slate-300 leading-relaxed">
-                                    Nosotros nos encargamos del cliente, tú te encargas solo del servicio.
-                                </p>
-                            </div>
+                        <div
+                            class="group relative rounded-[3rem] overflow-hidden border border-white/10 p-10 md:p-14 bg-white/5 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="users" class="w-16 h-16 text-blue-400 mb-10"></i>
+                            <h4 class="text-4xl font-medium text-white mb-6">Más y mejores clientes</h4>
+                            <p class="text-xl font-light text-slate-300 leading-relaxed max-w-md">
+                                Nosotros nos encargamos del cliente, tú te encargas solo del servicio.
+                            </p>
                         </div>
                         <div
                             class="flex flex-col justify-center items-center text-center p-14 bg-white/5 rounded-[3rem] border border-white/5">
@@ -379,6 +656,59 @@
                             <div class="h-[2px] w-20 bg-blue-500/50"></div>
                         </div>
                     </div>
+
+                    <!-- 4-Part Modular Storyteller for Negocios -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+                        <!-- Part 1: Gestión de métricas -->
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 100ms;">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6">
+                                <i data-lucide="bar-chart-3" class="w-8 h-8 text-blue-400"></i>
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Gestión de métricas</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Herramientas de gestión de datos para saber como mejorar tu negocio sin gastar de mas.
+                            </p>
+                        </div>
+                        <!-- Part 2: Logística completa -->
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 200ms;">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+                                <i data-lucide="truck" class="w-8 h-8 text-indigo-400"></i>
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Logística completa</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Nosotros nos encargamos de los clientes e insumos para que puedas recibir mas clientes
+                                en menos tiempo.
+                            </p>
+                        </div>
+                        <!-- Part 3: Seguridad de pagos -->
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 300ms;">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-6">
+                                <i data-lucide="credit-card" class="w-8 h-8 text-teal-400"></i>
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Seguridad de pagos</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Nuestra pasarela de pagos asegura y optimiza la recepcion de todos los medios de pago.
+                            </p>
+                        </div>
+                        <!-- Part 4: Posicionamiento -->
+                        <div class="glass-story-card p-6 md:p-8 rounded-[2.5rem] reveal-on-scroll"
+                            style="transition-delay: 400ms;">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6">
+                                <i data-lucide="award" class="w-8 h-8 text-cyan-400"></i>
+                            </div>
+                            <h4 class="text-xl font-medium text-white mb-3">Posicionamiento</h4>
+                            <p class="text-base font-light text-slate-400 leading-relaxed">
+                                Zippy solo trabaja con calidad verificada. Si estas en Zippy eres de los mejores.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -386,9 +716,9 @@
     </section>
 
     <!-- Cómo funciona Timeline -->
-    <section class="py-32 px-6 md:px-12 relative">
+    <section class="py-32 px-6 md:px-12 relative reveal-on-scroll">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-24">
+            <div class="text-center mb-24 reveal-on-scroll" style="transition-delay: 100ms;">
                 <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-white">Cómo funciona</h2>
             </div>
 
@@ -404,7 +734,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6 relative z-10">
                     <!-- Step 1 -->
-                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0 reveal-on-scroll"
+                        style="transition-delay: 200ms;">
                         <div class="md:mb-8 flex-shrink-0">
                             <i data-lucide="search" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
                                 stroke-width="1.5"></i>
@@ -421,7 +752,8 @@
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0 reveal-on-scroll"
+                        style="transition-delay: 300ms;">
                         <div class="md:mb-8 flex-shrink-0">
                             <i data-lucide="settings" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
                                 stroke-width="1.5"></i>
@@ -438,7 +770,8 @@
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0 reveal-on-scroll"
+                        style="transition-delay: 400ms;">
                         <div class="md:mb-8 flex-shrink-0">
                             <i data-lucide="activity" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
                                 stroke-width="1.5"></i>
@@ -449,13 +782,14 @@
                         </div>
                         <div>
                             <h4 class="text-2xl font-medium tracking-tight text-white mb-3">Seguimiento</h4>
-                            <p class="text-lg font-light text-slate-400">Documentación de cada paso y avance en tiempo
-                                real.</p>
+                            <p class="text-lg font-light text-slate-400">Documentación de cada paso y avance en el
+                                servicio.</p>
                         </div>
                     </div>
 
                     <!-- Step 4 -->
-                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0">
+                    <div class="flex md:flex-col items-start md:items-center text-left md:text-center gap-6 md:gap-0 reveal-on-scroll"
+                        style="transition-delay: 500ms;">
                         <div class="md:mb-8 flex-shrink-0">
                             <i data-lucide="check-circle-2" class="w-8 h-8 text-slate-400 hidden md:block mx-auto mb-6"
                                 stroke-width="1.5"></i>
@@ -475,33 +809,56 @@
         </div>
     </section>
 
+    <!-- Marcas Aliadas (Logos) Section (Relocated) -->
+    <section class="py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto text-center reveal-on-scroll">
+        <h2 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-12">Nuestros Aliados</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 items-center justify-center">
+            <!-- Placeholder for partner logos -->
+            <img src="assets/glowcar negro.PNG" alt="Glowcar Logo" class="partner-logo mx-auto h-40 w-auto"
+                style="filter: brightness(0) invert(1); opacity: 0.9 !important;">
+            <img src="https://via.placeholder.com/200x80/0F172A/94A3B8?text=Marca+2" alt="Partner Logo 2"
+                class="partner-logo mx-auto h-16 w-auto">
+            <img src="https://via.placeholder.com/200x80/0F172A/94A3B8?text=Marca+3" alt="Partner Logo 3"
+                class="partner-logo mx-auto h-16 w-auto">
+            <img src="https://via.placeholder.com/200x80/0F172A/94A3B8?text=Marca+4" alt="Partner Logo 4"
+                class="partner-logo mx-auto h-16 w-auto">
+            <img src="https://via.placeholder.com/200x80/0F172A/94A3B8?text=Marca+5" alt="Partner Logo 5"
+                class="partner-logo mx-auto h-16 w-auto">
+            <!-- Recruitment Button -->
+            <button onclick="scrollToPartnerForm()"
+                class="group flex flex-col items-center justify-center p-6 border-2 border-dashed border-white/10 rounded-3xl hover:border-blue-400/40 hover:bg-blue-400/5 transition-all duration-300">
+                <div
+                    class="w-16 h-16 rounded-full bg-blue-400/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="plus" class="w-8 h-8 text-blue-400"></i>
+                </div>
+                <span class="text-white/80 font-medium group-hover:text-white">Quiero ser un aliado Zippy</span>
+            </button>
+        </div>
+    </section>
+
     <!-- Formulario de contacto -->
     <section class="py-32 px-6 md:px-12 relative">
-        <div
-            class="max-w-3xl mx-auto bg-slate-900/30 backdrop-blur-2xl border border-slate-400/20 rounded-[2.5rem] p-8 md:p-16 shadow-2xl relative overflow-hidden">
+        <div class="max-w-3xl mx-auto bg-slate-900/30 backdrop-blur-2xl border border-slate-400/20 rounded-[2.5rem] p-8 md:p-16 shadow-2xl relative overflow-hidden reveal-on-scroll"
+            style="transition-delay: 100ms;">
             <!-- Subtle reflection highlight inside the form -->
             <div
                 class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent">
             </div>
 
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">Quiero saber más</h2>
+                <h2 class="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">Unete a la red Zippy</h2>
                 <p class="text-xl font-light text-slate-400">Selecciona tu perfil y déjanos tus datos.</p>
             </div>
 
             <!-- User Type Slider -->
             <div class="relative bg-slate-950/50 p-1.5 rounded-2xl flex mb-12 border border-slate-500/10">
                 <div id="slider-indicator"
-                    class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-300 ease-out z-0">
+                    class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-300 ease-out z-0 w-[calc(50%-6px)]">
                 </div>
                 <button type="button" onclick="setFormType('client', 0)"
                     class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-white transition-colors">Cliente</button>
                 <button type="button" onclick="setFormType('partner', 1)"
-                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Taller</button>
-                <button type="button" onclick="setFormType('partner', 2)"
-                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Lavadero</button>
-                <button type="button" onclick="setFormType('partner', 3)"
-                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Detailing</button>
+                    class="user-type-btn relative z-10 flex-1 py-3 text-sm md:text-base font-medium text-slate-400 transition-colors">Aliado</button>
             </div>
 
             <form id="contact-form" class="space-y-6">
@@ -563,6 +920,22 @@
 
                 <!-- Partner Specific -->
                 <div id="partner-fields" class="hidden space-y-6">
+                    <div class="space-y-3">
+                        <label class="text-lg text-slate-400 font-light block ml-2">Tipo de Negocio</label>
+                        <div class="relative bg-slate-950/50 p-1.5 rounded-2xl flex border border-slate-500/10">
+                            <div id="partner-type-indicator"
+                                class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-300 ease-out z-0 w-[calc(25%-6px)]">
+                            </div>
+                            <button type="button" onclick="setPartnerType('Taller', 0)"
+                                class="partner-type-btn relative z-10 flex-1 py-3 text-xs md:text-sm font-medium text-white transition-colors">Taller</button>
+                            <button type="button" onclick="setPartnerType('Lavadero', 1)"
+                                class="partner-type-btn relative z-10 flex-1 py-3 text-xs md:text-sm font-medium text-slate-400 transition-colors">Lavadero</button>
+                            <button type="button" onclick="setPartnerType('Detailing', 2)"
+                                class="partner-type-btn relative z-10 flex-1 py-3 text-xs md:text-sm font-medium text-slate-400 transition-colors">Detailing</button>
+                            <button type="button" onclick="setPartnerType('Lujos', 3)"
+                                class="partner-type-btn relative z-10 flex-1 py-3 text-xs md:text-sm font-medium text-slate-400 transition-colors">Lujos</button>
+                        </div>
+                    </div>
                     <div class="relative">
                         <input type="text" id="business-name"
                             class="peer w-full bg-slate-950/50 border border-slate-500/20 rounded-2xl px-6 pt-8 pb-3 text-xl text-white placeholder-transparent focus:border-white/40 focus:bg-slate-950/80 focus:outline-none transition-all duration-300"
@@ -589,9 +962,74 @@
 
                 <button type="submit"
                     class="w-full bg-white text-slate-950 hover:bg-slate-200 rounded-2xl px-8 py-5 text-xl font-medium transition-all duration-300 mt-4 active:scale-95 shadow-lg shadow-white/5">
-                    Quiero saber más
+                    Quiero saber mas
                 </button>
             </form>
+        </div>
+    </section>
+
+    <!-- FAQ Section (Relocated) -->
+    <section class="py-32 px-6 md:px-12 relative border-t border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-24 reveal-on-scroll">
+                <span
+                    class="px-5 py-2 rounded-full bg-blue-500/10 text-blue-400 text-sm font-semibold tracking-widest uppercase border border-blue-500/20 mb-6 inline-block">Soporte</span>
+                <h2 class="text-4xl md:text-5xl font-medium tracking-tight text-white mb-6">Preguntas frecuentes</h2>
+                <p class="text-xl font-light text-slate-400">Todo lo que necesitas saber sobre Zippy en un solo lugar.
+                </p>
+            </div>
+
+            <div class="space-y-4 reveal-on-scroll">
+                <!-- FAQ 1 -->
+                <div class="faq-item">
+                    <button class="faq-button" onclick="toggleFaq(this)">
+                        <span>¿Cuál es el costo de usar Zippy?</span>
+                        <i data-lucide="plus" class="faq-icon w-6 h-6 text-blue-400"></i>
+                    </button>
+                    <div class="faq-content">
+                        Zippy no cobra a sus clientes una tarifa adicional en su servicio. somos aliados de los
+                        establecimientos y ellos son quienes pagan nuestra tarifa
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-item">
+                    <button class="faq-button" onclick="toggleFaq(this)">
+                        <span>¿Cómo eligen a los talleres aliados?</span>
+                        <i data-lucide="plus" class="faq-icon w-6 h-6 text-blue-400"></i>
+                    </button>
+                    <div class="faq-content">
+                        Pasamos por un riguroso proceso de verificación de calidad. Evaluamos infraestructura,
+                        herramientas, experiencia de los técnicos and cumplimiento de tiempos para asegurar que tu
+                        vehículo esté en las mejores manos.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-item">
+                    <button class="faq-button" onclick="toggleFaq(this)">
+                        <span>¿Qué servicios puedo gestionar con Zippy?</span>
+                        <i data-lucide="plus" class="faq-icon w-6 h-6 text-blue-400"></i>
+                    </button>
+                    <div class="faq-content">
+                        Puedes gestionar desde revisiones, mantenimientos preventivos y correctivos, hasta servicios de
+                        lavado profesional y detailing . Todo coordinado por tu gestor personal.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="faq-item">
+                    <button class="faq-button" onclick="toggleFaq(this)">
+                        <span>¿Tienen garantía sobre los trabajos realizados?</span>
+                        <i data-lucide="plus" class="faq-icon w-6 h-6 text-blue-400"></i>
+                    </button>
+                    <div class="faq-content">
+                        Sí, todos los trabajos realizados a través de Zippy bajo nuestra supervisión cuentan con una
+                        garantía respaldada tanto por el taller como por nuestro sistema de control de calidad y estan
+                        respaldados segun las condiciones del contrato de servicio
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -610,10 +1048,12 @@
             </div>
 
             <div class="flex gap-8 mb-12">
-                <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
+                <a href="https://www.instagram.com/zippy.med?igsh=NGJkY3E2emNwZHdu" target="_blank"
+                    rel="noopener noreferrer" class="text-slate-500 hover:text-white transition-colors duration-300">
                     <i data-lucide="instagram" class="w-7 h-7" stroke-width="1.5"></i>
                 </a>
-                <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
+                <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
+                    class="text-slate-500 hover:text-white transition-colors duration-300">
                     <i data-lucide="message-circle" class="w-7 h-7" stroke-width="1.5"></i>
                 </a>
                 <a href="#" class="text-slate-500 hover:text-white transition-colors duration-300">
@@ -637,9 +1077,291 @@
         </div>
     </footer>
 
+    <div id="zippy-wizard">
+        <div class="wizard-overlay" onclick="closeWizard()"></div>
+        <div class="wizard-card reveal-on-scroll is-visible">
+            <div id="wizard-steps-container">
+                <!-- Step 1 -->
+                <div class="wizard-step text-center" id="step-1">
+                    <div class="emoji-container" id="emoji-1">😐</div>
+                    <h3 class="text-3xl font-medium text-white mb-6">¿Tienes un taller de tu plena confianza?</h3>
+                    <input type="range" min="0" max="100" value="50" class="wizard-slider" id="slider-1"
+                        oninput="updateEmoji(1, this.value)">
+                    <div class="flex justify-between text-slate-400 text-sm mb-10">
+                        <span>Para nada</span>
+                        <span>Totalmente</span>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="wizard-step text-center hidden-step" id="step-2">
+                    <div class="emoji-container" id="emoji-2">😐</div>
+                    <h3 class="text-3xl font-medium text-white mb-6">¿Has tenido problemas o desconfianza con algún
+                        taller?</h3>
+                    <input type="range" min="0" max="100" value="50" class="wizard-slider" id="slider-2"
+                        oninput="updateEmoji(2, this.value)">
+                    <div class="flex justify-between text-slate-400 text-sm mb-10">
+                        <span>Nunca</span>
+                        <span>Siempre</span>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="wizard-step text-center hidden-step" id="step-3">
+                    <div class="emoji-container" id="emoji-3">😐</div>
+                    <h3 class="text-3xl font-medium text-white mb-6">¿Crees que algún taller te ha cobrado de más?</h3>
+                    <input type="range" min="0" max="100" value="50" class="wizard-slider" id="slider-3"
+                        oninput="updateEmoji(3, this.value)">
+                    <div class="flex justify-between text-slate-400 text-sm mb-10">
+                        <span>Nunca</span>
+                        <span>Siempre</span>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="wizard-step text-center hidden-step" id="step-4">
+                    <div class="emoji-container" id="emoji-4">😐</div>
+                    <h3 class="text-3xl font-medium text-white mb-6">¿Sientes que pierdes mucho tiempo buscando
+                        servicio?</h3>
+                    <input type="range" min="0" max="100" value="50" class="wizard-slider" id="slider-4"
+                        oninput="updateEmoji(4, this.value)">
+                    <div class="flex justify-between text-slate-400 text-sm mb-10">
+                        <span>Nada</span>
+                        <span>Demasiado</span>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="wizard-step text-center hidden-step" id="step-5">
+                    <div class="emoji-container" id="emoji-5">😐</div>
+                    <h3 class="text-3xl font-medium text-white mb-6">Como mujer, ¿sientes confianza en ir sola a
+                        talleres?</h3>
+                    <input type="range" min="0" max="100" value="50" class="wizard-slider" id="slider-5"
+                        oninput="updateEmoji(5, this.value)">
+                    <div class="flex justify-between text-slate-400 text-sm mb-10">
+                        <span>Ninguna</span>
+                        <span>Total</span>
+                    </div>
+                </div>
+
+                <!-- Final Step -->
+                <div class="wizard-step text-center hidden-step" id="step-final">
+                    <div class="emoji-container text-6xl mb-4" id="final-emoji">✨</div>
+                    <div id="score-container" class="mb-8">
+                        <div class="score-value" id="final-score">0%</div>
+                        <p class="text-slate-500 uppercase tracking-widest text-xs font-medium">Índice de Incertidumbre
+                        </p>
+                        <div class="score-scale-container">
+                            <div class="score-scale-fill" id="score-fill"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-medium text-white mb-4">¡Tu diagnóstico está listo!</h3>
+                    <p class="text-slate-400 text-lg mb-10 leading-relaxed" id="diagnostic-summary">
+                        Hemos analizado tus respuestas y tenemos el plan perfecto para devolverte la tranquilidad.
+                    </p>
+                    <button onclick="sendWizardToWhatsApp()"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-2xl py-4 text-xl font-medium transition-all mb-4">
+                        Hablar con un gestor Zippy
+                    </button>
+                    <button onclick="closeWizard()" class="text-slate-500 hover:text-slate-300 transition-colors">
+                        Dejar para más tarde
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-8" id="wizard-navigation">
+                <button onclick="prevStep()" id="prev-btn"
+                    class="text-white/50 hover:text-white transition-colors flex items-center gap-2 opacity-0 pointer-events-none">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Anterior
+                </button>
+                <div class="flex gap-2" id="wizard-dots">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/10"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/10"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/10"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/10"></div>
+                </div>
+                <button onclick="nextStep()" id="next-btn"
+                    class="bg-white/10 hover:bg-white/20 text-white rounded-xl px-6 py-2 transition-all flex items-center gap-2">
+                    Siguiente <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="openWizard()" class="wizard-fab group">
+        <div class="relative">
+            <i data-lucide="sparkles" class="w-6 h-6 text-blue-400 group-hover:rotate-12 transition-transform"></i>
+            <div class="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+        </div>
+        <span class="font-medium tracking-tight">¿Zippy es para ti?</span>
+    </button>
+
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
+
+        // Wizard Logic
+        let currentStep = 1;
+        const totalSteps = 5;
+        let wizardAnswers = JSON.parse(localStorage.getItem('zippy_wizard_data')) || {
+            1: 50, 2: 50, 3: 50, 4: 50, 5: 50
+        };
+
+        function openWizard() {
+            document.getElementById('zippy-wizard').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Restore answers to sliders
+            for (let i = 1; i <= totalSteps; i++) {
+                const slider = document.getElementById(`slider-${i}`);
+                if (slider) {
+                    slider.value = wizardAnswers[i];
+                    updateEmoji(i, wizardAnswers[i], false);
+                }
+            }
+        }
+
+        function closeWizard() {
+            document.getElementById('zippy-wizard').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        const emojis = {
+            1: ['😢', '😟', '😐', '🙂', '😊'], // Taller confianza (Triste -> Feliz)
+            2: ['😊', '😐', '😟', '😢', '😭'], // Problemas (Feliz -> Llorando)
+            3: ['😊', '😐', '😟', '😠', '😡'], // Cobro de más (Feliz -> Furioso)
+            4: ['😌', '😐', '😑', '😫', '😩'], // Tiempo (Relajado -> Agotado)
+            5: ['😨', '😟', '😐', '🙂', '🛡️']  // Mujer/Confianza (Preocupada -> Segura)
+        };
+
+        function updateEmoji(step, value, shouldSave = true) {
+            const index = Math.min(Math.floor(value / 20), 4);
+            const container = document.getElementById(`emoji-${step}`);
+            if (container) {
+                container.textContent = emojis[step][index];
+                container.style.transform = `scale(${0.8 + (value / 200)})`;
+            }
+            wizardAnswers[step] = value;
+            if (shouldSave) {
+                localStorage.setItem('zippy_wizard_data', JSON.stringify(wizardAnswers));
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                document.getElementById(`step-${currentStep}`).classList.add('hidden-step');
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden-step');
+                updateWizardUI();
+            } else if (currentStep === totalSteps) {
+                showFinalStep();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.add('hidden-step');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden-step');
+                updateWizardUI();
+            }
+        }
+
+        function updateWizardUI() {
+            // Update dots
+            const dots = document.getElementById('wizard-dots').children;
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].classList.toggle('bg-blue-500', i === currentStep - 1);
+                dots[i].classList.toggle('bg-white/10', i !== currentStep - 1);
+            }
+
+            // Update buttons
+            const prevBtn = document.getElementById('prev-btn');
+            prevBtn.classList.toggle('opacity-0', currentStep === 1);
+            prevBtn.classList.toggle('pointer-events-none', currentStep === 1);
+
+            const nextBtn = document.getElementById('next-btn');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = 'Ver Resultado <i data-lucide="check" class="w-5 h-5"></i>';
+                lucide.createIcons();
+            } else {
+                nextBtn.innerHTML = 'Siguiente <i data-lucide="arrow-right" class="w-5 h-5"></i>';
+                lucide.createIcons();
+            }
+        }
+
+        function showFinalStep() {
+            document.getElementById(`step-${currentStep}`).classList.add('hidden-step');
+            document.getElementById('step-final').classList.remove('hidden-step');
+            document.getElementById('wizard-navigation').classList.add('hidden');
+
+            // Calculate "Mistrust Score" (Invert Trust questions 1 and 5)
+            const q1_mistrust = 100 - parseInt(wizardAnswers[1]);
+            const q2_mistrust = parseInt(wizardAnswers[2]);
+            const q3_mistrust = parseInt(wizardAnswers[3]);
+            const q4_mistrust = parseInt(wizardAnswers[4]);
+            const q5_mistrust = 100 - parseInt(wizardAnswers[5]);
+
+            const totalScore = Math.round((q1_mistrust + q2_mistrust + q3_mistrust + q4_mistrust + q5_mistrust) / 5);
+
+            let summaryText = "";
+            let finalEmoji = "✨";
+
+            if (totalScore > 40) {
+                finalEmoji = "😢";
+                summaryText = "Detectamos que la desconfianza y el estrés en el taller te están afectando. Zippy nació precisamente para ser tu escudo y garantizar que nadie se aproveche de ti.";
+            } else {
+                finalEmoji = "😊";
+                summaryText = "Valoras la transparencia y el tiempo. En Zippy optimizamos cada minuto de tu gestión automotriz para que tú solo disfrutes el camino.";
+            }
+
+            document.getElementById('diagnostic-summary').textContent = summaryText;
+            document.getElementById('final-emoji').textContent = finalEmoji;
+
+            // Animate Scale
+            setTimeout(() => {
+                document.getElementById('final-score').textContent = `${totalScore}%`;
+                document.getElementById('score-fill').style.width = `${totalScore}%`;
+            }, 300);
+
+            // Silent Lead Submission (Lead Tracking)
+            silentLeadSubmit(totalScore);
+        }
+
+        function silentLeadSubmit(score) {
+            const formspreeId = "YOUR_FORMSPREE_ID"; // Use same ID or specific one
+            if (formspreeId !== "YOUR_FORMSPREE_ID") {
+                fetch(`https://formspree.io/f/${formspreeId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'WIZARD_RESULT',
+                        score: `${score}%`,
+                        answers: wizardAnswers,
+                        timestamp: new Date().toISOString()
+                    })
+                }).catch(err => console.log("Lead not synced", err));
+            }
+        }
+
+        function scrollToPartnerForm() {
+            const formSection = document.getElementById('contact-form').parentElement.parentElement;
+            formSection.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                setFormType('partner', 1);
+            }, 800);
+        }
+
+        function sendWizardToWhatsApp() {
+            const results = Object.entries(wizardAnswers).map(([step, val]) => {
+                const q = document.querySelector(`#step-${step} h3`).textContent;
+                return `${q}: ${val}%`;
+            }).join('\n');
+
+            const message = `¡Hola Zippy! Acabo de completar el test de confianza.\n\nResultados:\n${results}\n\nQuiero que un gestor me ayude a mejorar mi experiencia en el taller.`;
+            const whatsappUrl = `https://wa.me/573117055495?text=${encodeURIComponent(message)}`;
+            window.location.href = whatsappUrl;
+        }
 
         // Form Logic
         let currentFormType = 'client';
@@ -653,9 +1375,12 @@
             currentFormType = type;
 
             // Move slider
-            const width = 100 / buttons.length;
-            sliderIndicator.style.width = `calc(${width}% - 12px)`;
-            sliderIndicator.style.left = `calc(${index * width}% + 6px)`;
+            if (index === 0) {
+                sliderIndicator.style.left = '6px';
+            } else {
+                sliderIndicator.style.left = '50%';
+            }
+            sliderIndicator.style.width = 'calc(50% - 12px)';
 
             // Update text colors
             buttons.forEach((btn, i) => {
@@ -668,21 +1393,25 @@
                 }
             });
 
-            // Toggle sections
+            // Toggle sections & Disable hidden fields to prevent validation errors
             if (type === 'client') {
                 clientFields.classList.remove('hidden');
                 partnerFields.classList.add('hidden');
-                nameLabel.innerText = 'Nombre completo';
-                document.getElementById('business-name').required = false;
-                document.getElementById('nit').required = false;
-                document.getElementById('address').required = false;
+                nameLabel.textContent = 'Nombre completo';
+
+                // Client fields active
+                clientFields.querySelectorAll('input, select').forEach(el => el.disabled = false);
+                // Partner fields inactive
+                partnerFields.querySelectorAll('input, select').forEach(el => el.disabled = true);
             } else {
                 clientFields.classList.add('hidden');
                 partnerFields.classList.remove('hidden');
-                nameLabel.innerText = 'Nombre del contacto';
-                document.getElementById('business-name').required = true;
-                document.getElementById('nit').required = true;
-                document.getElementById('address').required = true;
+                nameLabel.textContent = 'Nombre del contacto';
+
+                // Client fields inactive
+                clientFields.querySelectorAll('input, select').forEach(el => el.disabled = true);
+                // Partner fields active
+                partnerFields.querySelectorAll('input, select').forEach(el => el.disabled = false);
             }
         }
 
@@ -706,8 +1435,30 @@
         }
 
         // Initialize slider position
+        let currentPartnerType = 'Taller';
+        const partnerIndicator = document.getElementById('partner-type-indicator');
+        const partnerBtns = document.querySelectorAll('.partner-type-btn');
+
+        function setPartnerType(type, index) {
+            currentPartnerType = type;
+            const width = 100 / partnerBtns.length;
+            partnerIndicator.style.width = `calc(${width}% - 12px)`;
+            partnerIndicator.style.left = `calc(${index * width}% + 6px)`;
+
+            partnerBtns.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.remove('text-slate-400');
+                    btn.classList.add('text-white');
+                } else {
+                    btn.classList.add('text-slate-400');
+                    btn.classList.remove('text-white');
+                }
+            });
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             setFormType('client', 0);
+            setPartnerType('Taller', 0);
             updateVehicleFields();
 
             // Initial solution setup
@@ -756,10 +1507,27 @@
             }
         }
 
-        // Initialize reveal elements on load
+        // Intersection Observer for scroll reveal animations (Bi-directional)
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.reveal-up').forEach(el => {
-                el.classList.add('active');
+            const observerOptions = {
+                root: null,
+                rootMargin: '-5% 0px -5% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        // Remove class when element leaves viewport to allow re-animation on scroll up
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
             });
         });
 
@@ -767,10 +1535,16 @@
         const contactForm = document.getElementById('contact-form');
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
+            console.log("Submit clicked. Validating...");
 
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
+
+            if (!name || !phone || !email) {
+                alert("Por favor completa los campos principales.");
+                return;
+            }
 
             let details = `Pefil: ${currentFormType.toUpperCase()}\nNombre: ${name}\nTeléfono: ${phone}\nEmail: ${email}\n`;
 
@@ -780,30 +1554,33 @@
                 const vehicles = document.getElementById('vehicle-list').querySelectorAll('.p-6');
                 vehicles.forEach((v, i) => {
                     const inputs = v.querySelectorAll('input');
-                    details += `Vehículo ${i + 1}: ${inputs[0].value} ${inputs[1].value} (${inputs[2].value})\n`;
+                    if (inputs.length >= 3) {
+                        details += `Vehículo ${i + 1}: ${inputs[0].value} ${inputs[1].value} (${inputs[2].value})\n`;
+                    }
                 });
             } else {
+                details += `Tipo: ${currentPartnerType}\n`;
                 details += `Razón Social: ${document.getElementById('business-name').value}\n`;
                 details += `NIT: ${document.getElementById('nit').value}\n`;
                 details += `Dirección: ${document.getElementById('address').value}\n`;
             }
 
-            // Prepare WhatsApp
-            const whatsappNumber = "573000000000";
+            console.log("Preparing WhatsApp message...");
+            const whatsappNumber = "573117055495";
             const message = `Hola Zippy! 👋\n${details}`;
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-            // Formspree
+            // Formspree logic
             const formspreeId = "YOUR_FORMSPREE_ID";
-
             if (formspreeId !== "YOUR_FORMSPREE_ID") {
                 fetch(`https://formspree.io/f/${formspreeId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, phone, email, details })
-                }).finally(() => {
-                    window.location.href = whatsappUrl;
-                });
+                }).catch(err => console.error("Formspree error:", err))
+                    .finally(() => {
+                        window.location.href = whatsappUrl;
+                    });
             } else {
                 window.location.href = whatsappUrl;
             }
@@ -820,6 +1597,22 @@
                 }
             });
         });
+
+        // FAQ Toggle Function
+        function toggleFaq(button) {
+            const item = button.parentElement;
+            const isActive = item.classList.contains('active');
+
+            // Close all other FAQs
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                otherItem.classList.remove('active');
+            });
+
+            // Toggle active state
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
     </script>
 
 </body>
