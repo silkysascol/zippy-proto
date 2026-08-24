@@ -1,4 +1,4 @@
-/* Zippy — nuevo.html
+/* Zippy — index.html
    Sin dependencias: solo lucide (CDN) para los iconos. */
 
 (function () {

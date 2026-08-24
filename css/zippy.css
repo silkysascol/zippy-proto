@@ -1,4 +1,4 @@
-/* Zippy — hoja de estilo de nuevo.html
+/* Zippy — hoja de estilo de index.html
    Solo clases propias con prefijo z-: no pisa utilidades de Tailwind.
 
    TODA la paleta vive en tres bloques, mismos ~43 tokens en los tres:
@@ -7,7 +7,7 @@
    2. @media (prefers-color-scheme: light) — reemplaza :root cuando el
                         sistema pide claro y NO hay elección manual guardada.
    3. :root[data-tema="oscuro"] / [data-tema="claro"] — elección manual
-                        (guardada en localStorage por nuevo.js). Por
+                        (guardada en localStorage por zippy.js). Por
                         especificidad de atributo gana siempre sobre 1 y 2,
                         en los dos sentidos.
    Ningún color tiene su única definición dentro de un @media.
@@ -15,7 +15,7 @@
    No hay literales de color fuera de estos bloques, ni en esta hoja ni en
    el marcado, para que el tema se pueda tokenizar sin perseguir hex sueltos.
    Fuera de aquí solo quedan: el #000 de una máscara (es opacidad, no tema),
-   el <meta name="theme-color"> y el favicon en data: URI de nuevo.html —
+   el <meta name="theme-color"> y el favicon en data: URI de index.html —
    ambos resueltos en JS/HTML porque no aceptan var().
 
    --lane-mark es un token nuevo: las rayas de carril del asfalto (autopista
@@ -188,7 +188,7 @@
     }
 }
 
-/* Elección manual (nuevo.js la guarda en localStorage): gana siempre sobre
+/* Elección manual (zippy.js la guarda en localStorage): gana siempre sobre
    el sistema, en los dos sentidos, por especificidad de atributo. */
 :root[data-tema="oscuro"] {
     color-scheme: dark;
@@ -448,7 +448,7 @@ body {
 }
 
 /* Un solo nodo por botón, reutilizado en cada toque. Nace donde cayó el dedo:
-   nuevo.js pasa la posición por --rx/--ry. Solo se anima transform y opacity. */
+   zippy.js pasa la posición por --rx/--ry. Solo se anima transform y opacity. */
 .z-ripple {
     position: absolute;
     left: var(--rx, 50%);
@@ -507,7 +507,7 @@ body {
 }
 
 /* El del header no se ve al cargar: entra cuando el del hero sale de pantalla
-   (nuevo.js lo decide con un IntersectionObserver sobre el del hero).
+   (zippy.js lo decide con un IntersectionObserver sobre el del hero).
 
    Se oculta con visibility, no solo con opacity, por dos motivos: así deja de
    ser enfocable con Tab y de existir para un lector de pantalla, y además
@@ -1035,7 +1035,7 @@ body {
    (--traffic-*, --paint-*, --car-*, --lane-mark), porque el asfalto se queda
    oscuro en claro y en oscuro.
 
-   Las animaciones solo existen bajo .is-live, que nuevo.js pone al entrar la
+   Las animaciones solo existen bajo .is-live, que zippy.js pone al entrar la
    tarjeta en pantalla y quita al salir: nada se anima fuera de la vista, y
    entran escalonadas para no arrancar las cinco de golpe.
 
