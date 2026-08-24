@@ -77,6 +77,13 @@
     --car-spoke: #94a3b8;
     --car-lamp: #fbbf24;
 
+    /* Luces de los vehículos: encendidas de noche, apagadas de día. En el
+       tema claro valen transparent y se apagan solas por la cascada, sin JS
+       ni marcado duplicado. El rojo es la luz de un carro, no un color de
+       estado de la interfaz: los avisos de la página siguen en ámbar. */
+    --lamp-front: #fff3d1;
+    --lamp-rear: #ef4444;
+
     /* tráfico del hero — silueta de carros sobre el asfalto, que no
        cambia de tema; se dejan igual a propósito en los dos temas */
     --traffic-1: #334155;
@@ -93,6 +100,12 @@
     /* wizard */
     --overlay: rgba(2, 6, 23, .88);
     --track: rgba(148, 163, 184, .2);
+
+    /* No es color: decide si la autopista del hero se desvanece por los
+       bordes. En claro se apaga (none) porque el degradado deja un borrón
+       gris sucio contra el fondo claro; ahí corta a ras el overflow:hidden. */
+    --highway-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    --highway-fade: transparent;
 
     --ease: cubic-bezier(.16, 1, .3, 1);
 }
@@ -131,6 +144,12 @@
         --amber: #92400e;
 
         --track: rgba(71, 85, 105, .3);
+
+        --highway-mask: none;
+        --highway-fade: var(--road);
+
+        --lamp-front: transparent;
+        --lamp-rear: transparent;
     }
 }
 
@@ -168,6 +187,12 @@
     --amber: #fbbf24;
 
     --track: rgba(148, 163, 184, .2);
+
+    --lamp-front: #fff3d1;
+    --lamp-rear: #ef4444;
+
+    --highway-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    --highway-fade: transparent;
 }
 
 :root[data-tema="claro"] {
@@ -202,6 +227,12 @@
     --amber: #92400e;
 
     --track: rgba(71, 85, 105, .3);
+
+    --lamp-front: transparent;
+    --lamp-rear: transparent;
+
+    --highway-mask: none;
+    --highway-fade: var(--road);
 }
 
 html {
@@ -324,6 +355,38 @@ body {
     background: var(--surface-hover);
 }
 
+/* Segundo CTA de igual peso que el primario: sólido, sin transparencias. */
+.z-btn--invert {
+    background: var(--txt);
+    color: var(--bg);
+}
+
+.z-btn--invert:hover {
+    background: var(--txt-soft);
+}
+
+/* Logo de Silky: alto fijo, ancho por proporción, y sigue al tema por
+   currentColor porque va inline como <symbol>, no como imagen. */
+.z-silky-icon {
+    height: 1.15rem;
+    width: auto;
+    flex: none;
+}
+
+/* A 375 px el header ya lleva interruptor de tema y botón de WhatsApp: aquí
+   el de Silky queda como icono solo, con su aria-label. Desde sm, con texto. */
+.z-silky-btn {
+    padding-left: .8rem;
+    padding-right: .8rem;
+}
+
+@media (min-width: 640px) {
+    .z-silky-btn {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+    }
+}
+
 .z-btn--sm {
     padding: .65rem 1.25rem;
     font-size: .875rem;
@@ -348,6 +411,17 @@ body {
 
 .z-ink-accent {
     color: var(--accent-2);
+}
+
+.z-link-inline {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color .25s;
+}
+
+.z-link-inline:hover {
+    color: var(--accent-soft);
 }
 
 .z-link-dim {
@@ -385,6 +459,25 @@ body {
 
 .z-logo--footer {
     height: 3.5rem;
+}
+
+/* El logo del pie recibe toques repetidos; que no se seleccione ni salte el
+   menú contextual al mantenerlo pulsado en el teléfono. */
+.z-footmark {
+    /* El logo mide 26 px de ancho: sin este relleno el objetivo queda por
+       debajo de lo que un dedo acierta. El relleno es transparente y los
+       márgenes negativos lo compensan, así que nada se mueve a la vista. */
+    padding: .4rem 1.4rem;
+    margin-top: -.4rem;
+    margin-left: -1.4rem;
+    margin-right: -1.4rem;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    /* Sin esto el navegador espera por si el toque doble es un zoom, y los
+       toques seguidos llegan tarde o se pierden. */
+    touch-action: manipulation;
 }
 
 /* ---------- interruptor de tema ---------- */
@@ -478,8 +571,19 @@ body {
     fill: var(--car-tyre);
 }
 
+/* Faro y stop del carro del recorrido. Es el más grande de la página, así
+   que se permite un halo muy corto; en claro los tokens son transparent y
+   el drop-shadow de una forma transparente no pinta nada, se apaga solo.
+   Las luces van pegadas a la geometría, no a la pantalla: cuando el carro
+   se voltea con scaleX(-1) al volver del taller, el faro sigue adelante. */
 .z-car .car-lamp {
-    fill: var(--car-lamp);
+    fill: var(--lamp-front);
+    filter: drop-shadow(0 0 1.5px var(--lamp-front));
+}
+
+.z-car .car-lamp--rear {
+    fill: var(--lamp-rear);
+    filter: drop-shadow(0 0 1.5px var(--lamp-rear));
 }
 
 .z-car .car-hub {
@@ -501,11 +605,12 @@ body {
     position: relative;
     overflow: hidden;
     height: clamp(168px, 34vw, 210px);
-    background: linear-gradient(180deg, transparent, var(--road) 34%, var(--road));
+    background: linear-gradient(180deg, var(--highway-fade), var(--road) 34%, var(--road));
     border-top: 1px solid var(--line);
-    /* El #000 de la máscara es opacidad, no color de tema: no tokenizar. */
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    /* El #000 del degradado es opacidad, no color de tema. En claro el token
+       vale none y el corte lo hace el overflow:hidden de arriba. */
+    -webkit-mask-image: var(--highway-mask);
+    mask-image: var(--highway-mask);
 }
 
 .z-highway__lane {
@@ -768,6 +873,262 @@ body {
     }
 }
 
+/* ---------- la red: una tarjeta por tipo de taller ----------
+   Cada tarjeta reutiliza el mismo <symbol id="zcar"> del hero. El escenario
+   es asfalto (--road) y los efectos solo usan tokens que NO cambian con el
+   tema (--traffic-*, --car-*, --lane-mark), porque el asfalto se queda
+   oscuro en claro y en oscuro.
+
+   Las animaciones solo existen bajo .is-live, que nuevo.js pone al entrar la
+   tarjeta en pantalla y quita al salir: nada se anima fuera de la vista, y
+   entran escalonadas para no arrancar las seis de golpe. */
+
+.z-svc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+}
+
+@media (min-width: 768px) {
+    .z-svc-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+.z-svc {
+    list-style: none;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: .6rem .6rem .9rem;
+    background: var(--surface);
+}
+
+.z-svc__art {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    /* El escenario es asfalto en los dos temas, así que el tinte del carro se
+       fija aquí con tokens estables; heredar color del texto lo volvería
+       negro sobre negro en el tema claro. */
+    color: var(--traffic-2);
+}
+
+.z-svc:nth-child(even) .z-svc__art {
+    color: var(--traffic-4);
+}
+
+.z-svc__stage {
+    fill: var(--road);
+}
+
+.z-svc__ground {
+    fill: var(--lane-mark);
+}
+
+.z-svc__name {
+    margin-top: .7rem;
+    text-align: center;
+    font-size: clamp(.78rem, 3vw, .9rem);
+    font-weight: 600;
+    letter-spacing: -.01em;
+}
+
+/* --- mecánica: el carro sube en el elevador --- */
+
+.z-svc__lift-post,
+.z-svc__lift-arm {
+    fill: var(--traffic-3);
+}
+
+.z-svc__lift-arm {
+    fill: var(--car-spoke);
+}
+
+.z-svc.is-live .z-svc__lift {
+    animation: z-svc-lift 3.4s ease-in-out infinite;
+}
+
+@keyframes z-svc-lift {
+
+    0%,
+    12% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    45%,
+    72% {
+        transform: translate3d(0, -14px, 0);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* --- latonería y pintura: la pistola pasa soltando neblina --- */
+
+.z-svc__gun-body {
+    fill: var(--traffic-3);
+}
+
+.z-svc__mist {
+    fill: var(--traffic-4);
+    opacity: .5;
+}
+
+.z-svc.is-live .z-svc__gun {
+    animation: z-svc-gun 3.8s linear infinite;
+}
+
+.z-svc.is-live .z-svc__mist {
+    animation: z-svc-mist 1.1s ease-out infinite;
+}
+
+@keyframes z-svc-gun {
+    from {
+        transform: translate3d(-6px, 0, 0);
+    }
+
+    to {
+        transform: translate3d(132px, 0, 0);
+    }
+}
+
+@keyframes z-svc-mist {
+
+    0%,
+    100% {
+        opacity: .18;
+    }
+
+    45% {
+        opacity: .85;
+    }
+}
+
+/* --- lavado: espuma en la carrocería y burbujas subiendo --- */
+
+.z-svc__foam {
+    fill: var(--car-spoke);
+    opacity: .3;
+}
+
+.z-svc__bubble {
+    fill: var(--car-spoke);
+    opacity: .5;
+}
+
+.z-svc.is-live .z-svc__bubble {
+    animation: z-svc-bubble 2.6s ease-out infinite;
+    animation-delay: var(--b, 0s);
+}
+
+@keyframes z-svc-bubble {
+    0% {
+        transform: translate3d(0, 6px, 0);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: .75;
+    }
+
+    100% {
+        transform: translate3d(0, -30px, 0);
+        opacity: 0;
+    }
+}
+
+/* --- detailing: un brillo barre la carrocería --- */
+
+.z-svc__shine {
+    fill: var(--car-spoke);
+    opacity: .28;
+}
+
+.z-svc.is-live .z-svc__shine {
+    animation: z-svc-shine 3.2s ease-in-out infinite;
+}
+
+@keyframes z-svc-shine {
+    0% {
+        transform: translate3d(-26px, 0, 0);
+        opacity: 0;
+    }
+
+    22%,
+    72% {
+        opacity: .55;
+    }
+
+    100% {
+        transform: translate3d(62px, 0, 0);
+        opacity: 0;
+    }
+}
+
+/* --- lujos y accesorios: la pieza baja y queda puesta --- */
+
+.z-svc__part {
+    fill: var(--car-lamp);
+}
+
+.z-svc.is-live .z-svc__part {
+    animation: z-svc-part 3.6s ease-out infinite;
+}
+
+@keyframes z-svc-part {
+    0% {
+        transform: translate3d(0, -18px, 0);
+        opacity: 0;
+    }
+
+    22% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    90% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    99%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* --- diagnóstico: una línea escanea el carro --- */
+
+.z-svc__scan {
+    fill: var(--traffic-4);
+    opacity: .65;
+}
+
+.z-svc.is-live .z-svc__scan {
+    animation: z-svc-scan 2.8s ease-in-out infinite;
+}
+
+@keyframes z-svc-scan {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 0;
+    }
+
+    12%,
+    82% {
+        opacity: .9;
+    }
+
+    100% {
+        transform: translate3d(0, 40px, 0);
+        opacity: 0;
+    }
+}
+
 /* ---------- acta: vista cenital ---------- */
 
 .z-top__metal {
@@ -993,6 +1354,10 @@ body {
     font-size: clamp(1.5rem, 7vw, 2rem);
 }
 
+.z-wiz__num--money {
+    font-size: clamp(1.7rem, 8.5vw, 2.3rem);
+}
+
 .z-wiz__unit {
     display: block;
     margin-top: .45rem;
@@ -1109,6 +1474,31 @@ body {
     color: var(--muted-dim);
 }
 
+/* La cuenta queda a la vista: quien quiera, la rehace con una calculadora. */
+.z-wiz__math {
+    margin-top: 1.35rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-raised);
+    text-align: left;
+    display: grid;
+    gap: .55rem;
+    font-size: .85rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.z-wiz__math li {
+    list-style: none;
+}
+
+.z-wiz__math strong {
+    color: var(--txt);
+    font-weight: 600;
+}
+
 .z-wiz__note {
     color: var(--muted);
     font-weight: 300;
@@ -1196,5 +1586,18 @@ input:focus-visible {
     .z-wiz__card,
     .z-wiz__q.is-on {
         animation: none;
+    }
+
+    /* Las seis tarjetas de la red se congelan en su estado de reposo, que ya
+       está dibujado para leerse sin movimiento: elevador abajo, espuma
+       puesta, pistola a un lado, brillo tenue, pieza montada, línea visible. */
+    .z-svc.is-live .z-svc__lift,
+    .z-svc.is-live .z-svc__gun,
+    .z-svc.is-live .z-svc__mist,
+    .z-svc.is-live .z-svc__bubble,
+    .z-svc.is-live .z-svc__shine,
+    .z-svc.is-live .z-svc__part,
+    .z-svc.is-live .z-svc__scan {
+        animation: none !important;
     }
 }

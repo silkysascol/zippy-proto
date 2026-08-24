@@ -128,15 +128,22 @@
     }
 })();
 
-/* ---------- encuesta flotante: cuánto tiempo se te va en el taller ----------
+/* ---------- encuesta flotante: cuánto te cuesta llevar y traer el carro ----------
    Se abre y cierra sin recargar. Cierra con Escape, tocando fuera o en la X.
-   El resultado se calcula solo con lo que el usuario respondió; si no da una
-   cifra creíble, se muestra un mensaje simple en vez de inventarla. */
+   Todo lo que sale en pantalla se calcula con lo que el usuario respondió, y
+   la cuenta se muestra paso a paso para que cualquiera la rehaga. Si no da
+   una cifra creíble, se dice y no se infla. Nada se guarda ni se envía. */
 
 (function () {
     'use strict';
 
     var WA = 'https://wa.me/573117055495';
+
+    // Jornada legal en Colombia: 8 horas al día × 30 días = 240 horas al mes.
+    // Es el divisor que convierte el sueldo mensual en valor de la hora.
+    var HORAS_DIA = 8;
+    var DIAS_MES = 30;
+    var HORAS_MES = HORAS_DIA * DIAS_MES;   // 240
 
     var fab = document.getElementById('fab');
     var wiz = document.getElementById('wiz');
@@ -154,11 +161,19 @@
     var step = 0;              // índice de pregunta; questions.length = pantalla final
     var lastFocus = null;
 
-    /* --- lectura de cada deslizador --- */
+    /* --- formato --- */
+
+    var fmt = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
+
+    function pesos(n) {
+        return '$' + fmt.format(Math.round(n));
+    }
 
     function nf(n) {
         return n.toLocaleString('es-CO', { maximumFractionDigits: 1 });
     }
+
+    /* --- lectura de cada deslizador --- */
 
     function paint(i) {
         var input = sliders[i];
@@ -168,9 +183,14 @@
 
         var out = questions[i].querySelector('[data-out]');
         var words = input.dataset.words;
-        out.textContent = words
-            ? words.split('|')[Math.round(val / (max / (words.split('|').length - 1)))]
-            : nf(val);
+        if (words) {
+            var lista = words.split('|');
+            out.textContent = lista[Math.round(val / (max / (lista.length - 1)))];
+        } else if (input.hasAttribute('data-money')) {
+            out.textContent = pesos(val);
+        } else {
+            out.textContent = nf(val);
+        }
     }
 
     sliders.forEach(function (input, i) {
@@ -194,16 +214,21 @@
     /* --- el cálculo --- */
 
     function compute() {
-        var veces = parseFloat(sliders[0].value);      // viajes redondos al año
-        var porViaje = parseFloat(sliders[1].value);   // horas de una ida
-        var pct = parseFloat(sliders[2].value);        // % en horario laboral
+        var veces = parseFloat(sliders[0].value);      // visitas al taller en el año
+        var viaje = parseFloat(sliders[1].value);      // horas de una ida
+        var espera = parseFloat(sliders[2].value);     // horas de una espera
         var aplaza = parseFloat(sliders[3].value);
+        var sueldo = parseFloat(sliders[4].value);
 
-        var horas = veces * 2 * porViaje;              // ida y vuelta
+        // Cada visita son dos idas y dos esperas: dejarlo y recogerlo.
+        var horas = veces * 2 * (viaje + espera);
+        var valorHora = sueldo / HORAS_MES;
+        var costo = horas * valorHora;
 
         var big = document.getElementById('wizBig');
         var bigUnit = document.getElementById('wizBigUnit');
         var title = document.getElementById('wizTitle');
+        var math = document.getElementById('wizMath');
         var note = document.getElementById('wizNote');
         var wa = document.getElementById('wizWa');
 
@@ -211,25 +236,31 @@
         if (horas < 2) {
             big.textContent = '';
             bigUnit.textContent = '';
+            math.innerHTML = '';
             title.textContent = 'Con eso casi no pierdes tiempo.';
             note.textContent = 'Lo que respondiste no llega ni a dos horas al año. No te vamos a inflar la cifra. Cuando el taller te quede lejos o te coja la semana, escríbenos.';
             wa.href = WA + '?text=' + encodeURIComponent('Hola Zippy, quiero cotizar un traslado.');
             return;
         }
 
-        big.textContent = nf(horas);
-        bigUnit.textContent = 'horas al año';
-        title.textContent = 'Eso es lo que se te va llevando y trayendo el carro.';
+        big.textContent = pesos(costo);
+        bigUnit.textContent = 'al año en tiempo perdido';
+        title.textContent = 'Eso te cuesta llevar y traer el carro.';
 
-        var lines = [veces + ' idas y ' + veces + ' vueltas al año, a ' + nf(porViaje) + ' h cada viaje.'];
-        var enTrabajo = horas * pct / 100;
-        if (enTrabajo >= 1) lines.push('Unas ' + nf(enTrabajo) + ' h de esas caen en tu horario de trabajo.');
-        if (aplaza >= 50) lines.push('Y ya has aplazado un mantenimiento por no tener cuándo.');
-        note.textContent = lines.join(' ');
+        // La cuenta, a la vista: quien quiera la rehace con una calculadora.
+        math.innerHTML =
+            '<li>' + veces + ' visitas al año, ida y vuelta, entre viaje y espera: <strong>' + nf(horas) + ' h</strong></li>' +
+            '<li>' + HORAS_DIA + ' horas al día × ' + DIAS_MES + ' días = <strong>' + HORAS_MES + ' horas al mes</strong></li>' +
+            '<li>' + pesos(sueldo) + ' ÷ ' + HORAS_MES + ' h = <strong>' + pesos(valorHora) + ' la hora</strong></li>' +
+            '<li>' + nf(horas) + ' h × ' + pesos(valorHora) + ' = <strong>' + pesos(costo) + '</strong></li>';
+
+        note.textContent = aplaza >= 50
+            ? 'Y ya has aplazado un mantenimiento por no tener cuándo. Ese también sale caro.'
+            : 'Ese tiempo se va en el trancón, en la espera y en la vuelta.';
 
         wa.href = WA + '?text=' + encodeURIComponent(
-            'Hola Zippy, calculé que se me van unas ' + nf(horas) +
-            ' horas al año llevando y trayendo el carro. Quiero cotizar un traslado.');
+            'Hola Zippy, calculé que llevar y traer el carro me cuesta unos ' + pesos(costo) +
+            ' al año. Quiero cotizar un traslado.');
     }
 
     /* --- abrir y cerrar --- */
@@ -272,10 +303,78 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     });
 
-    // El botón flotante aparece cuando el hero ya pasó.
-    var revealFab = function () { fab.classList.toggle('is-ready', window.scrollY > 420); };
+    // El botón flotante aparece cuando el hero ya pasó, y se retira al llegar
+    // al pie para no taparle los enlaces de términos y contacto.
+    var revealFab = function () {
+        var y = window.scrollY;
+        var alFinal = y + window.innerHeight > document.body.scrollHeight - 140;
+        fab.classList.toggle('is-ready', y > 420 && !alFinal);
+    };
     window.addEventListener('scroll', revealFab, { passive: true });
     revealFab();
+})();
+
+/* ---------- tarjetas de la red: animar solo lo que está en pantalla ----------
+   Seis tarjetas animándose a la vez es trabajo de más para un teléfono
+   modesto. Cada una arranca al entrar en pantalla, escalonada, y se apaga al
+   salir. Con prefers-reduced-motion no se enciende ninguna: el CSS ya deja
+   cada dibujo legible en reposo. */
+
+(function () {
+    'use strict';
+
+    var tiles = document.querySelectorAll('[data-svc]');
+    if (!tiles.length) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        !('IntersectionObserver' in window)) return;
+
+    var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            var i = Array.prototype.indexOf.call(tiles, e.target);
+            if (e.isIntersecting) {
+                setTimeout(function () { e.target.classList.add('is-live'); }, i * 180);
+            } else {
+                e.target.classList.remove('is-live');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    Array.prototype.forEach.call(tiles, function (t) { obs.observe(t); });
+})();
+
+/* ---------- acceso interno al acta ----------
+   El enlace público al formulario de recepción se retiró del pie: es una
+   herramienta de los operadores, no del cliente. Queda detrás de cinco
+   toques seguidos sobre el logo del pie, con la cuenta reiniciándose si se
+   demora más de 1,2 s entre toques, para que nadie llegue por accidente.
+   Uno o dos toques no hacen nada visible. La URL directa recepcion.html
+   sigue funcionando, que es como entra el equipo hoy. Esto es discreción,
+   no seguridad: el acta tiene su propia clave. */
+
+(function () {
+    'use strict';
+
+    var marca = document.getElementById('footmark');
+    if (!marca) return;
+
+    var TOQUES = 5;
+    var VENTANA = 1200;
+    var cuenta = 0;
+    var ultimo = 0;
+
+    marca.addEventListener('click', function () {
+        var ahora = Date.now();
+        cuenta = (ahora - ultimo > VENTANA) ? 1 : cuenta + 1;
+        ultimo = ahora;
+        if (cuenta >= TOQUES) {
+            cuenta = 0;
+            window.location.href = 'recepcion.html';
+        }
+    });
+
+    // Mantener pulsado en el teléfono no debe abrir el menú del sistema.
+    marca.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 })();
 
 /* ---------- interruptor de tema: claro / oscuro / según el sistema ----------
