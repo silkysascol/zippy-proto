@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zippy | Llevamos tu carro al taller y te lo devolvemos</title>
 
+    <!-- Tema: se aplica ANTES de pintar, para no destellar. Si hay elección
+         guardada, se fija el atributo (gana sobre el sistema); si no, no se
+         toca nada y manda @media (prefers-color-scheme) en nuevo.css. -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('zippy-tema');
+                if (t === 'claro' || t === 'oscuro') {
+                    document.documentElement.setAttribute('data-tema', t);
+                }
+                var esClaro = t === 'claro' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches);
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) meta.setAttribute('content', esClaro ? '#f3f6fb' : '#020617');
+            } catch (e) {}
+        })();
+    </script>
+
     <meta name="description"
         content="Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos. Con acta de fotos y firma en los dos extremos.">
     <meta name="theme-color" content="#020617">
@@ -19,7 +36,13 @@
         content="Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos.">
     <meta name="twitter:card" content="summary">
     <link rel="canonical" href="https://zippymed.co">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 434 940"%3E%3Crect width="434" height="940" fill="%23020617"/%3E%3Cpath fill="%23ffffff" d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z"/%3E%3Cpath fill="%23ffffff" d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z"/%3E%3C/svg%3E">
+    <!-- Favicon en SVG con comillas simples por dentro: el original usaba comillas
+         dobles anidadas dentro del atributo href de comillas dobles, lo que
+         truncaba la data: URI a la mitad y dejaba el icono roto. Se resuelve el
+         color con @media (prefers-color-scheme) embebido en el propio SVG, porque
+         el favicon no puede leer el atributo data-tema de la página. -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 434 940'%3E%3Cstyle%3E.zbg%7Bfill:%23020617%7D.zmark%7Bfill:%23fff%7D@media(prefers-color-scheme:light)%7B.zbg%7Bfill:%23f3f6fb%7D.zmark%7Bfill:%230f172a%7D%7D%3C/style%3E%3Crect width='434' height='940' class='zbg'/%3E%3Cpath class='zmark' d='M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z'/%3E%3Cpath class='zmark' d='M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,11 +82,19 @@
                 </svg>
                 <span class="text-lg font-semibold tracking-tight">Zippy</span>
             </a>
-            <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
-                target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary !py-2.5 !px-5 !text-sm">
-                <i data-lucide="message-circle" class="w-4 h-4" stroke-width="2"></i>
-                WhatsApp
-            </a>
+            <div class="flex items-center gap-2 md:gap-3">
+                <button type="button" class="z-theme-toggle" id="temaToggle">
+                    <i data-lucide="sun" class="z-theme-toggle__icon z-theme-toggle__icon--sun"
+                        aria-hidden="true"></i>
+                    <i data-lucide="moon" class="z-theme-toggle__icon z-theme-toggle__icon--moon"
+                        aria-hidden="true"></i>
+                </button>
+                <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
+                    target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary !py-2.5 !px-5 !text-sm">
+                    <i data-lucide="message-circle" class="w-4 h-4" stroke-width="2"></i>
+                    WhatsApp
+                </a>
+            </div>
         </div>
     </header>
 

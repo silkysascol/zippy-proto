@@ -1,15 +1,34 @@
 /* Zippy — hoja de estilo de nuevo.html
    Solo clases propias con prefijo z-: no pisa utilidades de Tailwind.
 
-   TODA la paleta vive en el bloque :root de abajo. No hay literales de color
-   fuera de ahí, ni en esta hoja ni en el marcado, para que el tema se pueda
-   tokenizar sin perseguir hex sueltos. */
+   TODA la paleta vive en tres bloques, mismos ~43 tokens en los tres:
+   1. :root          — paleta por defecto (oscura). Sirve de respaldo y es
+                        la que gana si el navegador no entiende media queries.
+   2. @media (prefers-color-scheme: light) — reemplaza :root cuando el
+                        sistema pide claro y NO hay elección manual guardada.
+   3. :root[data-tema="oscuro"] / [data-tema="claro"] — elección manual
+                        (guardada en localStorage por nuevo.js). Por
+                        especificidad de atributo gana siempre sobre 1 y 2,
+                        en los dos sentidos.
+   Ningún color tiene su única definición dentro de un @media.
+
+   No hay literales de color fuera de estos bloques, ni en esta hoja ni en
+   el marcado, para que el tema se pueda tokenizar sin perseguir hex sueltos.
+   Fuera de aquí solo quedan: el #000 de una máscara (es opacidad, no tema),
+   el <meta name="theme-color"> y el favicon en data: URI de nuevo.html —
+   ambos resueltos en JS/HTML porque no aceptan var().
+
+   --lane-mark es un token nuevo: las rayas de carril del asfalto (autopista
+   y escena) necesitan quedar SIEMPRE claras sobre asfalto SIEMPRE oscuro,
+   sin importar el tema — por eso se separó de --line-strong, que si cambia
+   con el tema (borde de tarjetas/botones sobre superficies claras u
+   oscuras). Compartir el mismo token entre ambos usos era lo que iba a
+   dejar las rayas de carril "gris sucio" en claro. --surface-warn también
+   es nuevo: el bloque ámbar de la póliza gana un fondo cálido propio en
+   claro en vez de heredar el blanco genérico de las tarjetas. */
 
 :root {
-    /* Paleta única de la página. Para un tema claro basta redefinir estos
-       tokens; el resto de la hoja y todo el marcado los consumen por var().
-       Fuera de aquí solo quedan: el #000 de una máscara (es opacidad),
-       el <meta name="theme-color"> y el favicon en data: URI de nuevo.html. */
+    color-scheme: dark;
 
     /* superficies */
     --bg: #020617;
@@ -17,6 +36,7 @@
     --surface: #0b1424;
     --surface-raised: #17233a;
     --surface-hover: #1e2b45;
+    --surface-warn: #0b1424;
 
     /* escena del recorrido y asfalto */
     --road: #0a1220;
@@ -30,14 +50,17 @@
     --line-road: rgba(148, 163, 184, .34);
     --line-top: rgba(148, 163, 184, .38);
     --line-warn: rgba(251, 191, 36, .28);
+    --lane-mark: rgba(148, 163, 184, .28);
     --shade-inset: rgba(0, 0, 0, .9);
 
-    /* texto */
+    /* texto — muted-dim/faint se aclararon frente al original (no pasaban
+       4.5:1 contra --bg/--surface; verificado y corregido con el cálculo
+       de contraste del navegador) */
     --txt: rgba(255, 255, 255, .9);
     --txt-soft: #cbd5e1;
     --muted: #94a3b8;
-    --muted-dim: #64748b;
-    --muted-faint: #475569;
+    --muted-dim: #8b9bb4;
+    --muted-faint: #7e8ea8;
     --on-accent: #041022;
 
     /* acento */
@@ -46,7 +69,7 @@
     --accent-2: #38bdf8;
     --amber: #fbbf24;
 
-    /* carro de perfil */
+    /* carro de perfil (usa var(--accent): sigue el acento del tema solo) */
     --car-body: var(--accent);
     --car-glass: #0b1424;
     --car-tyre: #1e293b;
@@ -54,13 +77,14 @@
     --car-spoke: #94a3b8;
     --car-lamp: #fbbf24;
 
-    /* tráfico del hero */
+    /* tráfico del hero — silueta de carros sobre el asfalto, que no
+       cambia de tema; se dejan igual a propósito en los dos temas */
     --traffic-1: #334155;
     --traffic-2: #60a5fa;
     --traffic-3: #475569;
     --traffic-4: #38bdf8;
 
-    /* ilustración cenital del acta */
+    /* ilustración cenital del acta — icono autocontenido, mismo criterio */
     --top-body: #162943;
     --top-glass: #0c1e35;
     --top-roof: #1e3a5c;
@@ -71,6 +95,113 @@
     --track: rgba(148, 163, 184, .2);
 
     --ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Tema claro por preferencia del sistema, sin elección manual guardada. */
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+
+        --bg: #f3f6fb;
+        --surface: #ffffff;
+        --surface-raised: #eef2f8;
+        --surface-hover: #e3e9f2;
+        --surface-warn: #fdf6ec;
+
+        --sky-1: #bfe0fb;
+        --sky-2: #dcedfb;
+        --sky-3: #eef6fd;
+
+        --line: rgba(15, 23, 42, .10);
+        --line-strong: rgba(15, 23, 42, .18);
+        --line-road: rgba(15, 23, 42, .30);
+        --line-warn: rgba(180, 83, 9, .35);
+        --lane-mark: rgba(203, 213, 225, .42);
+
+        --txt: #0f172a;
+        --txt-soft: #1e293b;
+        --muted: #46566b;
+        --muted-dim: #55677d;
+        --muted-faint: #5c6b81;
+        --on-accent: #f8fbff;
+
+        --accent: #1d4ed8;
+        --accent-soft: #2563eb;
+        --accent-2: #0369a1;
+        --amber: #92400e;
+
+        --track: rgba(71, 85, 105, .3);
+    }
+}
+
+/* Elección manual (nuevo.js la guarda en localStorage): gana siempre sobre
+   el sistema, en los dos sentidos, por especificidad de atributo. */
+:root[data-tema="oscuro"] {
+    color-scheme: dark;
+
+    --bg: #020617;
+    --surface: #0b1424;
+    --surface-raised: #17233a;
+    --surface-hover: #1e2b45;
+    --surface-warn: #0b1424;
+
+    --sky-1: #17293f;
+    --sky-2: #101c31;
+    --sky-3: #0e1a2d;
+
+    --line: rgba(148, 163, 184, .14);
+    --line-strong: rgba(148, 163, 184, .28);
+    --line-road: rgba(148, 163, 184, .34);
+    --line-warn: rgba(251, 191, 36, .28);
+    --lane-mark: rgba(148, 163, 184, .28);
+
+    --txt: rgba(255, 255, 255, .9);
+    --txt-soft: #cbd5e1;
+    --muted: #94a3b8;
+    --muted-dim: #8b9bb4;
+    --muted-faint: #7e8ea8;
+    --on-accent: #041022;
+
+    --accent: #60a5fa;
+    --accent-soft: #93c5fd;
+    --accent-2: #38bdf8;
+    --amber: #fbbf24;
+
+    --track: rgba(148, 163, 184, .2);
+}
+
+:root[data-tema="claro"] {
+    color-scheme: light;
+
+    --bg: #f3f6fb;
+    --surface: #ffffff;
+    --surface-raised: #eef2f8;
+    --surface-hover: #e3e9f2;
+    --surface-warn: #fdf6ec;
+
+    --sky-1: #bfe0fb;
+    --sky-2: #dcedfb;
+    --sky-3: #eef6fd;
+
+    --line: rgba(15, 23, 42, .10);
+    --line-strong: rgba(15, 23, 42, .18);
+    --line-road: rgba(15, 23, 42, .30);
+    --line-warn: rgba(180, 83, 9, .35);
+    --lane-mark: rgba(203, 213, 225, .42);
+
+    --txt: #0f172a;
+    --txt-soft: #1e293b;
+    --muted: #46566b;
+    --muted-dim: #55677d;
+    --muted-faint: #5c6b81;
+    --on-accent: #f8fbff;
+
+    --accent: #1d4ed8;
+    --accent-soft: #2563eb;
+    --accent-2: #0369a1;
+    --amber: #92400e;
+
+    --track: rgba(71, 85, 105, .3);
 }
 
 html {
@@ -143,6 +274,7 @@ body {
 }
 
 .z-card--warn {
+    background: var(--surface-warn);
     border-color: var(--line-warn);
 }
 
@@ -255,6 +387,68 @@ body {
     height: 3.5rem;
 }
 
+/* ---------- interruptor de tema ---------- */
+
+.z-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 100px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line-strong);
+    color: var(--txt);
+    transition: background-color .25s, border-color .25s;
+}
+
+.z-theme-toggle:hover {
+    background: var(--surface-hover);
+}
+
+.z-theme-toggle__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+/* Por defecto (oscuro): luna visible, sol oculto. */
+.z-theme-toggle__icon--sun {
+    display: none;
+}
+
+.z-theme-toggle__icon--moon {
+    display: block;
+}
+
+/* Sistema en claro, sin elección manual: se invierte. */
+@media (prefers-color-scheme: light) {
+    .z-theme-toggle__icon--sun {
+        display: block;
+    }
+
+    .z-theme-toggle__icon--moon {
+        display: none;
+    }
+}
+
+/* Elección manual: gana siempre, en los dos sentidos. */
+:root[data-tema="oscuro"] .z-theme-toggle__icon--sun {
+    display: none;
+}
+
+:root[data-tema="oscuro"] .z-theme-toggle__icon--moon {
+    display: block;
+}
+
+:root[data-tema="claro"] .z-theme-toggle__icon--sun {
+    display: block;
+}
+
+:root[data-tema="claro"] .z-theme-toggle__icon--moon {
+    display: none;
+}
+
 /* ---------- reveal al hacer scroll ---------- */
 
 .z-reveal {
@@ -319,7 +513,7 @@ body {
     left: 0;
     height: 2px;
     width: 200%;
-    background: repeating-linear-gradient(90deg, var(--line-strong) 0 34px, transparent 34px 74px);
+    background: repeating-linear-gradient(90deg, var(--lane-mark) 0 34px, transparent 34px 74px);
     animation: z-lane 1.6s linear infinite;
 }
 
@@ -466,7 +660,7 @@ body {
     left: 0;
     height: 2px;
     width: 200%;
-    background: repeating-linear-gradient(90deg, var(--line-strong) 0 26px, transparent 26px 58px);
+    background: repeating-linear-gradient(90deg, var(--lane-mark) 0 26px, transparent 26px 58px);
 }
 
 .z-scene.is-driving .z-scene__lane {

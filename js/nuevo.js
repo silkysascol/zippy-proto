@@ -277,3 +277,48 @@
     window.addEventListener('scroll', revealFab, { passive: true });
     revealFab();
 })();
+
+/* ---------- interruptor de tema: claro / oscuro / según el sistema ----------
+   Sin elección guardada manda prefers-color-scheme (ya resuelto por CSS,
+   incluso en vivo si el sistema cambia). Si el usuario toca el botón, su
+   elección se guarda en localStorage y gana siempre, en los dos sentidos. */
+
+(function () {
+    'use strict';
+
+    var STORAGE_KEY = 'zippy-tema';
+    var root = document.documentElement;
+    var btn = document.getElementById('temaToggle');
+    if (!btn) return;
+
+    var mql = window.matchMedia('(prefers-color-scheme: light)');
+    var metaColor = document.querySelector('meta[name="theme-color"]');
+
+    function temaActual() {
+        var explicito = root.getAttribute('data-tema');
+        if (explicito === 'claro' || explicito === 'oscuro') return explicito;
+        return mql.matches ? 'claro' : 'oscuro';
+    }
+
+    function pintar() {
+        var esClaro = temaActual() === 'claro';
+        if (metaColor) metaColor.setAttribute('content', esClaro ? '#f3f6fb' : '#020617');
+        btn.setAttribute('aria-label', esClaro
+            ? 'Modo claro activo. Cambiar a modo oscuro.'
+            : 'Modo oscuro activo. Cambiar a modo claro.');
+    }
+
+    btn.addEventListener('click', function () {
+        var siguiente = temaActual() === 'claro' ? 'oscuro' : 'claro';
+        root.setAttribute('data-tema', siguiente);
+        try { localStorage.setItem(STORAGE_KEY, siguiente); } catch (e) {}
+        pintar();
+    });
+
+    // Sin elección guardada, si el sistema cambia en vivo lo seguimos.
+    mql.addEventListener('change', function () {
+        if (!root.hasAttribute('data-tema')) pintar();
+    });
+
+    pintar();
+})();
