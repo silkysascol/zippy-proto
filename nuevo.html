@@ -57,7 +57,8 @@
 
     <!-- Sprite: el carro se dibuja una vez y se reutiliza con <use>. -->
     <svg class="z-sprite" aria-hidden="true" focusable="false">
-        <symbol id="zcar" viewBox="0 0 140 56">
+        <symbol id="zcar" viewBox="0 0 140 56" overflow="visible">
+            <path class="z-beam" d="M134 30.5 L166 22 L166 46 L134 35.5 Z" fill="url(#zbeam)" />
             <path fill="currentColor"
                 d="M9 44 L9 33 C9 29 11 26 15 25 L34 21 L50 10 C53 7.5 57 6 61 6 L86 6 C90.5 6 94.5 8 97.5 11.5 L108 24 L124 27 C130 28.2 133.5 32 133.5 37.5 L133.5 42 C133.5 43.2 132.6 44 131.4 44 Z" />
             <path fill="var(--car-glass)" d="M52 11.5 L66 10.5 L66 21 L41 21 Z" />
@@ -70,7 +71,8 @@
             <circle cx="108" cy="44" r="3.4" fill="var(--car-hub)" />
         </symbol>
 
-        <symbol id="zsuv" viewBox="0 0 140 56">
+        <symbol id="zsuv" viewBox="0 0 140 56" overflow="visible">
+            <path class="z-beam" d="M134 29.5 L166 21 L166 45 L134 34.5 Z" fill="url(#zbeam)" />
             <path fill="currentColor"
                 d="M9 44 L9 28 C9 26 10 24.6 12 24.2 L14.5 23.8 L16.5 12 C17.2 8 20 6 24 6 L100 6 C104 6 107 7.6 109.2 11 L116.5 23.8 L126 25.8 C131 26.9 134 30.4 134 35.4 L134 42 C134 43.2 133.2 44 132 44 Z" />
             <path fill="var(--car-glass)" d="M23 12 L56 11.2 L56 23 L19.5 23 Z" />
@@ -83,7 +85,8 @@
             <circle cx="106" cy="43.5" r="3.6" fill="var(--car-hub)" />
         </symbol>
 
-        <symbol id="zpick" viewBox="0 0 140 56">
+        <symbol id="zpick" viewBox="0 0 140 56" overflow="visible">
+            <path class="z-beam" d="M134 29.5 L166 21 L166 45 L134 34.5 Z" fill="url(#zbeam)" />
             <path fill="currentColor"
                 d="M9 44 L9 28 C9 26.4 10 25.4 11.6 25.4 L58 25.4 L62 12 C63 9 66 7.4 69.5 7.4 L92 7.4 C96 7.4 99.2 9 101 12.2 L108.5 24 L126 25.8 C131 26.9 134 30.4 134 35.4 L134 42 C134 43.2 133.2 44 132 44 Z" />
             <path fill="var(--car-glass)" d="M67 13 L78 12.8 L78 24 L66.5 24 Z" />
@@ -96,7 +99,8 @@
             <circle cx="110" cy="43.5" r="3.6" fill="var(--car-hub)" />
         </symbol>
 
-        <symbol id="zsport" viewBox="0 0 140 56">
+        <symbol id="zsport" viewBox="0 0 140 56" overflow="visible">
+            <path class="z-beam" d="M134 32 L166 24 L166 48 L134 37.5 Z" fill="url(#zbeam)" />
             <path fill="currentColor"
                 d="M8 44 L8 34 C8 30 10.2 27.6 14 26.6 L34 22 L54 15.4 C57 14.2 60.4 13.4 64 13.4 L82 13.4 C86.2 13.4 90 14.5 93 16.8 L112 27 L126 29 C131 30 134 32.6 134 36.6 L134 42 C134 43.2 133.2 44 132 44 Z" />
             <path fill="var(--car-glass)" d="M52 26 L64 15.4 L76 14.8 L76 26 Z" />
@@ -109,7 +113,43 @@
             <circle cx="108" cy="43.5" r="3.6" fill="var(--car-hub)" />
         </symbol>
 
-        <symbol id="silkymark" viewBox="0 0 736 1024">
+        <defs>
+            <filter id="zfoam" x="-25%" y="-25%" width="150%" height="150%">
+                <feGaussianBlur stdDeviation="3.2" />
+            </filter>
+
+            <!-- Haz del faro: opaco en la boca y disuelto en la punta. El color
+                 sale de --beam, que vale transparent en tema claro, así que el
+                 haz se apaga solo por la misma cascada que las luces. -->
+            <linearGradient id="zbeam" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="var(--beam)" stop-opacity=".42" />
+                <stop offset=".55" stop-color="var(--beam)" stop-opacity=".12" />
+                <stop offset="1" stop-color="var(--beam)" stop-opacity="0" />
+            </linearGradient>
+
+            <!-- Destello del detailing: núcleo estrecho y muy claro, flancos que se
+                 disuelven. Ninguna parada llega a opacidad 1, para que el brillo
+                 pase por encima del color de la carrocería sin borrarlo. -->
+            <linearGradient id="zshine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="var(--shine)" stop-opacity="0" />
+                <stop offset=".34" stop-color="var(--shine)" stop-opacity=".26" />
+                <stop offset=".47" stop-color="var(--shine-core)" stop-opacity=".82" />
+                <stop offset=".53" stop-color="var(--shine-core)" stop-opacity=".82" />
+                <stop offset=".66" stop-color="var(--shine)" stop-opacity=".26" />
+                <stop offset="1" stop-color="var(--shine)" stop-opacity="0" />
+            </linearGradient>
+
+            <!-- Silueta de la carrocería de #zsuv, ya colocada en las coordenadas
+                 de la tarjeta (translate 34,39.1 y escala 0.6571, que es como la
+                 sitúa el <use>). El brillo del detailing se recorta con esto para
+                 que no se salga del carro. -->
+            <clipPath id="zbodysuv" clipPathUnits="userSpaceOnUse">
+                <path transform="translate(34 39.1) scale(0.6571)"
+                    d="M9 44 L9 28 C9 26 10 24.6 12 24.2 L14.5 23.8 L16.5 12 C17.2 8 20 6 24 6 L100 6 C104 6 107 7.6 109.2 11 L116.5 23.8 L126 25.8 C131 26.9 134 30.4 134 35.4 L134 42 C134 43.2 133.2 44 132 44 Z" />
+            </clipPath>
+        </defs>
+
+        <symbol id="silkymark" viewBox="160 290 423 441">
             <path fill="currentColor" d="M324.696777,721.902344 C284.752991,733.226379 247.405563,728.561707 213.115921,705.433289 C188.045975,688.523499 172.553391,664.544983 164.521866,635.579407 C164.309738,634.814331 163.835434,634.009888 164.600113,633.212158 C166.356903,632.846863 166.727753,634.408203 167.478043,635.377502 C185.753036,658.985718 209.226959,673.979797 239.184906,677.314697 C264.471069,680.129517 287.781219,674.006836 308.790283,659.510254 C341.932983,636.641296 353.006012,604.122620 348.938477,565.554932 C345.694855,534.799194 339.617767,504.424774 335.263367,473.812653 C332.852051,456.861023 330.214386,439.869965 331.695343,422.661743 C335.983246,372.836426 355.739532,332.221527 401.589600,307.792084 C417.658997,299.230103 435.152161,295.346710 453.413147,294.514252 C475.463257,293.509033 496.667511,296.895447 516.422180,306.726501 C544.691406,320.795044 564.002563,343.127136 574.765930,372.819244 C575.188477,373.984894 576.079590,375.194977 575.028809,376.597534 C572.908386,376.281036 572.315430,374.303711 571.208496,372.985657 C557.445923,356.597595 540.698547,344.581909 519.777039,339.409882 C485.785797,331.006836 456.161804,340.024231 431.014557,363.753693 C412.988892,380.763031 405.136444,402.543121 404.233215,426.933289 C403.440887,448.329895 407.106842,469.350983 410.214264,490.417236 C413.950226,515.744324 419.003662,540.927307 420.733765,566.489624 C423.425140,606.255066 417.007996,643.970215 391.742767,676.370789 C374.452606,698.544006 351.931305,713.438477 324.696777,721.902344 z" />
             <path fill="currentColor" d="M191.640198,645.389038 C162.901978,618.523743 156.617401,578.767029 175.799469,543.678711 C193.655472,511.016052 221.988678,491.558502 256.917877,480.726807 C265.066833,478.199829 273.414307,476.164551 281.864227,475.906586 C296.255768,475.467255 312.695435,483.377075 318.785980,501.928741 C323.771362,517.114136 317.191437,534.807983 303.520660,543.333740 C297.470276,547.107117 290.741882,548.783691 283.895111,550.374207 C268.418976,553.969604 255.408890,561.451721 246.690613,575.225891 C227.434967,605.648132 246.252762,645.180542 281.971863,649.837280 C289.139465,650.771729 296.123718,650.083862 303.381195,649.964966 C291.069885,658.708801 277.538574,664.454834 262.600983,666.270691 C236.171829,669.483643 212.366196,663.138367 191.640198,645.389038 z" />
             <path fill="currentColor" d="M486.181213,532.331787 C476.881165,534.776611 467.982361,536.590942 458.702179,534.431274 C442.189880,530.588501 430.914886,517.930969 429.762573,501.659576 C428.671997,486.260529 438.145142,471.725006 453.523376,465.943817 C458.791473,463.963379 464.461823,463.077545 469.896393,461.511169 C490.229858,455.650482 503.867340,443.159668 507.080627,421.648956 C510.700836,397.414062 495.248230,373.548126 472.326630,367.112244 C463.783417,364.713470 455.221375,364.868988 446.624573,366.752808 C445.518616,366.995178 444.426819,367.618103 443.241119,366.997772 C442.461365,365.716797 443.506592,365.205963 444.275177,364.662567 C466.463623,348.975494 490.729034,342.631989 517.570374,348.931610 C549.813416,356.499084 575.881775,387.501648 578.415588,420.355164 C581.240906,456.988495 565.305420,484.655762 537.572510,506.641907 C522.403442,518.667725 505.443237,527.422058 486.181213,532.331787 z" />
@@ -129,23 +169,18 @@
                 <span class="text-lg font-semibold tracking-tight">Zippy</span>
             </a>
             <div class="flex items-center gap-2 md:gap-3">
+                <a href="https://www.silkyapp.co/descargar" target="_blank" rel="noopener noreferrer"
+                    class="z-btn z-btn--silky z-silky-btn z-silky-btn--header" id="silkyHeader" inert>
+                    <svg class="z-silky-icon" viewBox="0 0 423 441" aria-hidden="true"><use href="#silkymark" /></svg>
+                    <span class="z-btn__label"><span class="hidden sm:inline">Agendar por&nbsp;</span>Silky</span>
+                    <span class="z-ripple" aria-hidden="true"></span>
+                </a>
                 <button type="button" class="z-theme-toggle" id="temaToggle">
                     <i data-lucide="sun" class="z-theme-toggle__icon z-theme-toggle__icon--sun"
                         aria-hidden="true"></i>
                     <i data-lucide="moon" class="z-theme-toggle__icon z-theme-toggle__icon--moon"
                         aria-hidden="true"></i>
                 </button>
-                <!-- Pendiente: reemplazar #agendar-silky por la URL real de agendamiento. -->
-                <a href="#agendar-silky" class="z-btn z-btn--ghost z-btn--sm z-silky-btn"
-                    aria-label="Agendar por Silky">
-                    <svg class="z-silky-icon" viewBox="0 0 736 1024" aria-hidden="true"><use href="#silkymark" /></svg>
-                    <span class="hidden sm:inline">Agendar por Silky</span>
-                </a>
-                <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
-                    target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary !py-2.5 !px-5 !text-sm">
-                    <i data-lucide="message-circle" class="w-4 h-4" stroke-width="2"></i>
-                    WhatsApp
-                </a>
             </div>
         </div>
     </header>
@@ -162,15 +197,18 @@
                 <p class="z-lead mt-6 max-w-xl z-reveal" style="transition-delay:.16s">
                     Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos.
                 </p>
-                <div class="mt-9 flex flex-col sm:flex-row gap-3 z-reveal" style="transition-delay:.24s">
+                <div class="mt-9 flex flex-col sm:flex-row gap-3 sm:max-w-xl z-reveal"
+                    style="transition-delay:.24s">
                     <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
-                        target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary">
+                        target="_blank" rel="noopener noreferrer" class="z-btn sm:flex-1 z-btn--ghost">
                         <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
                         Pedir un traslado
                     </a>
-                    <a href="#recorrido" class="z-btn z-btn--ghost">
-                        Ver el recorrido
-                        <i data-lucide="arrow-down" class="w-4 h-4" stroke-width="2"></i>
+                    <a href="https://www.silkyapp.co/descargar" target="_blank" rel="noopener noreferrer"
+                        class="z-btn sm:flex-1 z-btn--silky" id="silkyHero">
+                        <svg class="z-silky-icon" viewBox="0 0 423 441" aria-hidden="true"><use href="#silkymark" /></svg>
+                        <span class="z-btn__label">Agendar por Silky</span>
+                        <span class="z-ripple" aria-hidden="true"></span>
                     </a>
                 </div>
             </div>
@@ -218,6 +256,7 @@
                         <div class="z-scene__rail" id="rail">
                             <!-- Carro del recorrido: inline para poder girar las ruedas por CSS. -->
                             <svg class="z-scene__car z-car" id="journeyCar" viewBox="0 0 140 56" aria-hidden="true">
+                                <path class="z-beam" d="M134 30.5 L166 22 L166 46 L134 35.5 Z" fill="url(#zbeam)" />
                                 <path fill="currentColor"
                                     d="M9 44 L9 33 C9 29 11 26 15 25 L34 21 L50 10 C53 7.5 57 6 61 6 L86 6 C90.5 6 94.5 8 97.5 11.5 L108 24 L124 27 C130 28.2 133.5 32 133.5 37.5 L133.5 42 C133.5 43.2 132.6 44 131.4 44 Z" />
                                 <path class="car-glass" d="M52 11.5 L66 10.5 L66 21 L41 21 Z" />
@@ -320,7 +359,7 @@
 
                 <!-- Los datos de la red (aliados, especialidades, zonas) entran aquí cuando lleguen. -->
                 <ul class="z-svc-grid mt-10">
-                    <li class="z-svc z-reveal" data-svc>
+                    <li class="z-svc z-svc--mec z-reveal" data-svc>
                         <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
                             <rect class="z-svc__stage" width="160" height="92" rx="12" />
                             <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
@@ -333,64 +372,73 @@
                         </svg>
                         <h3 class="z-svc__name">Mecánica</h3>
                     </li>
-                    <li class="z-svc z-reveal" data-svc>
-                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
-                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
-                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
-                            <use href="#zsport" x="34" y="39" width="92" height="37" />
-                            <g class="z-svc__gun">
-                                <rect class="z-svc__gun-body" x="14" y="12" width="16" height="7" rx="3.5" />
-                                <rect class="z-svc__gun-body" x="20" y="19" width="5" height="6" rx="2" />
-                                <circle class="z-svc__mist" cx="19" cy="33" r="2.2" />
-                                <circle class="z-svc__mist" cx="26" cy="37" r="1.8" />
-                                <circle class="z-svc__mist" cx="22" cy="41.5" r="1.4" />
-                            </g>
-                        </svg>
-                        <h3 class="z-svc__name">Latonería y pintura</h3>
-                    </li>
-                    <li class="z-svc z-reveal" data-svc>
-                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
-                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
-                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
-                            <use href="#zsuv" x="34" y="39" width="92" height="37" />
-                            <g class="z-svc__foam">
-                                <circle cx="40" cy="72" r="8" />
-                                <circle cx="58" cy="69" r="9.5" />
-                                <circle cx="78" cy="70" r="9" />
-                                <circle cx="98" cy="69" r="9.5" />
-                                <circle cx="116" cy="72" r="8" />
-                            </g>
-                            <circle class="z-svc__bubble" style="--b:0s" cx="48" cy="52" r="4" />
-                            <circle class="z-svc__bubble" style="--b:.7s" cx="76" cy="48" r="3" />
-                            <circle class="z-svc__bubble" style="--b:1.4s" cx="104" cy="52" r="3.5" />
-                        </svg>
-                        <h3 class="z-svc__name">Lavado</h3>
-                    </li>
-                    <li class="z-svc z-reveal" data-svc>
+                    <li class="z-svc z-svc--maint z-reveal" data-svc>
                         <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
                             <rect class="z-svc__stage" width="160" height="92" rx="12" />
                             <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
                             <use href="#zcar" x="34" y="39" width="92" height="37" />
-                            <g transform="skewX(-16)">
-                                <rect class="z-svc__shine" x="58" y="34" width="11" height="46" rx="5.5" />
+                            <g transform="translate(110 40)">
+                                <g class="z-svc__wrench">
+                                    <path
+                                        d="M-3 11 L-3 -4 L-6.5 -7.5 L-6.5 -13 L-2.6 -13 L-2.6 -9 L2.6 -9 L2.6 -13 L6.5 -13 L6.5 -7.5 L3 -4 L3 11 A3 3 0 0 1 -3 11 Z" />
+                                </g>
                             </g>
                         </svg>
-                        <h3 class="z-svc__name">Detailing</h3>
+                        <h3 class="z-svc__name">Mantenimiento</h3>
                     </li>
-                    <li class="z-svc z-reveal" data-svc>
-                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
-                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
-                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
-                            <use href="#zpick" x="34" y="39" width="92" height="37" />
-                            <rect class="z-svc__part" x="68" y="40" width="30" height="4.5" rx="2.25" />
-                        </svg>
-                        <h3 class="z-svc__name">Lujos y accesorios</h3>
-                    </li>
-                    <li class="z-svc z-reveal" data-svc>
+                    <li class="z-svc z-svc--paint z-reveal" data-svc>
                         <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
                             <rect class="z-svc__stage" width="160" height="92" rx="12" />
                             <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
                             <use href="#zsport" x="34" y="39" width="92" height="37" />
+                        </svg>
+                        <h3 class="z-svc__name">Latonería y pintura</h3>
+                    </li>
+                    <li class="z-svc z-svc--wash z-reveal" data-svc>
+                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
+                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
+                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
+                            <use href="#zsuv" x="34" y="39" width="92" height="37" />
+                            <g class="z-svc__foam" filter="url(#zfoam)">
+                                <circle cx="44" cy="66" r="13" />
+                                <circle cx="60" cy="60" r="15" />
+                                <circle cx="80" cy="58" r="16" />
+                                <circle cx="100" cy="61" r="14.5" />
+                                <circle cx="116" cy="67" r="12" />
+                                <circle cx="70" cy="70" r="14" />
+                                <circle cx="92" cy="71" r="13" />
+                            </g>
+                            <g clip-path="url(#zbodysuv)">
+                                <g transform="skewX(-16)">
+                                    <rect class="z-svc__shine" x="64" y="26" width="26" height="60" fill="url(#zshine)" />
+                                </g>
+                            </g>
+                        </svg>
+                        <h3 class="z-svc__name">Lavado y detailing</h3>
+                    </li>
+                    <li class="z-svc z-svc--rim z-reveal" data-svc>
+                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
+                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
+                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
+                            <use href="#zpick" x="34" y="39" width="92" height="37" />
+                            <g class="z-svc__rim">
+                                <circle class="z-svc__rim-tyre" cx="59" cy="65.2" r="8.8" />
+                                <circle class="z-svc__rim-hub" cx="59" cy="65.2" r="5" />
+                                <circle class="z-svc__rim-bolt" cx="59" cy="65.2" r="1.6" />
+                            </g>
+                            <g class="z-svc__rim" style="--r:.18s">
+                                <circle class="z-svc__rim-tyre" cx="106.3" cy="65.2" r="8.8" />
+                                <circle class="z-svc__rim-hub" cx="106.3" cy="65.2" r="5" />
+                                <circle class="z-svc__rim-bolt" cx="106.3" cy="65.2" r="1.6" />
+                            </g>
+                        </svg>
+                        <h3 class="z-svc__name">Lujos y accesorios</h3>
+                    </li>
+                    <li class="z-svc z-svc--diag z-reveal" data-svc>
+                        <svg class="z-svc__art" viewBox="0 0 160 92" aria-hidden="true">
+                            <rect class="z-svc__stage" width="160" height="92" rx="12" />
+                            <rect class="z-svc__ground" x="10" y="72" width="140" height="2" rx="1" />
+                            <use href="#zcar" x="34" y="39" width="92" height="37" />
                             <rect class="z-svc__scan" x="22" y="36" width="116" height="3" rx="1.5" />
                         </svg>
                         <h3 class="z-svc__name">Diagnóstico</h3>
@@ -548,14 +596,15 @@
             <div class="max-w-3xl mx-auto z-reveal">
                 <h2 class="z-h2">Dinos dónde está el carro y a qué taller va.</h2>
                 <p class="z-lead mt-5 max-w-lg mx-auto">Te cotizamos por WhatsApp.</p>
-                <div class="mt-9 flex flex-col sm:flex-row gap-3 sm:justify-center">
-                    <!-- Pendiente: reemplazar #agendar-silky por la URL real de agendamiento. -->
-                    <a href="#agendar-silky" class="z-btn z-btn--invert">
-                        <svg class="z-silky-icon" viewBox="0 0 736 1024" aria-hidden="true"><use href="#silkymark" /></svg>
-                        Agendar por Silky
+                <div class="mt-9 flex flex-col sm:flex-row gap-3 sm:max-w-xl sm:mx-auto">
+                    <a href="https://www.silkyapp.co/descargar" target="_blank" rel="noopener noreferrer"
+                        class="z-btn sm:flex-1 z-btn--silky">
+                        <svg class="z-silky-icon" viewBox="0 0 423 441" aria-hidden="true"><use href="#silkymark" /></svg>
+                        <span class="z-btn__label">Agendar por Silky</span>
+                        <span class="z-ripple" aria-hidden="true"></span>
                     </a>
                     <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
-                        target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary">
+                        target="_blank" rel="noopener noreferrer" class="z-btn sm:flex-1 z-btn--primary">
                         <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
                         Escribir a Zippy
                     </a>

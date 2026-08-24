@@ -377,6 +377,58 @@
     marca.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 })();
 
+/* ---------- onda al tocar el botón de Silky ----------
+   pointerdown cubre dedo y ratón con un solo escuchador. Se reutiliza el
+   mismo <span> en cada toque, reiniciando la animación, en vez de ir
+   añadiendo nodos. Con prefers-reduced-motion no se engancha nada: el CSS
+   deja el cambio de tono al pulsar y la onda oculta. */
+
+(function () {
+    'use strict';
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll('.z-btn--silky').forEach(function (boton) {
+        var onda = boton.querySelector('.z-ripple');
+        if (!onda) return;
+
+        boton.addEventListener('pointerdown', function (e) {
+            var caja = boton.getBoundingClientRect();
+            onda.style.setProperty('--rx', (e.clientX - caja.left) + 'px');
+            onda.style.setProperty('--ry', (e.clientY - caja.top) + 'px');
+            onda.classList.remove('is-on');
+            void onda.offsetWidth;   // fuerza el reinicio de la animación
+            onda.classList.add('is-on');
+        });
+    });
+})();
+
+/* ---------- el botón de Silky del header ----------
+   Depende del botón de Silky del hero, así que se observa ese elemento en vez
+   de escuchar scroll y comparar pixeles en cada cuadro. Mientras el del hero
+   se vea, el del header está oculto e inerte; cuando sale de pantalla, entra. */
+
+(function () {
+    'use strict';
+
+    var hero = document.getElementById('silkyHero');
+    var header = document.getElementById('silkyHeader');
+    if (!hero || !header) return;
+
+    function mostrar(si) {
+        header.classList.toggle('is-in', si);
+        if (si) header.removeAttribute('inert');
+        else header.setAttribute('inert', '');
+    }
+
+    // Sin IntersectionObserver es preferible que se vea siempre a que no se vea nunca.
+    if (!('IntersectionObserver' in window)) { mostrar(true); return; }
+
+    new IntersectionObserver(function (entries) {
+        mostrar(!entries[0].isIntersecting);
+    }, { threshold: 0 }).observe(hero);
+})();
+
 /* ---------- interruptor de tema: claro / oscuro / según el sistema ----------
    Sin elección guardada manda prefers-color-scheme (ya resuelto por CSS,
    incluso en vivo si el sistema cambia). Si el usuario toca el botón, su

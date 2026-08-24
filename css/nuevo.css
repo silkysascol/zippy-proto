@@ -51,6 +51,7 @@
     --line-top: rgba(148, 163, 184, .38);
     --line-warn: rgba(251, 191, 36, .28);
     --lane-mark: rgba(148, 163, 184, .28);
+    --btn-outline: #55657e;
     --shade-inset: rgba(0, 0, 0, .9);
 
     /* texto — muted-dim/faint se aclararon frente al original (no pasaban
@@ -83,6 +84,30 @@
        estado de la interfaz: los avisos de la página siguen en ámbar. */
     --lamp-front: #fff3d1;
     --lamp-rear: #ef4444;
+    --beam: #fff3d1;
+
+    /* Azul de marca de Silky, el mismo que usa la app. No cambia con el tema:
+       una marca no se repinta de noche. La etiqueta va en blanco por decisión
+       del fundador: blanco sobre este azul da 3,52:1, que solo cumple como
+       TEXTO GRANDE, así que .z-btn--silky fuerza 19 px en peso 700 (el umbral
+       es 18,66 px en negrita). Si alguien baja ese tamaño, el botón deja de
+       cumplir. El hover oscurece en vez de aclarar: aclararlo bajaría el
+       contraste a 2,77:1. */
+    --silky: #0092CA;
+    --silky-hover: #007CAC;
+    --on-silky: #ffffff;
+
+    /* tonos de repintado de la tarjeta de latonería. Estables entre temas
+       igual que --traffic-*: el escenario es asfalto en claro y en oscuro.
+       Ninguno choca con el azul de marca ni con el ámbar de avisos. */
+    /* destello del detailing: mismo criterio estable, la tarjeta es asfalto
+       en los dos temas */
+    --shine: #cfeaff;
+    --shine-core: #ffffff;
+
+    --paint-1: #e2e8f0;
+    --paint-2: #b91c1c;
+    --paint-3: #10b981;
 
     /* tráfico del hero — silueta de carros sobre el asfalto, que no
        cambia de tema; se dejan igual a propósito en los dos temas */
@@ -130,6 +155,7 @@
         --line-road: rgba(15, 23, 42, .30);
         --line-warn: rgba(180, 83, 9, .35);
         --lane-mark: rgba(203, 213, 225, .42);
+        --btn-outline: #78869a;
 
         --txt: #0f172a;
         --txt-soft: #1e293b;
@@ -150,6 +176,15 @@
 
         --lamp-front: transparent;
         --lamp-rear: transparent;
+        --beam: transparent;
+
+        /* Azul de marca de Silky, el mismo que usa la app. No cambia con el tema:
+           una marca no se repinta de noche. La etiqueta va en tinta oscura y no
+           en blanco porque blanco sobre este azul da 3,52:1 y no pasa 4.5:1;
+           con la tinta oscura sube a 5,4:1 con texto de tamaño normal. */
+        --silky: #0092CA;
+        --silky-hover: #007CAC;
+        --on-silky: #ffffff;
     }
 }
 
@@ -173,6 +208,7 @@
     --line-road: rgba(148, 163, 184, .34);
     --line-warn: rgba(251, 191, 36, .28);
     --lane-mark: rgba(148, 163, 184, .28);
+    --btn-outline: #55657e;
 
     --txt: rgba(255, 255, 255, .9);
     --txt-soft: #cbd5e1;
@@ -190,6 +226,18 @@
 
     --lamp-front: #fff3d1;
     --lamp-rear: #ef4444;
+    --beam: #fff3d1;
+
+    /* Azul de marca de Silky, el mismo que usa la app. No cambia con el tema:
+       una marca no se repinta de noche. La etiqueta va en blanco por decisión
+       del fundador: blanco sobre este azul da 3,52:1, que solo cumple como
+       TEXTO GRANDE, así que .z-btn--silky fuerza 19 px en peso 700 (el umbral
+       es 18,66 px en negrita). Si alguien baja ese tamaño, el botón deja de
+       cumplir. El hover oscurece en vez de aclarar: aclararlo bajaría el
+       contraste a 2,77:1. */
+    --silky: #0092CA;
+    --silky-hover: #007CAC;
+    --on-silky: #ffffff;
 
     --highway-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
     --highway-fade: transparent;
@@ -213,6 +261,7 @@
     --line-road: rgba(15, 23, 42, .30);
     --line-warn: rgba(180, 83, 9, .35);
     --lane-mark: rgba(203, 213, 225, .42);
+    --btn-outline: #78869a;
 
     --txt: #0f172a;
     --txt-soft: #1e293b;
@@ -230,6 +279,18 @@
 
     --lamp-front: transparent;
     --lamp-rear: transparent;
+    --beam: transparent;
+
+    /* Azul de marca de Silky, el mismo que usa la app. No cambia con el tema:
+       una marca no se repinta de noche. La etiqueta va en blanco por decisión
+       del fundador: blanco sobre este azul da 3,52:1, que solo cumple como
+       TEXTO GRANDE, así que .z-btn--silky fuerza 19 px en peso 700 (el umbral
+       es 18,66 px en negrita). Si alguien baja ese tamaño, el botón deja de
+       cumplir. El hover oscurece en vez de aclarar: aclararlo bajaría el
+       contraste a 2,77:1. */
+    --silky: #0092CA;
+    --silky-hover: #007CAC;
+    --on-silky: #ffffff;
 
     --highway-mask: none;
     --highway-fade: var(--road);
@@ -318,15 +379,22 @@ body {
 }
 
 /* Botones sólidos, nunca fantasma. */
+/* Todas las variantes comparten caja: mismo alto, mismo tipo y un borde de
+   1 px aunque sea transparente, para que pasar una a solo borde no la haga
+   1 px más alta que la otra. El min-height evita que un icono más grande
+   estire un botón y no el de al lado. */
 .z-btn {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: .6rem;
-    padding: .95rem 1.6rem;
+    min-height: 3.4rem;
+    padding: .8rem 1.6rem;
+    border: 1px solid transparent;
     border-radius: 100px;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 1.1875rem;
     line-height: 1;
     transition: transform .25s var(--ease), background-color .25s;
     text-align: center;
@@ -345,51 +413,129 @@ body {
     background: var(--accent-soft);
 }
 
+/* Botón de solo borde. El borde lleva token propio porque --line-strong es
+   para separar superficies y en claro se queda por debajo de 3:1 contra el
+   fondo, que es el mínimo para el contorno de un control. */
 .z-btn--ghost {
-    background: var(--surface-raised);
+    background: transparent;
     color: var(--txt);
-    border: 1px solid var(--line-strong);
+    border: 1px solid var(--btn-outline);
 }
 
 .z-btn--ghost:hover {
-    background: var(--surface-hover);
+    background: var(--surface-raised);
 }
 
-/* Segundo CTA de igual peso que el primario: sólido, sin transparencias. */
-.z-btn--invert {
-    background: var(--txt);
-    color: var(--bg);
+/* Segundo CTA de igual peso que el primario: mismo tamaño, igual de sólido,
+   distinto color. No es un botón de repuesto. */
+.z-btn--silky {
+    background: var(--silky);
+    color: var(--on-silky);
+    /* La onda se recorta al radio del botón y la etiqueta va por encima. */
+    position: relative;
+    overflow: hidden;
 }
 
-.z-btn--invert:hover {
-    background: var(--txt-soft);
+/* Al pulsar crece, no encoge: es la variante de marca. */
+.z-btn--silky:active {
+    transform: scale(1.03);
+}
+
+.z-btn--silky .z-btn__label,
+.z-btn--silky .z-silky-icon {
+    position: relative;
+    z-index: 1;
+}
+
+/* Un solo nodo por botón, reutilizado en cada toque. Nace donde cayó el dedo:
+   nuevo.js pasa la posición por --rx/--ry. Solo se anima transform y opacity. */
+.z-ripple {
+    position: absolute;
+    left: var(--rx, 50%);
+    top: var(--ry, 50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 0;
+}
+
+.z-ripple.is-on {
+    animation: z-ripple .58s ease-out;
+}
+
+@keyframes z-ripple {
+    from {
+        opacity: .42;
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(28);
+    }
+}
+
+.z-btn--silky:hover {
+    background: var(--silky-hover);
 }
 
 /* Logo de Silky: alto fijo, ancho por proporción, y sigue al tema por
    currentColor porque va inline como <symbol>, no como imagen. */
+/* El viewBox del símbolo se recortó a la caja óptica del dibujo (era
+   736x1024 con el trazo ocupando solo 415x433 en el centro), así que esta
+   altura es la del logo de verdad y no la de un marco medio vacío. */
 .z-silky-icon {
-    height: 1.15rem;
+    height: 1.45rem;
     width: auto;
     flex: none;
+    margin-right: .1rem;
 }
 
 /* A 375 px el header ya lleva interruptor de tema y botón de WhatsApp: aquí
    el de Silky queda como icono solo, con su aria-label. Desde sm, con texto. */
+/* En el header el botón va compacto; a 375 px la etiqueta se queda en
+   "Silky" porque con 19 px en negrita el texto largo no cabe junto al logo
+   y al interruptor de tema. */
 .z-silky-btn {
-    padding-left: .8rem;
-    padding-right: .8rem;
+    gap: .45rem;
+    min-height: 2.6rem;
+    padding: .45rem .95rem;
 }
 
-@media (min-width: 640px) {
-    .z-silky-btn {
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
-    }
+/* El del header no se ve al cargar: entra cuando el del hero sale de pantalla
+   (nuevo.js lo decide con un IntersectionObserver sobre el del hero).
+
+   Se oculta con visibility, no solo con opacity, por dos motivos: así deja de
+   ser enfocable con Tab y de existir para un lector de pantalla, y además
+   sigue ocupando su caja, con lo que el header nunca se recoloca al entrar o
+   salir el botón — el logo y el interruptor no se mueven ni un pixel.
+
+   El truco del retardo en `visibility` deja que la salida sea una transición
+   y no un corte: al aparecer cambia al instante, al irse espera a que termine
+   el desvanecido. */
+.z-silky-btn--header {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, -8px, 0);
+    transition: opacity .35s var(--ease), transform .35s var(--ease), visibility 0s linear .35s;
+}
+
+.z-silky-btn--header.is-in {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity .35s var(--ease), transform .35s var(--ease), visibility 0s;
 }
 
 .z-btn--sm {
-    padding: .65rem 1.25rem;
+    min-height: 2.5rem;
+    padding: .5rem 1.1rem;
     font-size: .875rem;
+    font-weight: 600;
 }
 
 /* Utilidades de tinta: el marcado nombra el papel, no el color. */
@@ -542,6 +688,11 @@ body {
     display: none;
 }
 
+/* El haz nunca se anima: un faro que parpadea parece una avería. */
+.z-beam {
+    pointer-events: none;
+}
+
 /* ---------- reveal al hacer scroll ---------- */
 
 .z-reveal {
@@ -644,6 +795,9 @@ body {
 
 .z-highway__car {
     position: absolute;
+    /* El haz del faro se dibuja fuera del viewBox 0 0 140 56; sin esto lo
+       corta el borde del SVG. La banda ya recorta con su overflow:hidden. */
+    overflow: visible;
     left: 0;
     width: var(--w);
     height: auto;
@@ -794,6 +948,8 @@ body {
 }
 
 .z-scene__car {
+    /* mismo motivo: el haz vive fuera del viewBox */
+    overflow: visible;
     width: clamp(84px, 22vw, 132px);
     transform: translate3d(var(--car-x, 0px), 0, 0) scaleX(var(--car-dir, 1));
     transition: transform 1.9s cubic-bezier(.55, .05, .3, 1);
@@ -874,34 +1030,46 @@ body {
 }
 
 /* ---------- la red: una tarjeta por tipo de taller ----------
-   Cada tarjeta reutiliza el mismo <symbol id="zcar"> del hero. El escenario
-   es asfalto (--road) y los efectos solo usan tokens que NO cambian con el
-   tema (--traffic-*, --car-*, --lane-mark), porque el asfalto se queda
+   Cada tarjeta reutiliza el mismo <symbol> del hero. El escenario es asfalto
+   (--road) y los efectos solo usan tokens que NO cambian con el tema
+   (--traffic-*, --paint-*, --car-*, --lane-mark), porque el asfalto se queda
    oscuro en claro y en oscuro.
 
    Las animaciones solo existen bajo .is-live, que nuevo.js pone al entrar la
    tarjeta en pantalla y quita al salir: nada se anima fuera de la vista, y
-   entran escalonadas para no arrancar las seis de golpe. */
+   entran escalonadas para no arrancar las cinco de golpe.
+
+   El estado de reposo de cada dibujo es el estado FINAL, no el inicial: el
+   carro con un color, la carrocería limpia y el rin grande ya puesto. Así
+   con prefers-reduced-motion la tarjeta sigue contando lo mismo sin moverse. */
 
 .z-svc-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: .75rem;
+    padding: 0;
 }
 
-@media (min-width: 768px) {
-    .z-svc-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-    }
-}
-
+/* Cinco tarjetas no llenan filas de 2 ni de 3: con flex centrado, la última
+   fila queda centrada en vez de dejar un hueco a un lado. */
 .z-svc {
+    flex: 0 1 calc(50% - .375rem);
     list-style: none;
     border: 1px solid var(--line);
     border-radius: 18px;
     padding: .6rem .6rem .9rem;
     background: var(--surface);
+}
+
+@media (min-width: 768px) {
+    .z-svc-grid {
+        gap: 1rem;
+    }
+
+    .z-svc {
+        flex-basis: calc(33.333% - .667rem);
+    }
 }
 
 .z-svc__art {
@@ -915,8 +1083,13 @@ body {
     color: var(--traffic-2);
 }
 
-.z-svc:nth-child(even) .z-svc__art {
+.z-svc--wash .z-svc__art,
+.z-svc--diag .z-svc__art {
     color: var(--traffic-4);
+}
+
+.z-svc--paint .z-svc__art {
+    color: var(--paint-1);
 }
 
 .z-svc__stage {
@@ -937,8 +1110,7 @@ body {
 
 /* --- mecánica: el carro sube en el elevador --- */
 
-.z-svc__lift-post,
-.z-svc__lift-arm {
+.z-svc__lift-post {
     fill: var(--traffic-3);
 }
 
@@ -967,136 +1139,178 @@ body {
     }
 }
 
-/* --- latonería y pintura: la pistola pasa soltando neblina --- */
+/* --- mantenimiento: la llave aprieta --- */
 
-.z-svc__gun-body {
-    fill: var(--traffic-3);
+.z-svc__wrench {
+    fill: var(--car-spoke);
+    transform-box: fill-box;
+    transform-origin: 50% 22%;
 }
 
-.z-svc__mist {
-    fill: var(--traffic-4);
-    opacity: .5;
+.z-svc.is-live .z-svc__wrench {
+    animation: z-svc-wrench 2.4s ease-in-out infinite;
 }
 
-.z-svc.is-live .z-svc__gun {
-    animation: z-svc-gun 3.8s linear infinite;
-}
-
-.z-svc.is-live .z-svc__mist {
-    animation: z-svc-mist 1.1s ease-out infinite;
-}
-
-@keyframes z-svc-gun {
-    from {
-        transform: translate3d(-6px, 0, 0);
-    }
-
-    to {
-        transform: translate3d(132px, 0, 0);
-    }
-}
-
-@keyframes z-svc-mist {
+@keyframes z-svc-wrench {
 
     0%,
     100% {
-        opacity: .18;
+        transform: rotate(-24deg);
     }
 
-    45% {
-        opacity: .85;
+    50% {
+        transform: rotate(12deg);
     }
 }
 
-/* --- lavado: espuma en la carrocería y burbujas subiendo --- */
+/* --- latonería y pintura: la carrocería cambia de color ---
+   El cuerpo del <symbol> se pinta con currentColor, así que basta animar
+   `color` en el SVG de la tarjeta. Es una sola propiedad en un solo
+   elemento pequeño; no toca layout. */
+
+.z-svc.is-live .z-svc__art {
+    animation: none;
+}
+
+.z-svc--paint.is-live .z-svc__art {
+    animation: z-svc-paint 7.5s ease-in-out infinite;
+}
+
+@keyframes z-svc-paint {
+
+    0%,
+    30% {
+        color: var(--paint-1);
+    }
+
+    36%,
+    63% {
+        color: var(--paint-2);
+    }
+
+    69%,
+    96% {
+        color: var(--paint-3);
+    }
+
+    100% {
+        color: var(--paint-1);
+    }
+}
+
+/* --- lavado y detailing: primero la espuma, después el brillo ---
+   Las dos animaciones comparten duración para no desfasarse. La espuma es
+   un grupo de círculos solapados con feGaussianBlur: se lee como una nube,
+   no como bolitas sueltas. */
 
 .z-svc__foam {
     fill: var(--car-spoke);
-    opacity: .3;
+    opacity: 0;
 }
 
-.z-svc__bubble {
-    fill: var(--car-spoke);
-    opacity: .5;
+.z-svc.is-live .z-svc__foam {
+    animation: z-svc-foam 6s ease-in-out infinite;
 }
 
-.z-svc.is-live .z-svc__bubble {
-    animation: z-svc-bubble 2.6s ease-out infinite;
-    animation-delay: var(--b, 0s);
-}
-
-@keyframes z-svc-bubble {
+@keyframes z-svc-foam {
     0% {
-        transform: translate3d(0, 6px, 0);
         opacity: 0;
+        transform: translate3d(0, 5px, 0);
     }
 
-    25% {
-        opacity: .75;
+    14%,
+    36% {
+        opacity: .85;
+        transform: translate3d(0, 0, 0);
     }
 
+    48%,
     100% {
-        transform: translate3d(0, -30px, 0);
         opacity: 0;
+        transform: translate3d(0, 0, 0);
     }
 }
 
-/* --- detailing: un brillo barre la carrocería --- */
-
+/* El brillo ya no es un relleno plano: lo pinta el degradado #zshine, con
+   un núcleo estrecho y muy claro y dos flancos que se disuelven. El núcleo
+   se queda por debajo de opacidad 1 a propósito, para que el destello pase
+   POR ENCIMA del color de la carrocería sin quemarlo. Va recortado a la
+   silueta con clip-path, así que no se sale del carro. */
 .z-svc__shine {
-    fill: var(--car-spoke);
-    opacity: .28;
+    opacity: 0;
 }
 
 .z-svc.is-live .z-svc__shine {
-    animation: z-svc-shine 3.2s ease-in-out infinite;
+    animation: z-svc-shine 6s ease-in-out infinite;
 }
 
 @keyframes z-svc-shine {
-    0% {
-        transform: translate3d(-26px, 0, 0);
+
+    0%,
+    50% {
+        transform: translate3d(-46px, 0, 0);
         opacity: 0;
     }
 
-    22%,
-    72% {
-        opacity: .55;
-    }
-
-    100% {
-        transform: translate3d(62px, 0, 0);
-        opacity: 0;
-    }
-}
-
-/* --- lujos y accesorios: la pieza baja y queda puesta --- */
-
-.z-svc__part {
-    fill: var(--car-lamp);
-}
-
-.z-svc.is-live .z-svc__part {
-    animation: z-svc-part 3.6s ease-out infinite;
-}
-
-@keyframes z-svc-part {
-    0% {
-        transform: translate3d(0, -18px, 0);
-        opacity: 0;
-    }
-
-    22% {
-        transform: translate3d(0, 0, 0);
+    57%,
+    93% {
         opacity: 1;
     }
 
-    90% {
-        transform: translate3d(0, 0, 0);
+    100% {
+        transform: translate3d(76px, 0, 0);
+        opacity: 0;
+    }
+}
+
+/* --- lujos y accesorios: entra un rin más grande ---
+   El rin del <symbol> no se puede tocar desde aquí (vive en el shadow tree
+   del <use>), así que el grande se dibuja encima y lo tapa por completo al
+   crecer. En reposo queda puesto, que es el estado que cuenta la historia. */
+
+.z-svc__rim {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 1;
+}
+
+.z-svc__rim-tyre {
+    fill: var(--car-tyre);
+}
+
+.z-svc__rim-hub {
+    fill: var(--car-spoke);
+}
+
+.z-svc__rim-bolt {
+    fill: var(--road);
+}
+
+.z-svc.is-live .z-svc__rim {
+    animation: z-svc-rim 4.2s ease-out infinite;
+    animation-delay: var(--r, 0s);
+}
+
+@keyframes z-svc-rim {
+    0% {
+        transform: scale(.5);
+        opacity: 0;
+    }
+
+    16% {
+        transform: scale(1.08);
         opacity: 1;
     }
 
-    99%,
+    24%,
+    86% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    96%,
     100% {
+        transform: scale(.5);
         opacity: 0;
     }
 }
@@ -1581,6 +1795,22 @@ input:focus-visible {
         transform: none;
     }
 
+    .z-ripple {
+        display: none;
+    }
+
+    .z-btn--silky:active {
+        transform: none;
+        background: var(--silky-hover);
+    }
+
+    /* Sigue apareciendo y desapareciendo, pero sin recorrido ni desvanecido. */
+    .z-silky-btn--header,
+    .z-silky-btn--header.is-in {
+        transition: none;
+        transform: none;
+    }
+
     .z-step__panel p,
     .z-faq__body,
     .z-wiz__card,
@@ -1591,12 +1821,15 @@ input:focus-visible {
     /* Las seis tarjetas de la red se congelan en su estado de reposo, que ya
        está dibujado para leerse sin movimiento: elevador abajo, espuma
        puesta, pistola a un lado, brillo tenue, pieza montada, línea visible. */
+    /* Las cinco tarjetas de la red se congelan en su estado de reposo, que ya
+       está dibujado para leerse sin movimiento: elevador abajo, carro con un
+       color, carrocería limpia y rin grande puesto. */
     .z-svc.is-live .z-svc__lift,
-    .z-svc.is-live .z-svc__gun,
-    .z-svc.is-live .z-svc__mist,
-    .z-svc.is-live .z-svc__bubble,
+    .z-svc.is-live .z-svc__wrench,
+    .z-svc--paint.is-live .z-svc__art,
+    .z-svc.is-live .z-svc__foam,
     .z-svc.is-live .z-svc__shine,
-    .z-svc.is-live .z-svc__part,
+    .z-svc.is-live .z-svc__rim,
     .z-svc.is-live .z-svc__scan {
         animation: none !important;
     }
