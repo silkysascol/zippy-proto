@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zippy | Términos y condiciones</title>
+
+    <!-- Mismo criterio que nuevo.html: el tema se fija antes de pintar. -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('zippy-tema');
+                if (t === 'claro' || t === 'oscuro') {
+                    document.documentElement.setAttribute('data-tema', t);
+                }
+                var esClaro = t === 'claro' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches);
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) meta.setAttribute('content', esClaro ? '#f3f6fb' : '#020617');
+            } catch (e) {}
+        })();
+    </script>
+
+    <meta name="description" content="Condiciones del servicio de recogida y traslado de vehículos de Zippy.">
+    <meta name="theme-color" content="#020617">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/nuevo.css">
+    <style>
+        /* Documento legal: una sola columna de lectura, sobre los tokens de nuevo.css. */
+        .doc {
+            max-width: 46rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 6rem;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        .doc a.volver {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: .95rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .doc a.volver:hover { color: var(--txt); }
+
+        .doc h1 {
+            font-size: clamp(1.9rem, 6vw, 2.6rem);
+            font-weight: 500;
+            letter-spacing: -.02em;
+            color: var(--txt);
+            margin: 0 0 .5rem;
+        }
+
+        .doc .sub {
+            color: var(--muted);
+            font-weight: 300;
+            margin: 0 0 .35rem;
+        }
+
+        .doc .fecha {
+            color: var(--muted);
+            font-size: .85rem;
+            margin: 0 0 2rem;
+        }
+
+        .doc .aviso {
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--amber);
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            color: var(--muted);
+            font-size: .92rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .doc h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--txt);
+            margin: 2.75rem 0 .9rem;
+            letter-spacing: -.01em;
+        }
+
+        .doc p,
+        .doc li {
+            color: var(--muted);
+            line-height: 1.75;
+            font-weight: 300;
+        }
+
+        .doc p { margin: 0 0 1rem; }
+
+        .doc ul,
+        .doc ol { margin: 0 0 1rem; padding-left: 1.35rem; }
+
+        .doc li { margin-bottom: .5rem; }
+
+        .doc strong { color: var(--txt); font-weight: 500; }
+
+        .doc hr {
+            border: 0;
+            border-top: 1px solid var(--line);
+            margin: 3rem 0 0;
+        }
+
+        .doc .pie {
+            color: var(--muted);
+            font-size: .85rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="doc">
+        <a class="volver" href="nuevo.html">&larr; Volver a Zippy</a>
+
+        <h1>Términos y condiciones</h1>
+        <p class="sub">Servicio de recogida y traslado de vehículos</p>
+        <p class="fecha">Actualizado el 24 de agosto de 2026</p>
+
+        <p class="aviso"><strong>Documento en revisión.</strong> Estas condiciones están pendientes de revisión
+            jurídica. Si algo aquí no te cuadra antes de entregarnos tu vehículo, escríbenos y lo hablamos.</p>
+
+        <h2>1. Quién presta el servicio</h2>
+        <p>ZIPPY es el nombre comercial bajo el cual <strong>David Álvarez Herrera</strong> presta el servicio de
+            recogida y traslado de vehículos descrito en estas condiciones, en adelante "Zippy". Canal de contacto
+            oficial: WhatsApp <strong>+57 311 705 5495</strong>.</p>
+
+        <h2>2. Qué es y qué no es este servicio</h2>
+        <p>Zippy presta <strong>un único servicio: recoger tu vehículo, trasladarlo al taller y devolvértelo al
+            terminar.</strong> Nada más.</p>
+        <p>Zippy <strong>no</strong>:</p>
+        <ul>
+            <li>ejecuta ni supervisa labores técnicas, mecánicas, de latonería, lavado o detailing;</li>
+            <li>recauda, canaliza ni intermedia el pago de los servicios del taller;</li>
+            <li>otorga, respalda ni administra garantías sobre el trabajo del taller.</li>
+        </ul>
+        <p>La relación por el servicio automotriz se da <strong>directamente entre el cliente y el taller</strong>.
+            Zippy no es parte de ese contrato. Cualquier reclamo sobre la calidad, el precio, el plazo o la garantía
+            del trabajo se dirige al taller.</p>
+
+        <h2>3. Alcance del traslado</h2>
+        <p>El servicio comprende, en este orden:</p>
+        <ol>
+            <li>Recogida del vehículo en la dirección y hora acordadas.</li>
+            <li>Levantamiento del <strong>acta de recogida</strong> (estado, fotos, inventario), firmada por el
+                cliente.</li>
+            <li>Traslado y entrega del vehículo en el taller indicado.</li>
+            <li>Recogida del vehículo en el taller una vez el cliente autorice la salida.</li>
+            <li>Devolución al cliente y firma del <strong>acta de devolución</strong>.</li>
+        </ol>
+        <p>El vehículo se traslada <strong>conducido por un operador de Zippy</strong>, salvo que las partes acuerden
+            por escrito el uso de grúa. El servicio de grúa, cuando aplique, se cotiza aparte.</p>
+
+        <h2>4. Declaraciones del cliente</h2>
+        <p>Al entregar el vehículo, el cliente declara y garantiza que:</p>
+        <ul>
+            <li>Es el propietario o está facultado para disponer del vehículo y autorizar su traslado.</li>
+            <li>El <strong>SOAT</strong> y la <strong>revisión tecnomecánica</strong> están vigentes.</li>
+            <li>El vehículo se encuentra en condiciones de circular por sus propios medios. Si no lo está, debe
+                informarlo antes de la recogida para programar grúa.</li>
+            <li>No deja en el vehículo dinero, joyas, documentos de valor, equipos electrónicos ni objetos personales
+                distintos de los registrados en el inventario del acta.</li>
+            <li>El vehículo no está reportado como hurtado, no pesa sobre él medida cautelar ni orden de
+                inmovilización, y no transporta mercancías o sustancias de tenencia prohibida o restringida.</li>
+        </ul>
+        <p>Si alguna de estas declaraciones resulta falsa, Zippy puede suspender el servicio en el acto y el cliente
+            responde por los perjuicios que ello cause.</p>
+
+        <h2>5. Autorización para movilizar el vehículo</h2>
+        <p>Al firmar el acta de recogida, <strong>el cliente autoriza expresamente a Zippy y a su operador
+            identificado en el acta a conducir el vehículo por vía pública</strong> entre los puntos de origen y
+            destino, exclusivamente para prestar el servicio de traslado.</p>
+        <p>Esta autorización se limita al recorrido acordado. Zippy no puede usar el vehículo para ningún otro fin.</p>
+
+        <h2>6. El operador</h2>
+        <p>Zippy garantiza que quien conduce el vehículo:</p>
+        <ul>
+            <li>tiene licencia de conducción vigente para la categoría correspondiente;</li>
+            <li>está vinculado a Zippy y su identidad queda registrada en el acta de recogida;</li>
+            <li>no puede ceder la conducción a un tercero bajo ninguna circunstancia;</li>
+            <li>no puede transportar pasajeros ni carga ajena al servicio.</li>
+        </ul>
+
+        <h2>7. Acta de recogida y acta de devolución</h2>
+        <p>El estado del vehículo se documenta en cada extremo del trayecto mediante acta con <strong>fotografías de
+            los seis ángulos, marcación de daños existentes e inventario de elementos</strong>. Ambas actas las firma
+            el cliente.</p>
+        <p><strong>Las actas son la prueba del estado del vehículo.</strong> Un daño que no aparezca en el acta de
+            recogida y sí en la de devolución se presume ocurrido bajo custodia de Zippy. Un daño ya registrado en el
+            acta de recogida no genera responsabilidad alguna para Zippy.</p>
+        <p>El cliente puede solicitar copia de cualquiera de las dos actas dentro de las <strong>24 horas</strong>
+            siguientes al servicio. Si no estuvo presente en la entrega y no firmó el acta de devolución, dispone de
+            esas mismas 24 horas para manifestar cualquier inconformidad; pasado ese plazo se entiende recibido a
+            conformidad.</p>
+
+        <h2>8. Seguro y responsabilidad por daños</h2>
+        <p><strong>8.1.</strong> <strong>Solo se trasladan vehículos con póliza de todo riesgo vigente.</strong> El
+            vehículo viaja amparado por <strong>la póliza de seguro del propio cliente</strong>, quien declara que se
+            encuentra vigente y que <strong>ampara la conducción por terceros autorizados</strong>. La aseguradora se
+            registra en el acta de recogida y el operador verifica la vigencia antes de mover el vehículo.</p>
+        <p><strong>8.2.</strong> Si durante el trayecto ocurre un siniestro atribuible a Zippy, la reclamación se
+            tramita ante la aseguradora del cliente y <strong>Zippy asume el pago del deducible</strong> que la póliza
+            determine.</p>
+        <p><strong>8.3.</strong> Zippy no responde por:</p>
+        <ul>
+            <li>daños, fallas o desgastes preexistentes, hayan sido o no registrados en el acta;</li>
+            <li>fallas mecánicas o eléctricas que se manifiesten durante el trayecto sin causa externa;</li>
+            <li>objetos dejados en el vehículo y no registrados en el inventario;</li>
+            <li>hechos de fuerza mayor o caso fortuito, ni actos de terceros ajenos a la conducción.</li>
+        </ul>
+        <p><strong>8.4.</strong> El cliente debe informar a Zippy cualquier restricción de su póliza (conductor único,
+            límite de edad, uso restringido) <strong>antes</strong> de la recogida. Si omite hacerlo y la aseguradora
+            objeta el siniestro por esa causa, la objeción no traslada a Zippy la responsabilidad que la póliza dejó
+            de cubrir.</p>
+        <p><strong>8.5.</strong> Si el vehículo <strong>no cuenta con póliza de todo riesgo vigente, Zippy no presta
+            el servicio.</strong> El operador puede negarse a recibir el vehículo en el sitio de recogida, sin costo
+            para ninguna de las partes. El SOAT no suple este requisito: ampara lesiones a personas, no daños al
+            vehículo.</p>
+
+        <h2>9. Multas y comparendos</h2>
+        <p>Los comparendos, fotomultas y sanciones de tránsito impuestos <strong>durante el trayecto y por conducta
+            del operador</strong> son asumidos íntegramente por Zippy, incluidos los intereses si se notifican tarde.
+            Las multas anteriores a la recogida y los peajes del recorrido son del cliente, salvo pacto distinto.</p>
+
+        <h2>10. Combustible y kilometraje</h2>
+        <p>El nivel de combustible y el kilometraje se registran en ambas actas. El recorrido normal del traslado
+            explica una variación razonable. Una diferencia superior a <strong>25 kilómetros</strong> sobre la ruta
+            prevista, sin justificación, se entiende uso indebido del vehículo y Zippy responde por el combustible
+            consumido y por el desgaste que acredite el cliente.</p>
+
+        <h2>11. Plazos, cancelación y cliente ausente</h2>
+        <ul>
+            <li>El cliente puede cancelar o reprogramar sin costo hasta <strong>2 horas</strong> antes de la recogida.
+                Después, Zippy cobra la fracción del traslado ya ejecutada al momento de la cancelación.</li>
+            <li>Si el operador llega y el cliente no está o no entrega el vehículo, Zippy espera <strong>20
+                minutos</strong> y luego cobra la fracción recorrida hasta el punto de recogida.</li>
+            <li>Si al devolver el vehículo el cliente no puede recibirlo, Zippy lo reprograma. El parqueadero que ello
+                genere corre por cuenta del cliente desde el segundo intento.</li>
+            <li>Zippy no garantiza tiempos de reparación: esos plazos los fija el taller.</li>
+        </ul>
+
+        <h2>12. Precio del traslado</h2>
+        <p>Zippy cobra únicamente <strong>su tarifa de transporte</strong>, informada al cliente antes de la recogida.
+            El costo del servicio automotriz lo paga el cliente directamente al taller, por los medios que el taller
+            disponga. Zippy no recibe, retiene ni transfiere dineros del taller.</p>
+
+        <h2>13. Tratamiento de datos personales</h2>
+        <p>En cumplimiento de la <strong>Ley 1581 de 2012</strong> y el Decreto 1074 de 2015:</p>
+        <ul>
+            <li><strong>Responsable:</strong> David Álvarez Herrera (Zippy). Canal de atención: WhatsApp
+                +57 311 705 5495.</li>
+            <li><strong>Datos que se recogen:</strong> nombre, teléfono, dirección de recogida, datos del vehículo
+                (placa, marca, modelo, kilometraje), aseguradora, vigencias de SOAT y tecnomecánica, y fotografías del
+                vehículo con sus daños e inventario.</li>
+            <li><strong>Finalidad:</strong> documentar el estado del vehículo al recogerlo y devolverlo, prestar el
+                servicio de traslado, atender reclamaciones y tramitar siniestros ante la aseguradora. No se usan para
+                publicidad ni perfilamiento, ni se ceden a terceros con fines comerciales.</li>
+            <li><strong>Destinatarios:</strong> el acta se entrega al cliente; puede compartirse con la aseguradora en
+                caso de siniestro y con el taller de destino.</li>
+            <li><strong>Almacenamiento:</strong> el acta se genera en PDF, se envía al cliente por WhatsApp y se
+                archiva en Google Drive, con acceso restringido a Zippy.</li>
+            <li><strong>Retención:</strong> 24 meses desde la prestación del servicio.</li>
+            <li><strong>Derechos del titular:</strong> conocer, actualizar, rectificar y suprimir sus datos, y revocar
+                esta autorización, escribiendo al canal de atención.</li>
+        </ul>
+        <p>Al marcar la casilla de aceptación en el acta de recogida, el cliente <strong>autoriza este
+            tratamiento</strong>.</p>
+
+        <h2>14. Aceptación</h2>
+        <p>Estos términos se aceptan marcando la casilla correspondiente en el acta de recogida y firmándola.</p>
+
+        <h2>15. Vigencia, modificaciones y ley aplicable</h2>
+        <p>Zippy puede modificar estos términos; los cambios rigen para servicios contratados después de su
+            publicación y no afectan traslados en curso. Este contrato se rige por la ley colombiana y las
+            controversias se someten a la jurisdicción ordinaria.</p>
+
+        <hr>
+        <p class="pie">¿Alguna duda con esto? Escríbenos por
+            <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
+                style="color:var(--accent)">WhatsApp</a>.</p>
+    </main>
+</body>
+
+</html>
