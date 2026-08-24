@@ -1,0 +1,1006 @@
+/* Zippy — hoja de estilo de nuevo.html
+   Solo clases propias con prefijo z-: no pisa utilidades de Tailwind.
+
+   TODA la paleta vive en el bloque :root de abajo. No hay literales de color
+   fuera de ahí, ni en esta hoja ni en el marcado, para que el tema se pueda
+   tokenizar sin perseguir hex sueltos. */
+
+:root {
+    /* Paleta única de la página. Para un tema claro basta redefinir estos
+       tokens; el resto de la hoja y todo el marcado los consumen por var().
+       Fuera de aquí solo quedan: el #000 de una máscara (es opacidad),
+       el <meta name="theme-color"> y el favicon en data: URI de nuevo.html. */
+
+    /* superficies */
+    --bg: #020617;
+    /* slate-950 */
+    --surface: #0b1424;
+    --surface-raised: #17233a;
+    --surface-hover: #1e2b45;
+
+    /* escena del recorrido y asfalto */
+    --road: #0a1220;
+    --sky-1: #17293f;
+    --sky-2: #101c31;
+    --sky-3: #0e1a2d;
+
+    /* líneas */
+    --line: rgba(148, 163, 184, .14);
+    --line-strong: rgba(148, 163, 184, .28);
+    --line-road: rgba(148, 163, 184, .34);
+    --line-top: rgba(148, 163, 184, .38);
+    --line-warn: rgba(251, 191, 36, .28);
+    --shade-inset: rgba(0, 0, 0, .9);
+
+    /* texto */
+    --txt: rgba(255, 255, 255, .9);
+    --txt-soft: #cbd5e1;
+    --muted: #94a3b8;
+    --muted-dim: #64748b;
+    --muted-faint: #475569;
+    --on-accent: #041022;
+
+    /* acento */
+    --accent: #60a5fa;
+    --accent-soft: #93c5fd;
+    --accent-2: #38bdf8;
+    --amber: #fbbf24;
+
+    /* carro de perfil */
+    --car-body: var(--accent);
+    --car-glass: #0b1424;
+    --car-tyre: #1e293b;
+    --car-hub: #475569;
+    --car-spoke: #94a3b8;
+    --car-lamp: #fbbf24;
+
+    /* tráfico del hero */
+    --traffic-1: #334155;
+    --traffic-2: #60a5fa;
+    --traffic-3: #475569;
+    --traffic-4: #38bdf8;
+
+    /* ilustración cenital del acta */
+    --top-body: #162943;
+    --top-glass: #0c1e35;
+    --top-roof: #1e3a5c;
+    --top-metal: #475569;
+
+    /* wizard */
+    --overlay: rgba(2, 6, 23, .88);
+    --track: rgba(148, 163, 184, .2);
+
+    --ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--txt);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Tailwind pinta text-white a blanco puro; en fondo tan oscuro quema. */
+.text-white {
+    color: var(--txt);
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+.z-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* ---------- tipografía y bloques base ---------- */
+
+.z-eyebrow {
+    font-size: .75rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.z-eyebrow--warn {
+    color: var(--amber);
+}
+
+.z-title {
+    font-size: clamp(2.1rem, 8.5vw, 4.5rem);
+    line-height: 1.03;
+    letter-spacing: -.035em;
+    font-weight: 600;
+}
+
+.z-h2 {
+    font-size: clamp(1.7rem, 5.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -.03em;
+    font-weight: 600;
+}
+
+.z-lead {
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.65;
+    font-size: clamp(1rem, 3.6vw, 1.2rem);
+}
+
+.z-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+}
+
+.z-card--warn {
+    border-color: var(--line-warn);
+}
+
+.z-rule {
+    border-top: 1px solid var(--line);
+}
+
+.z-ink-warn {
+    color: var(--amber);
+}
+
+/* Botones sólidos, nunca fantasma. */
+.z-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: .95rem 1.6rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform .25s var(--ease), background-color .25s;
+    text-align: center;
+}
+
+.z-btn:active {
+    transform: scale(.97);
+}
+
+.z-btn--primary {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+.z-btn--primary:hover {
+    background: var(--accent-soft);
+}
+
+.z-btn--ghost {
+    background: var(--surface-raised);
+    color: var(--txt);
+    border: 1px solid var(--line-strong);
+}
+
+.z-btn--ghost:hover {
+    background: var(--surface-hover);
+}
+
+.z-btn--sm {
+    padding: .65rem 1.25rem;
+    font-size: .875rem;
+}
+
+/* Utilidades de tinta: el marcado nombra el papel, no el color. */
+.z-ink-soft {
+    color: var(--txt-soft);
+}
+
+.z-ink-muted {
+    color: var(--muted);
+}
+
+.z-ink-dim {
+    color: var(--muted-dim);
+}
+
+.z-ink-faint {
+    color: var(--muted-faint);
+}
+
+.z-ink-accent {
+    color: var(--accent-2);
+}
+
+.z-link-dim {
+    color: var(--muted-dim);
+    transition: color .3s;
+}
+
+.z-link-dim:hover {
+    color: var(--txt);
+}
+
+/* ---------- header ---------- */
+
+.z-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    transition: background-color .35s, border-color .35s;
+    border-bottom: 1px solid transparent;
+}
+
+.z-header.is-scrolled {
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom-color: var(--line);
+}
+
+.z-logo {
+    height: 34px;
+    width: auto;
+    fill: var(--txt);
+}
+
+.z-logo--footer {
+    height: 3.5rem;
+}
+
+/* ---------- reveal al hacer scroll ---------- */
+
+.z-reveal {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition: opacity 1s var(--ease), transform 1s var(--ease);
+    will-change: transform, opacity;
+}
+
+.z-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* ---------- carro de perfil ---------- */
+
+.z-car {
+    display: block;
+    color: var(--car-body);
+}
+
+.z-car .car-glass {
+    fill: var(--car-glass);
+}
+
+.z-car .car-tyre {
+    fill: var(--car-tyre);
+}
+
+.z-car .car-lamp {
+    fill: var(--car-lamp);
+}
+
+.z-car .car-hub {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.z-car .car-hub__core {
+    fill: var(--car-hub);
+}
+
+.z-car .car-hub__spoke {
+    fill: var(--car-spoke);
+}
+
+/* ---------- autopista del hero ---------- */
+
+.z-highway {
+    position: relative;
+    overflow: hidden;
+    height: clamp(168px, 34vw, 210px);
+    background: linear-gradient(180deg, transparent, var(--road) 34%, var(--road));
+    border-top: 1px solid var(--line);
+    /* El #000 de la máscara es opacidad, no color de tema: no tokenizar. */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.z-highway__lane {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    width: 200%;
+    background: repeating-linear-gradient(90deg, var(--line-strong) 0 34px, transparent 34px 74px);
+    animation: z-lane 1.6s linear infinite;
+}
+
+.z-highway__lane--a {
+    top: 46%;
+}
+
+.z-highway__lane--b {
+    top: 76%;
+    opacity: .55;
+    animation-duration: 2.4s;
+}
+
+@keyframes z-lane {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-108px, 0, 0);
+    }
+}
+
+.z-highway__car {
+    position: absolute;
+    left: 0;
+    width: var(--w);
+    height: auto;
+    animation: z-drive var(--dur) linear var(--delay) infinite;
+    will-change: transform;
+}
+
+/* Cada carril: tamaño, ritmo y tinte. Nada de esto vive en el marcado. */
+.z-highway__car--1 {
+    --w: 78px;
+    --dur: 11s;
+    --delay: -2s;
+    --static-x: 6vw;
+    top: 10%;
+    color: var(--traffic-1);
+}
+
+.z-highway__car--2 {
+    --w: 96px;
+    --dur: 8s;
+    --delay: -6s;
+    --static-x: 42vw;
+    top: 31%;
+    color: var(--traffic-2);
+}
+
+.z-highway__car--3 {
+    --w: 114px;
+    --dur: 6s;
+    --delay: -1s;
+    --static-x: 72vw;
+    top: 52%;
+    color: var(--traffic-3);
+}
+
+.z-highway__car--4 {
+    --w: 132px;
+    --dur: 4.6s;
+    --delay: -3.4s;
+    --static-x: 20vw;
+    top: 72%;
+    color: var(--traffic-4);
+}
+
+@keyframes z-drive {
+    from {
+        transform: translate3d(-160px, 0, 0);
+    }
+
+    to {
+        transform: translate3d(calc(100vw + 160px), 0, 0);
+    }
+}
+
+/* ---------- escena del recorrido ---------- */
+
+.z-scene {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: radial-gradient(130% 90% at 50% 0%, var(--sky-1) 0%, var(--sky-2) 62%, var(--sky-3) 100%);
+    height: clamp(220px, 46vw, 310px);
+}
+
+.z-scene__place {
+    position: absolute;
+    bottom: 46%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .45rem;
+    color: var(--muted);
+    transition: color .4s, opacity .4s;
+    opacity: .55;
+}
+
+.z-scene__place svg {
+    width: clamp(44px, 11vw, 68px);
+    height: auto;
+}
+
+.z-scene__place span {
+    font-size: clamp(.62rem, 2.6vw, .78rem);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.z-scene__place.is-active {
+    color: var(--accent);
+    opacity: 1;
+}
+
+.z-scene__place--home {
+    left: 4%;
+}
+
+.z-scene__place--shop {
+    right: 4%;
+}
+
+.z-scene__road {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 42%;
+    background: var(--road);
+    border-top: 1px solid var(--line-road);
+    box-shadow: inset 0 12px 24px -14px var(--shade-inset);
+    overflow: hidden;
+}
+
+.z-scene__lane {
+    position: absolute;
+    top: 62%;
+    left: 0;
+    height: 2px;
+    width: 200%;
+    background: repeating-linear-gradient(90deg, var(--line-strong) 0 26px, transparent 26px 58px);
+}
+
+.z-scene.is-driving .z-scene__lane {
+    animation: z-lane-scene 1.1s linear infinite;
+}
+
+.z-scene.is-driving[data-dir="-1"] .z-scene__lane {
+    animation-direction: reverse;
+}
+
+@keyframes z-lane-scene {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-84px, 0, 0);
+    }
+}
+
+.z-scene__rail {
+    position: absolute;
+    left: 3%;
+    right: 3%;
+    top: 6%;
+}
+
+.z-scene__car {
+    width: clamp(84px, 22vw, 132px);
+    transform: translate3d(var(--car-x, 0px), 0, 0) scaleX(var(--car-dir, 1));
+    transition: transform 1.9s cubic-bezier(.55, .05, .3, 1);
+    will-change: transform;
+}
+
+.z-scene.is-driving .z-scene__car .car-hub {
+    animation: z-spin .45s linear infinite;
+}
+
+@keyframes z-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* pasos */
+
+.z-step {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    align-items: flex-start;
+    text-align: left;
+    padding: .8rem .9rem;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: transparent;
+    transition: background-color .3s, border-color .3s;
+    width: 100%;
+}
+
+.z-step:hover {
+    border-color: var(--line-strong);
+}
+
+.z-step__n {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--muted-dim);
+    transition: color .3s;
+}
+
+.z-step__t {
+    font-size: clamp(.9rem, 3.4vw, 1rem);
+    font-weight: 600;
+    color: var(--muted);
+    transition: color .3s;
+}
+
+.z-step.is-active {
+    background: var(--surface-raised);
+    border-color: var(--accent);
+}
+
+.z-step.is-active .z-step__n {
+    color: var(--accent);
+}
+
+.z-step.is-active .z-step__t {
+    color: var(--txt);
+}
+
+.z-step__panel {
+    min-height: 3.2rem;
+}
+
+.z-step__panel p {
+    animation: z-fade .5s var(--ease);
+}
+
+@keyframes z-fade {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 8px, 0);
+    }
+}
+
+/* ---------- acta: vista cenital ---------- */
+
+.z-top__metal {
+    fill: var(--top-metal);
+}
+
+.z-top__body {
+    fill: var(--top-body);
+    stroke: var(--line-top);
+    stroke-width: 2;
+}
+
+.z-top__glass {
+    fill: var(--top-glass);
+}
+
+.z-top__roof {
+    fill: var(--top-roof);
+}
+
+.z-acta__dot {
+    fill: var(--accent-2);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: z-ping 4.8s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+    opacity: .28;
+}
+
+@keyframes z-ping {
+
+    0%,
+    72%,
+    100% {
+        opacity: .28;
+        transform: scale(1);
+    }
+
+    8% {
+        opacity: 1;
+        transform: scale(1.7);
+    }
+
+    22% {
+        opacity: .45;
+        transform: scale(1);
+    }
+}
+
+/* ---------- FAQ ---------- */
+
+.z-faq {
+    border-bottom: 1px solid var(--line);
+}
+
+.z-faq summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.35rem 0;
+    font-weight: 500;
+    font-size: clamp(1rem, 3.8vw, 1.12rem);
+}
+
+.z-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.z-faq__chev {
+    flex: none;
+    color: var(--muted-dim);
+    transition: transform .3s var(--ease), color .3s;
+}
+
+.z-faq[open] .z-faq__chev {
+    transform: rotate(180deg);
+    color: var(--accent);
+}
+
+.z-faq__body {
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+    padding-bottom: 1.4rem;
+    max-width: 62ch;
+    animation: z-fade .35s var(--ease);
+}
+
+/* ---------- encuesta flotante ---------- */
+
+.z-fab {
+    position: fixed;
+    right: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .8rem 1.15rem;
+    border-radius: 100px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line-strong);
+    color: var(--txt);
+    font-size: .875rem;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 14px, 0);
+    transition: opacity .4s var(--ease), transform .4s var(--ease), background-color .25s;
+}
+
+.z-fab.is-ready {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+}
+
+.z-fab:hover {
+    background: var(--surface-hover);
+}
+
+.z-fab__icon {
+    color: var(--accent);
+    flex: none;
+}
+
+.z-wiz {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.z-wiz.is-open {
+    display: flex;
+}
+
+.z-wiz__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.z-wiz__card {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    max-height: min(88vh, 44rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 24px;
+    padding: 1.5rem 1.35rem 1.35rem;
+    animation: z-wiz-in .35s var(--ease);
+}
+
+@keyframes z-wiz-in {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 18px, 0) scale(.98);
+    }
+}
+
+.z-wiz__close {
+    position: absolute;
+    top: .85rem;
+    right: .85rem;
+    color: var(--muted-dim);
+    transition: color .25s;
+}
+
+.z-wiz__close:hover {
+    color: var(--txt);
+}
+
+.z-wiz__q {
+    display: none;
+}
+
+.z-wiz__q.is-on {
+    display: block;
+    animation: z-fade .35s var(--ease);
+}
+
+.z-wiz__title {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+}
+
+.z-wiz__hint {
+    color: var(--muted-dim);
+    font-size: .85rem;
+    font-weight: 300;
+    margin-top: .5rem;
+}
+
+.z-wiz__readout {
+    margin: 1.6rem 0 .2rem;
+    text-align: center;
+}
+
+.z-wiz__num {
+    font-size: clamp(2.6rem, 13vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -.04em;
+    line-height: 1;
+    color: var(--accent);
+    display: block;
+}
+
+.z-wiz__num--word {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+}
+
+.z-wiz__unit {
+    display: block;
+    margin-top: .45rem;
+    font-size: .72rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--muted-dim);
+}
+
+/* deslizador: pulgar grande, pensado para el dedo */
+.z-wiz__slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    margin: 1.4rem 0 .6rem;
+    border-radius: 100px;
+    outline: none;
+    background: linear-gradient(90deg, var(--accent) 0 var(--fill, 50%), var(--track) var(--fill, 50%));
+    touch-action: pan-y;
+}
+
+.z-wiz__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 4px solid var(--surface);
+    cursor: pointer;
+}
+
+.z-wiz__slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 4px solid var(--surface);
+    cursor: pointer;
+}
+
+.z-wiz__ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: .75rem;
+    color: var(--muted-dim);
+    font-weight: 300;
+}
+
+.z-wiz__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.6rem;
+}
+
+.z-wiz__nav[hidden] {
+    display: none;
+}
+
+.z-wiz__dots {
+    display: flex;
+    gap: .4rem;
+}
+
+.z-wiz__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--track);
+    transition: background-color .3s;
+}
+
+.z-wiz__dot.is-on {
+    background: var(--accent);
+}
+
+.z-wiz__back {
+    color: var(--muted-dim);
+    font-size: .875rem;
+    transition: color .25s, opacity .25s;
+}
+
+.z-wiz__back:hover {
+    color: var(--txt);
+}
+
+.z-wiz__back[hidden] {
+    display: none;
+}
+
+/* resultado */
+
+.z-wiz__result {
+    text-align: center;
+}
+
+.z-wiz__big {
+    font-size: clamp(3rem, 17vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -.05em;
+    line-height: 1;
+    color: var(--accent);
+}
+
+.z-wiz__bigunit {
+    margin-top: .5rem;
+    font-size: .75rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--muted-dim);
+}
+
+.z-wiz__note {
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.6;
+    font-size: .95rem;
+    margin-top: 1.25rem;
+}
+
+.z-wiz__fine {
+    color: var(--muted-dim);
+    font-weight: 300;
+    font-size: .8rem;
+    line-height: 1.55;
+    margin-top: .85rem;
+}
+
+/* ---------- accesibilidad ---------- */
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 8px;
+}
+
+.z-skip {
+    position: absolute;
+    left: -9999px;
+}
+
+.z-skip:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 99;
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: .6rem 1rem;
+    border-radius: 100px;
+}
+
+/* ---------- movimiento reducido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .z-highway__lane,
+    .z-highway__car,
+    .z-scene__lane,
+    .z-acta__dot,
+    .z-scene .car-hub {
+        animation: none !important;
+    }
+
+    .z-acta__dot {
+        opacity: .85;
+    }
+
+    /* los carros del hero quedan quietos y repartidos, legibles */
+    .z-highway__car {
+        transform: translate3d(var(--static-x), 0, 0);
+    }
+
+    .z-scene__car {
+        transition: none;
+    }
+
+    .z-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .z-fab {
+        transition: opacity .2s;
+        transform: none;
+    }
+
+    .z-step__panel p,
+    .z-faq__body,
+    .z-wiz__card,
+    .z-wiz__q.is-on {
+        animation: none;
+    }
+}

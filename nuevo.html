@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zippy | Llevamos tu carro al taller y te lo devolvemos</title>
+
+    <meta name="description"
+        content="Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos. Con acta de fotos y firma en los dos extremos.">
+    <meta name="theme-color" content="#020617">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zippymed.co">
+    <meta property="og:site_name" content="Zippy">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:title" content="Zippy | Llevamos tu carro al taller y te lo devolvemos">
+    <meta property="og:description"
+        content="Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos.">
+    <meta name="twitter:card" content="summary">
+    <link rel="canonical" href="https://zippymed.co">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 434 940"%3E%3Crect width="434" height="940" fill="%23020617"/%3E%3Cpath fill="%23ffffff" d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z"/%3E%3Cpath fill="%23ffffff" d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z"/%3E%3C/svg%3E">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/nuevo.css">
+</head>
+
+<body>
+    <a class="z-skip" href="#recorrido">Ir al contenido</a>
+
+    <!-- Sprite: el carro se dibuja una vez y se reutiliza con <use>. -->
+    <svg class="z-sprite" aria-hidden="true" focusable="false">
+        <symbol id="zcar" viewBox="0 0 140 56">
+            <path fill="currentColor"
+                d="M9 44 L9 33 C9 29 11 26 15 25 L34 21 L50 10 C53 7.5 57 6 61 6 L86 6 C90.5 6 94.5 8 97.5 11.5 L108 24 L124 27 C130 28.2 133.5 32 133.5 37.5 L133.5 42 C133.5 43.2 132.6 44 131.4 44 Z" />
+            <path fill="var(--car-glass)" d="M52 11.5 L66 10.5 L66 21 L41 21 Z" />
+            <path fill="var(--car-glass)" d="M71 10.5 L87 10 L97 21 L71 21 Z" />
+            <rect x="127" y="31" width="7" height="4" rx="2" fill="var(--car-lamp)" />
+            <circle cx="44" cy="44" r="9" fill="var(--car-tyre)" />
+            <circle cx="108" cy="44" r="9" fill="var(--car-tyre)" />
+            <circle cx="44" cy="44" r="3.4" fill="var(--car-hub)" />
+            <circle cx="108" cy="44" r="3.4" fill="var(--car-hub)" />
+        </symbol>
+    </svg>
+
+    <!-- ============ HEADER ============ -->
+    <header id="header" class="z-header">
+        <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 md:h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3" aria-label="Zippy, inicio">
+                <svg viewBox="0 0 434 940" class="z-logo" aria-hidden="true">
+                    <path
+                        d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                    <path
+                        d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+                </svg>
+                <span class="text-lg font-semibold tracking-tight">Zippy</span>
+            </a>
+            <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
+                target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary !py-2.5 !px-5 !text-sm">
+                <i data-lucide="message-circle" class="w-4 h-4" stroke-width="2"></i>
+                WhatsApp
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ============ HERO ============ -->
+        <section class="relative pt-14 md:pt-24">
+            <div class="max-w-6xl mx-auto px-5 md:px-8">
+                <p class="z-eyebrow z-reveal">Traslado de vehículos</p>
+                <h1 class="z-title mt-4 max-w-4xl z-reveal" style="transition-delay:.08s">
+                    Tu carro va al taller.<br>
+                    <span class="z-ink-dim">Tú sigues con tu día.</span>
+                </h1>
+                <p class="z-lead mt-6 max-w-xl z-reveal" style="transition-delay:.16s">
+                    Recogemos tu carro donde estés, lo llevamos al taller que elijas y te lo devolvemos.
+                </p>
+                <div class="mt-9 flex flex-col sm:flex-row gap-3 z-reveal" style="transition-delay:.24s">
+                    <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
+                        target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary">
+                        <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
+                        Pedir un traslado
+                    </a>
+                    <a href="#recorrido" class="z-btn z-btn--ghost">
+                        Ver el recorrido
+                        <i data-lucide="arrow-down" class="w-4 h-4" stroke-width="2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Autopista: bucle de tráfico, solo transform -->
+            <div class="z-highway mt-14 md:mt-20" aria-hidden="true">
+                <span class="z-highway__lane z-highway__lane--a"></span>
+                <span class="z-highway__lane z-highway__lane--b"></span>
+                <svg class="z-highway__car z-highway__car--1" viewBox="0 0 140 56"><use href="#zcar" /></svg>
+                <svg class="z-highway__car z-highway__car--2" viewBox="0 0 140 56"><use href="#zcar" /></svg>
+                <svg class="z-highway__car z-highway__car--3" viewBox="0 0 140 56"><use href="#zcar" /></svg>
+                <svg class="z-highway__car z-highway__car--4" viewBox="0 0 140 56"><use href="#zcar" /></svg>
+            </div>
+        </section>
+
+        <!-- ============ RECORRIDO (animación principal) ============ -->
+        <section id="recorrido" class="py-20 md:py-28 px-5 md:px-8">
+            <div class="max-w-6xl mx-auto">
+                <p class="z-eyebrow z-reveal">El recorrido</p>
+                <h2 class="z-h2 mt-3 max-w-2xl z-reveal">Casa, taller y de vuelta a casa.</h2>
+                <div class="z-scene mt-10 z-reveal" id="scene" data-dir="1" role="img"
+                    aria-label="Animación: un carro sale de tu casa, llega al taller y regresa.">
+                    <div class="z-scene__place z-scene__place--home">
+                        <svg viewBox="0 0 64 56" fill="none" stroke="currentColor" stroke-width="2.6"
+                            stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+                            <path d="M5 25 32 5 59 25" />
+                            <path d="M12 23v27h40V23" />
+                            <path d="M26 50V36h12v14" />
+                        </svg>
+                        <span>Donde estés</span>
+                    </div>
+                    <div class="z-scene__place z-scene__place--shop">
+                        <svg viewBox="0 0 64 56" fill="none" stroke="currentColor" stroke-width="2.6"
+                            stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+                            <path d="M6 21 32 7 58 21" />
+                            <path d="M11 21v29h42V21" />
+                            <path d="M19 50V31h26v19" />
+                            <path d="M19 40h26" />
+                        </svg>
+                        <span>Tu taller</span>
+                    </div>
+
+                    <div class="z-scene__road">
+                        <span class="z-scene__lane"></span>
+                        <div class="z-scene__rail" id="rail">
+                            <!-- Carro del recorrido: inline para poder girar las ruedas por CSS. -->
+                            <svg class="z-scene__car z-car" id="journeyCar" viewBox="0 0 140 56" aria-hidden="true">
+                                <path fill="currentColor"
+                                    d="M9 44 L9 33 C9 29 11 26 15 25 L34 21 L50 10 C53 7.5 57 6 61 6 L86 6 C90.5 6 94.5 8 97.5 11.5 L108 24 L124 27 C130 28.2 133.5 32 133.5 37.5 L133.5 42 C133.5 43.2 132.6 44 131.4 44 Z" />
+                                <path class="car-glass" d="M52 11.5 L66 10.5 L66 21 L41 21 Z" />
+                                <path class="car-glass" d="M71 10.5 L87 10 L97 21 L71 21 Z" />
+                                <rect class="car-lamp" x="127" y="31" width="7" height="4" rx="2" />
+                                <circle class="car-tyre" cx="44" cy="44" r="9" />
+                                <circle class="car-tyre" cx="108" cy="44" r="9" />
+                                <g class="car-hub">
+                                    <circle class="car-hub__core" cx="44" cy="44" r="3.6" />
+                                    <rect class="car-hub__spoke" x="43.1" y="38.6" width="1.8" height="10.8" rx=".9" />
+                                </g>
+                                <g class="car-hub">
+                                    <circle class="car-hub__core" cx="108" cy="44" r="3.6" />
+                                    <rect class="car-hub__spoke" x="107.1" y="38.6" width="1.8" height="10.8" rx=".9" />
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3" role="tablist" aria-label="Pasos del recorrido">
+                    <button type="button" class="z-step" data-step="0" role="tab" aria-selected="true"
+                        data-copy="Acta con fotos y tu firma antes de mover el carro.">
+                        <span class="z-step__n">01</span><span class="z-step__t">Recogemos</span>
+                    </button>
+                    <button type="button" class="z-step" data-step="1" role="tab" aria-selected="false"
+                        data-copy="Al taller que elegiste, conducido por un operador de Zippy.">
+                        <span class="z-step__n">02</span><span class="z-step__t">Llevamos</span>
+                    </button>
+                    <button type="button" class="z-step" data-step="2" role="tab" aria-selected="false"
+                        data-copy="Le pagas directo al taller. Ahí no nos metemos.">
+                        <span class="z-step__n">03</span><span class="z-step__t">El taller trabaja</span>
+                    </button>
+                    <button type="button" class="z-step" data-step="3" role="tab" aria-selected="false"
+                        data-copy="Segunda acta y te lo entregamos donde estés.">
+                        <span class="z-step__n">04</span><span class="z-step__t">Devolvemos</span>
+                    </button>
+                </div>
+
+                <div class="z-step__panel mt-6 max-w-2xl" id="stepPanel" aria-live="polite">
+                    <p class="z-lead"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ QUÉ SÍ / QUÉ NO ============ -->
+        <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
+            <div class="max-w-6xl mx-auto">
+                <p class="z-eyebrow z-reveal">Sin ambigüedades</p>
+                <h2 class="z-h2 mt-3 max-w-2xl z-reveal">Hacemos una sola cosa.</h2>
+
+                <div class="mt-10 grid md:grid-cols-2 gap-4">
+                    <div class="z-card p-7 md:p-9 z-reveal">
+                        <div class="flex items-center gap-2.5 z-ink-accent">
+                            <i data-lucide="check-circle-2" class="w-5 h-5" stroke-width="2"></i>
+                            <h3 class="font-semibold tracking-tight">Lo que hace Zippy</h3>
+                        </div>
+                        <ul class="mt-6 space-y-4 z-ink-soft font-light leading-relaxed">
+                            <li>Recoge tu carro donde estés.</li>
+                            <li>Lo lleva al taller que elegiste.</li>
+                            <li>Documenta su estado con fotos y firma.</li>
+                            <li>Te lo devuelve al terminar.</li>
+                            <li>Paga los comparendos del operador.</li>
+                        </ul>
+                    </div>
+                    <div class="z-card p-7 md:p-9 z-reveal" style="transition-delay:.1s">
+                        <div class="flex items-center gap-2.5 z-ink-dim">
+                            <i data-lucide="minus-circle" class="w-5 h-5" stroke-width="2"></i>
+                            <h3 class="font-semibold tracking-tight">Lo que no hace Zippy</h3>
+                        </div>
+                        <ul class="mt-6 space-y-4 z-ink-muted font-light leading-relaxed">
+                            <li>No ejecuta ni supervisa el trabajo técnico.</li>
+                            <li>No cobra ni intermedia el pago del taller.</li>
+                            <li>No da garantías sobre la reparación.</li>
+                            <li>No elige el taller por ti.</li>
+                            <li>No fija los tiempos de reparación.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ EL ACTA ============ -->
+        <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div class="z-reveal">
+                    <p class="z-eyebrow">El acta</p>
+                    <h2 class="z-h2 mt-3">Queda por escrito, al salir y al volver.</h2>
+                    <p class="z-lead mt-5">
+                        Fotos de los seis ángulos, daños, inventario, kilometraje y tu firma. Si un daño no está en la
+                        primera acta y sí en la segunda, lo asumimos nosotros.
+                    </p>
+                    <ul class="mt-8 grid sm:grid-cols-2 gap-x-6 gap-y-3.5 text-sm z-ink-muted font-light">
+                        <li class="flex items-center gap-2.5"><i data-lucide="camera" class="w-4 h-4 z-ink-accent"
+                                stroke-width="2"></i>Seis ángulos</li>
+                        <li class="flex items-center gap-2.5"><i data-lucide="clipboard-list"
+                                class="w-4 h-4 z-ink-accent" stroke-width="2"></i>Daños e inventario</li>
+                        <li class="flex items-center gap-2.5"><i data-lucide="gauge" class="w-4 h-4 z-ink-accent"
+                                stroke-width="2"></i>Kilometraje y combustible</li>
+                        <li class="flex items-center gap-2.5"><i data-lucide="pen-line" class="w-4 h-4 z-ink-accent"
+                                stroke-width="2"></i>Tu firma</li>
+                        <li class="flex items-center gap-2.5"><i data-lucide="badge-check" class="w-4 h-4 z-ink-accent"
+                                stroke-width="2"></i>Operador identificado</li>
+                        <li class="flex items-center gap-2.5"><i data-lucide="send" class="w-4 h-4 z-ink-accent"
+                                stroke-width="2"></i>Copia por WhatsApp</li>
+                    </ul>
+                </div>
+
+                <div class="z-card p-6 md:p-10 z-acta z-reveal" style="transition-delay:.1s">
+                    <svg viewBox="-20 -30 240 180" class="w-full h-auto" aria-hidden="true">
+                        <!-- Vista cenital del vehículo: las seis marcas son los seis ángulos del acta. -->
+                        <g class="z-top__metal">
+                            <rect x="48" y="8" width="27" height="13" rx="4" />
+                            <rect x="126" y="8" width="27" height="13" rx="4" />
+                            <rect x="48" y="99" width="27" height="13" rx="4" />
+                            <rect x="126" y="99" width="27" height="13" rx="4" />
+                            <rect x="120" y="21" width="14" height="6" rx="3" />
+                            <rect x="120" y="93" width="14" height="6" rx="3" />
+                        </g>
+                        <path class="z-top__body"
+                            d="M60 17 L124 17 C148 18 165 25 174 38 C181 47 184 54 184 60 C184 66 181 73 174 82 C165 95 148 102 124 103 L60 103 C42 102 31 92 28 76 C26 70 25 65 25 60 C25 55 26 50 28 44 C31 28 42 18 60 17 Z" />
+                        <path class="z-top__glass" d="M128 32 L150 46 L150 74 L128 88 Z" />
+                        <path class="z-top__glass" d="M62 34 L50 46 L50 74 L62 86 Z" />
+                        <rect class="z-top__roof" x="68" y="31" width="54" height="58" rx="9" />
+                        <g class="z-acta__dots">
+                            <circle class="z-acta__dot" style="--d:0s" cx="202" cy="60" r="6" />
+                            <circle class="z-acta__dot" style="--d:.8s" cx="140" cy="-14" r="6" />
+                            <circle class="z-acta__dot" style="--d:1.6s" cx="60" cy="-14" r="6" />
+                            <circle class="z-acta__dot" style="--d:2.4s" cx="6" cy="60" r="6" />
+                            <circle class="z-acta__dot" style="--d:3.2s" cx="60" cy="134" r="6" />
+                            <circle class="z-acta__dot" style="--d:4s" cx="140" cy="134" r="6" />
+                        </g>
+                    </svg>
+                    <p class="mt-6 text-xs tracking-[.18em] uppercase z-ink-dim font-semibold text-center">
+                        Acta de recogida · Acta de devolución
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ REQUISITO: PÓLIZA ============ -->
+        <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
+            <div class="max-w-4xl mx-auto z-card z-card--warn p-7 md:p-12 z-reveal">
+                <div class="flex items-center gap-2.5 z-ink-warn">
+                    <i data-lucide="shield-check" class="w-5 h-5" stroke-width="2"></i>
+                    <p class="z-eyebrow z-eyebrow--warn">Requisito</p>
+                </div>
+                <h2 class="z-h2 mt-4">Solo trasladamos carros con póliza de todo riesgo vigente.</h2>
+                <p class="z-lead mt-5 max-w-2xl">
+                    El operador verifica la vigencia antes de moverlo. Si el siniestro es atribuible a Zippy, pagamos
+                    el deducible. El SOAT no reemplaza el todo riesgo.
+                </p>
+                <p class="mt-5 text-sm z-ink-dim font-light max-w-2xl">
+                    ¿Tu póliza tiene restricciones? Cuéntanos antes de la recogida.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============ FAQ ============ -->
+        <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
+            <div class="max-w-3xl mx-auto">
+                <p class="z-eyebrow z-reveal">Preguntas</p>
+                <h2 class="z-h2 mt-3 z-reveal">Lo que preguntan primero.</h2>
+
+                <div class="mt-10 z-reveal">
+                    <details class="z-faq">
+                        <summary>¿Qué cobra Zippy?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">La tarifa del traslado, que te decimos antes de recogerlo. Al taller le
+                            pagas tú, directo.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Quién elige el taller?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">Tú. Llegamos al que nos digas. No tenemos red de aliados.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Responden por la reparación?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">No. Respondemos por el traslado y por el estado del carro mientras está
+                            con nosotros.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Quién conduce mi carro?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">Un operador de Zippy con licencia vigente, con nombre y cédula en el
+                            acta. No cede el volante ni lleva pasajeros.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Y si el carro no arranca?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">Avísanos antes y programamos grúa. Se cotiza aparte.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Y si le ponen un comparendo?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">Si es del operador durante el trayecto, lo paga Zippy.</div>
+                    </details>
+                    <details class="z-faq">
+                        <summary>¿Puedo cancelar?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
+                                stroke-width="2"></i></summary>
+                        <div class="z-faq__body">Sin costo hasta dos horas antes de la recogida.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CTA FINAL ============ -->
+        <section class="py-20 md:py-28 px-5 md:px-8 z-rule text-center">
+            <div class="max-w-3xl mx-auto z-reveal">
+                <h2 class="z-h2">Dinos dónde está el carro y a qué taller va.</h2>
+                <p class="z-lead mt-5 max-w-lg mx-auto">Te cotizamos por WhatsApp.</p>
+                <div class="mt-9 flex justify-center">
+                    <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
+                        target="_blank" rel="noopener noreferrer" class="z-btn z-btn--primary">
+                        <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
+                        Escribir a Zippy
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="z-rule pt-16 pb-12 px-5 md:px-8">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
+            <div class="opacity-40 mb-8">
+                <svg viewBox="0 0 434 940" class="z-logo z-logo--footer" aria-label="Zippy">
+                    <path
+                        d="M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z" />
+                    <path
+                        d="M91.662521,873.671875 C85.978348,883.583557 81.561394,893.833618 75.209457,902.905212 C74.648201,902.604736 74.086945,902.304260 73.525681,902.003784 C119.725494,794.939880 165.925308,687.875977 212.426636,580.113403 C188.183029,581.820740 164.597351,583.481750 139.579132,585.243652 C141.193359,582.281067 141.946426,579.963440 143.434189,578.304871 C183.678040,533.439209 223.975540,488.621613 264.309174,443.836609 C311.653107,391.267700 359.036652,338.734467 406.420532,286.201599 C407.895203,284.566681 409.564209,283.107025 411.142639,281.565704 C411.721039,281.964691 412.299469,282.363708 412.877869,282.762726 C305.874786,479.629822 198.871689,676.496887 91.662521,873.671875 z" />
+                </svg>
+            </div>
+
+            <div class="flex gap-7 mb-10">
+                <a href="https://www.instagram.com/zippy.med?igsh=NGJkY3E2emNwZHdu" target="_blank"
+                    rel="noopener noreferrer" aria-label="Instagram de Zippy"
+                    class="z-link-dim">
+                    <!-- Instagram: lucide ya no trae iconos de marca, va dibujado a mano. -->
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="2" width="20" height="20" rx="5.5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+                    </svg>
+                </a>
+                <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
+                    aria-label="WhatsApp de Zippy" class="z-link-dim">
+                    <i data-lucide="message-circle" class="w-6 h-6" stroke-width="1.6"></i>
+                </a>
+            </div>
+
+            <p class="text-base font-light z-ink-dim max-w-2xl leading-relaxed">
+                Zippy recoge tu vehículo, lo traslada al taller que elijas y te lo devuelve. No ejecuta ni supervisa
+                labores técnicas, no intermedia el pago del taller y no otorga garantías sobre la reparación.
+            </p>
+
+            <div
+                class="mt-14 pt-8 z-rule w-full flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-light z-ink-faint">
+                <p>© 2026 Zippy. Todos los derechos reservados.</p>
+                <div class="flex gap-6">
+                    <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
+                        class="z-link-dim">Contacto</a>
+                    <a href="recepcion.html" class="z-link-dim">Acceso operadores</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ ENCUESTA FLOTANTE ============ -->
+    <button type="button" class="z-fab" id="fab" aria-haspopup="dialog" aria-controls="wiz">
+        <i data-lucide="timer" class="z-fab__icon w-5 h-5" stroke-width="2"></i>
+        ¿Cuánto tiempo pierdes?
+    </button>
+
+    <div class="z-wiz" id="wiz" role="dialog" aria-modal="true" aria-labelledby="wizHeading" aria-hidden="true">
+        <div class="z-wiz__overlay" data-wiz-close></div>
+
+        <div class="z-wiz__card" id="wizCard" tabindex="-1">
+            <button type="button" class="z-wiz__close" data-wiz-close aria-label="Cerrar">
+                <i data-lucide="x" class="w-5 h-5" stroke-width="2"></i>
+            </button>
+
+            <p class="z-eyebrow" id="wizHeading">Tu tiempo</p>
+
+            <div class="z-wiz__q is-on" data-q>
+                <h3 class="z-wiz__title mt-3">¿Cuántas veces al año va tu carro al taller?</h3>
+                <p class="z-wiz__hint">Mantenimiento, lavado, revisión, lo que sea.</p>
+                <p class="z-wiz__readout"><span class="z-wiz__num" data-out>3</span>
+                    <span class="z-wiz__unit">veces al año</span>
+                </p>
+                <input class="z-wiz__slider" type="range" min="1" max="12" step="1" value="3"
+                    aria-label="Veces al año que llevas el carro al taller">
+                <span class="z-wiz__ends"><span>1</span><span>12 o más</span></span>
+            </div>
+
+            <div class="z-wiz__q" data-q>
+                <h3 class="z-wiz__title mt-3">¿Cuánto te toma un viaje al taller?</h3>
+                <p class="z-wiz__hint">Solo la ida, de puerta a puerta, con trancón incluido.</p>
+                <p class="z-wiz__readout"><span class="z-wiz__num" data-out>1,5</span>
+                    <span class="z-wiz__unit">horas por viaje</span>
+                </p>
+                <input class="z-wiz__slider" type="range" min="0.5" max="4" step="0.5" value="1.5"
+                    aria-label="Horas que te toma un viaje al taller">
+                <span class="z-wiz__ends"><span>Media hora</span><span>4 horas</span></span>
+            </div>
+
+            <div class="z-wiz__q" data-q>
+                <h3 class="z-wiz__title mt-3">¿Cuántos de esos viajes caen en tu horario de trabajo?</h3>
+                <p class="z-wiz__hint">De los que te toca pedir permiso o salir corriendo.</p>
+                <p class="z-wiz__readout"><span class="z-wiz__num z-wiz__num--word" data-out>La mitad</span>
+                    <span class="z-wiz__unit">en horas de trabajo</span>
+                </p>
+                <input class="z-wiz__slider" type="range" min="0" max="100" step="25" value="50"
+                    data-words="Ninguno|Pocos|La mitad|Casi todos|Todos"
+                    aria-label="Viajes que caen en tu horario de trabajo">
+                <span class="z-wiz__ends"><span>Ninguno</span><span>Todos</span></span>
+            </div>
+
+            <div class="z-wiz__q" data-q>
+                <h3 class="z-wiz__title mt-3">¿Has aplazado un mantenimiento por no tener cuándo?</h3>
+                <p class="z-wiz__hint">Sin culpa: pasa.</p>
+                <p class="z-wiz__readout"><span class="z-wiz__num z-wiz__num--word" data-out>Una vez</span>
+                    <span class="z-wiz__unit">lo he dejado para después</span>
+                </p>
+                <input class="z-wiz__slider" type="range" min="0" max="100" step="25" value="25"
+                    data-words="Nunca|Una vez|Alguna vez|Varias veces|Siempre"
+                    aria-label="Veces que has aplazado un mantenimiento">
+                <span class="z-wiz__ends"><span>Nunca</span><span>Siempre</span></span>
+            </div>
+
+            <div class="z-wiz__q z-wiz__result" data-result>
+                <p class="z-wiz__big" id="wizBig"></p>
+                <p class="z-wiz__bigunit" id="wizBigUnit"></p>
+                <h3 class="z-wiz__title mt-5" id="wizTitle"></h3>
+                <p class="z-wiz__note" id="wizNote"></p>
+                <p class="z-wiz__fine">Es una estimación hecha con lo que acabas de responder, no un diagnóstico.</p>
+                <a class="z-btn z-btn--primary w-full mt-6" id="wizWa" href="https://wa.me/573117055495"
+                    target="_blank" rel="noopener noreferrer">
+                    <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
+                    Escribir a Zippy
+                </a>
+                <button type="button" class="z-wiz__back mt-5" data-wiz-close>Cerrar</button>
+            </div>
+
+            <div class="z-wiz__nav" id="wizNav">
+                <button type="button" class="z-wiz__back" id="wizPrev" hidden>Anterior</button>
+                <span class="z-wiz__dots" id="wizDots">
+                    <span class="z-wiz__dot is-on"></span>
+                    <span class="z-wiz__dot"></span>
+                    <span class="z-wiz__dot"></span>
+                    <span class="z-wiz__dot"></span>
+                </span>
+                <button type="button" class="z-btn z-btn--ghost z-btn--sm" id="wizNext">Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/nuevo.js"></script>
+</body>
+
+</html>
