@@ -164,15 +164,13 @@
                     <label for="aseguradora">Aseguradora (todo riesgo)</label>
                     <datalist id="lista-aseguradoras"></datalist>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="campo-fecha">
-                        <span>Vence SOAT</span>
-                        <input type="date" id="vence-soat">
-                    </div>
-                    <div class="campo-fecha">
-                        <span>Vence tecnomecánica</span>
-                        <input type="date" id="vence-tecno">
-                    </div>
+                <div class="campo-fecha">
+                    <span>Vence SOAT (opcional)</span>
+                    <input type="date" id="vence-soat">
+                </div>
+                <div class="campo-fecha">
+                    <span>Vence tecnomecánica (opcional)</span>
+                    <input type="date" id="vence-tecno">
                 </div>
             </div>
             <div class="item-inv items-start mb-3" id="fila-documentos" onclick="alternarDocumentos(this)">

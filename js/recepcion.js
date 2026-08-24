@@ -973,7 +973,7 @@ function nuevaActa() {
    Esconde el acta de un visitante casual, no de alguien que lea el fuente.
    Para cambiar la clave: printf '%s' 'NUEVA' | shasum -a 256  ->  pega el resultado aquí. */
 
-const HASH_CLAVE = 'd413d8287604ac27d95dacefe4ed5fe4ea25f10a19a5d6e23707127499c970a2';
+const HASH_CLAVE = '77fe9a9670cf93d0f96c4281ec37d4ef0412133ebb77f9692dd0baae7b65ca82';
 const CLAVE_SESION = 'zippy_acta_acceso';
 
 /* SHA-256 en JS puro: crypto.subtle no existe al abrir el archivo con file://. */
