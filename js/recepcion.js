@@ -70,7 +70,8 @@ const estado = {
     terminos: false,  // el cliente aceptó los términos / recibió a conformidad
     poliza: false,    // el operador verificó la póliza todo riesgo
     documentos: false, // SOAT y tecnomecánica vigentes
-    firma: null,      // dataURL de la firma del cliente
+    firma: null,         // dataURL de la firma del cliente
+    firmaOperador: null, // dataURL de la firma del operador
     tipo: 'recogida', // 'recogida' | 'devolucion'
 };
 
@@ -190,7 +191,7 @@ function irAPaso(n) {
     $('etiqueta-paso').textContent = `Paso ${pasoActual} de ${TOTAL_PASOS}`;
     $('btn-atras').classList.toggle('invisible', pasoActual === 1);
     $('btn-siguiente').classList.toggle('hidden', pasoActual === TOTAL_PASOS);
-    if (pasoActual === TOTAL_PASOS) { pintarResumen(); dimensionarFirma(); }
+    if (pasoActual === TOTAL_PASOS) { pintarResumen(); dimensionarFirmas(); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     lucide.createIcons();
 }
@@ -262,6 +263,12 @@ function tocarSlot(anguloId, evento) {
     const y = (evento.clientY - caja.top) / caja.height;
     foto.marcas.push({ x, y, nota: '', foto: null });
     pintarSlots();
+    const nueva = numeroBaseDe(anguloId) + foto.marcas.length;
+    const tarjeta = $(`detalle-${nueva}`);
+    if (tarjeta) {
+        tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        tarjeta.querySelector('input').focus({ preventScroll: true });
+    }
 }
 
 function repetirFoto(anguloId, evento) {
@@ -273,26 +280,27 @@ function repetirFoto(anguloId, evento) {
 function pintarMarcas() {
     const lista = marcasNumeradas();
     $('sin-marcas').classList.toggle('hidden', lista.length > 0);
-    $('lista-marcas').innerHTML = lista.map((m) => {
+    $('lista-detalles').innerHTML = lista.map((m) => {
         const ang = ANGULOS.find((a) => a.label === m.angulo).id;
         return `
-        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 flex gap-4 items-start">
-            <span class="w-8 h-8 shrink-0 rounded-full bg-blue-500 text-white text-sm font-semibold flex items-center justify-center">${m.numero}</span>
-            <div class="flex-1 space-y-3">
-                <p class="text-xs uppercase tracking-wider text-slate-500">${m.angulo}</p>
-                <input type="text" value="${(m.nota || '').replace(/"/g, '&quot;')}"
-                       oninput="anotarMarca('${ang}', ${m.indice}, this.value)"
-                       placeholder="Rayón, abolladura, vidrio..."
-                       class="w-full bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-white/40">
-                <div class="flex items-center gap-3">
-                    <button type="button" onclick="fotoDeDetalle('${ang}', ${m.indice})"
-                            class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1.5 transition-colors">
-                        <i data-lucide="camera" class="w-4 h-4"></i>${m.foto ? 'Cambiar acercamiento' : 'Foto de acercamiento'}
-                    </button>
-                    ${m.foto ? `<img src="${m.foto}" class="w-12 h-12 rounded-lg object-cover border border-white/10">` : ''}
-                    <button type="button" onclick="borrarMarca('${ang}', ${m.indice})"
-                            class="text-sm text-slate-500 hover:text-slate-300 ml-auto transition-colors">Quitar</button>
-                </div>
+        <div class="p-4 bg-white/5 rounded-2xl border border-white/5" id="detalle-${m.numero}">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="w-7 h-7 shrink-0 rounded-full bg-blue-500 text-white text-xs font-semibold flex items-center justify-center">${m.numero}</span>
+                <span class="flex-1 text-xs uppercase tracking-wider text-slate-500">${m.angulo}</span>
+                <button type="button" onclick="borrarMarca('${ang}', ${m.indice})"
+                        class="shrink-0 w-8 h-8 rounded-full text-slate-400 hover:text-white hover:bg-white/10 text-xl leading-none transition-colors"
+                        title="Quitar detalle">&times;</button>
+            </div>
+            <input type="text" value="${(m.nota || '').replace(/"/g, '&quot;')}"
+                   oninput="anotarMarca('${ang}', ${m.indice}, this.value)"
+                   placeholder="Rayón, abolladura, vidrio..."
+                   class="w-full bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-white/40 mb-3">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="fotoDeDetalle('${ang}', ${m.indice})"
+                        class="flex-1 border border-slate-400/20 hover:border-white/40 text-white rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="camera" class="w-4 h-4"></i>${m.foto ? 'Cambiar foto' : 'Acercamiento'}
+                </button>
+                ${m.foto ? `<img src="${m.foto}" class="w-11 h-11 shrink-0 rounded-lg object-cover border border-white/10">` : ''}
             </div>
         </div>`;
     }).join('');
@@ -458,8 +466,8 @@ function setTipoActa(tipo) {
 /* ---------- Listas sugeridas ---------- */
 
 function pintarListas() {
-    $('lista-marcas').innerHTML = MARCAS.map((m) => `<option value="${m}">`).join('');
-    $('lista-aseguradoras').innerHTML = ASEGURADORAS.map((a) => `<option value="${a}">`).join('');
+    $('sugerencias-marcas').innerHTML = MARCAS.map((m) => `<option value="${m}">`).join('');
+    $('sugerencias-aseguradoras').innerHTML = ASEGURADORAS.map((a) => `<option value="${a}">`).join('');
     pintarModelos();
 }
 
@@ -467,7 +475,7 @@ function pintarListas() {
 function pintarModelos() {
     const escrita = valor('marca').toLowerCase();
     const marca = Object.keys(MODELOS).find((m) => m.toLowerCase() === escrita);
-    $('lista-modelos').innerHTML = (MODELOS[marca] || []).map((m) => `<option value="${m}">`).join('');
+    $('sugerencias-modelos').innerHTML = (MODELOS[marca] || []).map((m) => `<option value="${m}">`).join('');
 }
 
 /* ---------- Medidor de combustible ---------- */
@@ -524,66 +532,77 @@ function pintarCombustible() {
 
 /* ---------- Firma del cliente ---------- */
 
-let trazando = false;
-let ctxFirma = null;
+/* Dos lienzos: el cliente y el operador firman por separado. */
+const FIRMAS = [
+    { lienzo: 'lienzo-firma', clave: 'firma' },
+    { lienzo: 'lienzo-firma-operador', clave: 'firmaOperador' },
+];
 
-/* El lienzo vive en un paso oculto: solo se puede medir cuando el paso 4 está a la vista. */
-function prepararFirma() {
-    const lienzo = $('lienzo-firma');
-    const punto = (e) => {
-        const caja = lienzo.getBoundingClientRect();
-        const t = e.touches ? e.touches[0] : e;
-        return { x: t.clientX - caja.left, y: t.clientY - caja.top };
-    };
-    const empezar = (e) => {
-        if (!ctxFirma) return;
-        e.preventDefault(); trazando = true;
-        const p = punto(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y);
-    };
-    const seguir = (e) => {
-        if (!trazando) return;
-        e.preventDefault();
-        const p = punto(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke();
-    };
-    const soltar = () => {
-        if (!trazando) return;
-        trazando = false;
-        estado.firma = lienzo.toDataURL('image/png');
-    };
-    ['mousedown', 'touchstart'].forEach((ev) => lienzo.addEventListener(ev, empezar, { passive: false }));
-    ['mousemove', 'touchmove'].forEach((ev) => lienzo.addEventListener(ev, seguir, { passive: false }));
-    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach((ev) => lienzo.addEventListener(ev, soltar));
+const ctxFirma = {};
+
+function prepararFirmas() {
+    FIRMAS.forEach(({ lienzo: id, clave }) => {
+        const lienzo = $(id);
+        let trazando = false;
+        const punto = (e) => {
+            const caja = lienzo.getBoundingClientRect();
+            const t = e.touches ? e.touches[0] : e;
+            return { x: t.clientX - caja.left, y: t.clientY - caja.top };
+        };
+        const empezar = (e) => {
+            if (!ctxFirma[id]) return;
+            e.preventDefault(); trazando = true;
+            const p = punto(e); ctxFirma[id].beginPath(); ctxFirma[id].moveTo(p.x, p.y);
+        };
+        const seguir = (e) => {
+            if (!trazando) return;
+            e.preventDefault();
+            const p = punto(e); ctxFirma[id].lineTo(p.x, p.y); ctxFirma[id].stroke();
+        };
+        const soltar = () => {
+            if (!trazando) return;
+            trazando = false;
+            estado[clave] = lienzo.toDataURL('image/png');
+        };
+        ['mousedown', 'touchstart'].forEach((ev) => lienzo.addEventListener(ev, empezar, { passive: false }));
+        ['mousemove', 'touchmove'].forEach((ev) => lienzo.addEventListener(ev, seguir, { passive: false }));
+        ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach((ev) => lienzo.addEventListener(ev, soltar));
+    });
 }
 
-/* Redimensionar borra el lienzo, así que solo se hace si cambió de tamaño, y se repinta la firma. */
-function dimensionarFirma() {
-    const lienzo = $('lienzo-firma');
-    const escala = window.devicePixelRatio || 1;
-    const ancho = Math.round(lienzo.offsetWidth * escala);
-    const alto = Math.round(lienzo.offsetHeight * escala);
-    if (!ancho || !alto) return;
-    const trazos = estado.firma;
-    if (lienzo.width !== ancho || lienzo.height !== alto) {
-        lienzo.width = ancho;
-        lienzo.height = alto;
-    }
-    ctxFirma = lienzo.getContext('2d');
-    ctxFirma.setTransform(escala, 0, 0, escala, 0, 0);
-    ctxFirma.lineWidth = 2.2;
-    ctxFirma.lineCap = 'round';
-    ctxFirma.lineJoin = 'round';
-    ctxFirma.strokeStyle = '#0f172a';
-    if (trazos) {
-        const img = new Image();
-        img.onload = () => ctxFirma.drawImage(img, 0, 0, lienzo.offsetWidth, lienzo.offsetHeight);
-        img.src = trazos;
-    }
+/* Redimensionar borra el lienzo, así que solo se hace si cambió de tamaño, y se repinta lo firmado. */
+function dimensionarFirmas() {
+    FIRMAS.forEach(({ lienzo: id, clave }) => {
+        const lienzo = $(id);
+        const escala = window.devicePixelRatio || 1;
+        const ancho = Math.round(lienzo.offsetWidth * escala);
+        const alto = Math.round(lienzo.offsetHeight * escala);
+        if (!ancho || !alto) return;
+        const trazos = estado[clave];
+        if (lienzo.width !== ancho || lienzo.height !== alto) {
+            lienzo.width = ancho;
+            lienzo.height = alto;
+        }
+        const ctx = lienzo.getContext('2d');
+        ctx.setTransform(escala, 0, 0, escala, 0, 0);
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#0f172a';
+        ctxFirma[id] = ctx;
+        if (trazos) {
+            const img = new Image();
+            img.onload = () => ctx.drawImage(img, 0, 0, lienzo.offsetWidth, lienzo.offsetHeight);
+            img.src = trazos;
+        }
+    });
 }
 
-function limpiarFirma() {
-    const lienzo = $('lienzo-firma');
-    if (ctxFirma) ctxFirma.clearRect(0, 0, lienzo.width, lienzo.height);
-    estado.firma = null;
+function limpiarFirma(id) {
+    const lienzo = $(id);
+    if (ctxFirma[id]) ctxFirma[id].clearRect(0, 0, lienzo.width, lienzo.height);
+    const entrada = FIRMAS.find((f) => f.lienzo === id);
+    estado[entrada.clave] = null;
 }
 
 function alternarDocumentos(el) {
@@ -695,6 +714,10 @@ async function generarPDF() {
     }
     if (!estado.firma) {
         avisar('Falta la firma del cliente.');
+        return;
+    }
+    if (!estado.firmaOperador) {
+        avisar('Falta la firma del operador.');
         return;
     }
     const boton = $('btn-pdf');
@@ -915,6 +938,9 @@ async function generarPDF() {
         if (estado.firma) {
             doc.addImage(estado.firma, 'PNG', M, y, 60, 20);
         }
+        if (estado.firmaOperador) {
+            doc.addImage(estado.firmaOperador, 'PNG', ANCHO - M - 65, y, 60, 20);
+        }
         y += 22;
         doc.setDrawColor(150, 160, 175);
         doc.line(M, y, M + 70, y);
@@ -1060,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pintarSlots();
     pintarInventario();
     pintarListas();
-    prepararFirma();
+    prepararFirmas();
     pintarCombustible();
     setTipoActa('recogida');
     cargarBorrador();
