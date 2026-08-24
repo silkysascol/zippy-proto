@@ -184,13 +184,43 @@ body {
 
 /* Campo de la compuerta: sin etiqueta flotante, el placeholder se ve. */
 .campo-clave input {
-    padding: 1.15rem 1.25rem;
+    padding: 1.15rem 3.25rem;
     text-align: center;
     letter-spacing: 0.05em;
 }
 
 .campo-clave input::placeholder {
     color: #64748b;
+}
+
+/* Ojo para mostrar/ocultar la clave. Botón real dentro del campo, área táctil 44x44. */
+.btn-toggle-clave {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-toggle-clave:hover,
+.btn-toggle-clave:focus-visible {
+    color: #ffffff;
+}
+
+.btn-toggle-clave svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* Campo de fecha: la etiqueta no puede flotar porque el input nunca está "vacío". */

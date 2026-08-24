@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/recepcion.css?v=4">
+    <link rel="stylesheet" href="css/recepcion.css?v=5">
 </head>
 
 <body class="min-h-screen">
@@ -29,6 +29,10 @@
 
             <div class="campo campo-clave mb-4">
                 <input type="password" id="clave" placeholder="Clave" autocomplete="current-password">
+                <button type="button" id="btn-toggle-clave" class="btn-toggle-clave"
+                    aria-label="Mostrar contraseña" aria-pressed="false">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                </button>
             </div>
             <p id="error-clave" class="hidden text-amber-300/90 text-sm mb-4">Clave incorrecta.</p>
 
@@ -350,7 +354,7 @@
 
     </div><!-- /app -->
 
-    <script src="js/recepcion.js?v=4"></script>
+    <script src="js/recepcion.js?v=5"></script>
     <script>lucide.createIcons();</script>
 </body>
 

@@ -1100,6 +1100,21 @@ function sha256(texto) {
     return h.map((v) => (v >>> 0).toString(16).padStart(8, '0')).join('');
 }
 
+function alternarVisibilidadClave() {
+    const input = $('clave');
+    const boton = $('btn-toggle-clave');
+    const inicio = input.selectionStart;
+    const fin = input.selectionEnd;
+    const mostrar = input.type === 'password';
+    input.type = mostrar ? 'text' : 'password';
+    boton.setAttribute('aria-pressed', String(mostrar));
+    boton.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    boton.innerHTML = `<i data-lucide="${mostrar ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
+    lucide.createIcons();
+    input.focus();
+    try { input.setSelectionRange(inicio, fin); } catch (e) { /* algunos navegadores no lo permiten */ }
+}
+
 function intentarEntrar() {
     const clave = $('clave').value;
     if (!clave) return;
@@ -1132,6 +1147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (abierta) abrirActa();
     $('clave').addEventListener('keydown', (e) => { if (e.key === 'Enter') intentarEntrar(); });
     $('clave').addEventListener('input', () => $('error-clave').classList.add('hidden'));
+    $('btn-toggle-clave').addEventListener('click', alternarVisibilidadClave);
     $('taller').innerHTML = TALLERES.map((t) => `<option value="${t}">${t}</option>`).join('');
     $('servicio').innerHTML = SERVICIOS.map((s) => `<option value="${s}">${s}</option>`).join('');
     pintarSlots();
