@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/recepcion.css?v=3">
+    <link rel="stylesheet" href="css/recepcion.css?v=4">
 </head>
 
 <body class="min-h-screen">
@@ -111,9 +111,12 @@
                     <input type="text" id="recogida-direccion" placeholder="Dirección de recogida">
                     <label for="recogida-direccion">Dirección de recogida</label>
                 </div>
-                <div class="campo">
-                    <input type="text" id="recogida-fecha" placeholder="Fecha y hora">
-                    <label for="recogida-fecha">Fecha y hora de recogida</label>
+                <div class="campo-fecha">
+                    <span class="flex items-center justify-between">Fecha y hora
+                        <button type="button" onclick="fecharAhora()"
+                            class="text-slate-400 hover:text-white transition-colors">Ahora</button>
+                    </span>
+                    <input type="datetime-local" id="recogida-fecha">
                 </div>
             </div>
 
@@ -347,7 +350,7 @@
 
     </div><!-- /app -->
 
-    <script src="js/recepcion.js?v=3"></script>
+    <script src="js/recepcion.js?v=4"></script>
     <script>lucide.createIcons();</script>
 </body>
 

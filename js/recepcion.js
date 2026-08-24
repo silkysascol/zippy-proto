@@ -95,6 +95,25 @@ function normalizarTelefono(bruto) {
     return digitos;
 }
 
+/* El input datetime-local trabaja en hora local: nada de toISOString, que pasa a UTC. */
+function ahoraLocal() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function fecharAhora() {
+    $('recogida-fecha').value = ahoraLocal();
+    guardarBorrador();
+}
+
+function fechaHoraLegible(iso) {
+    if (!iso) return '—';
+    const [fecha, hora] = iso.split('T');
+    const [a, m, d] = fecha.split('-');
+    return `${d}/${m}/${a}, ${hora}`;
+}
+
 function fechaLegible(iso) {
     if (!iso) return '—';
     const [a, m, d] = iso.split('-');
@@ -619,6 +638,15 @@ function alternarPoliza(el) {
 
 /* ---------- PDF ---------- */
 
+function medirImagen(src) {
+    return new Promise((resolver) => {
+        const img = new Image();
+        img.onload = () => resolver({ w: img.width, h: img.height });
+        img.onerror = () => resolver({ w: 4, h: 3 });
+        img.src = src;
+    });
+}
+
 /* El mismo medidor del formulario, trazado con segmentos porque jsPDF no dibuja arcos. */
 function dibujarCluster(doc, cx, cy, r, t) {
     const PASOS = 28;
@@ -692,6 +720,19 @@ function fotoConMarcas(anguloId) {
         };
         img.src = foto.src;
     });
+}
+
+/* Un solo archivo: un ancla con download y nada más. */
+function descargar(blob, nombre) {
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = nombre;
+    enlace.rel = 'noopener';
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 8000);
 }
 
 async function generarPDF() {
@@ -777,7 +818,7 @@ async function generarPDF() {
         par('Nombre', valor('cliente-nombre'), 0);
         par('Teléfono', valor('cliente-telefono'), 1);
         par('Dirección', valor('recogida-direccion'), 0);
-        par('Fecha y hora', valor('recogida-fecha'), 1);
+        par('Fecha y hora', fechaHoraLegible(valor('recogida-fecha')), 1);
         par('Operador Zippy', valor('operador-nombre'), 0);
         par('Cédula del operador', valor('operador-cedula'), 1);
 
@@ -867,9 +908,17 @@ async function generarPDF() {
         if (marcas.length) {
             espacio(28);
             titulo('Detalles señalados');
+            const ANCHO_DETALLE = UTIL - 10;
+            const ALTO_MAX = 105;   // una foto vertical si no se come la página entera
             for (const m of marcas) {
-                const alto = m.foto ? 32 : 12;
-                espacio(alto + 4);
+                const medida = m.foto ? await medirImagen(m.foto) : null;
+                let anchoFoto = ANCHO_DETALLE;
+                let altoFoto = medida ? ANCHO_DETALLE * (medida.h / medida.w) : 0;
+                if (altoFoto > ALTO_MAX) {
+                    anchoFoto = ALTO_MAX * (medida.w / medida.h);
+                    altoFoto = ALTO_MAX;
+                }
+                espacio(altoFoto + 16);
                 doc.setFillColor(59, 130, 246);
                 doc.circle(M + 3.5, y + 3, 3.5, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -881,9 +930,11 @@ async function generarPDF() {
                 doc.setFontSize(10);
                 doc.text(`${m.angulo}: ${m.nota || 'sin anotación'}`, M + 10, y + 4.2);
                 if (m.foto) {
-                    doc.addImage(m.foto, 'JPEG', M + 10, y + 7, 32, 24);
+                    doc.addImage(m.foto, 'JPEG', M + 10, y + 8, anchoFoto, altoFoto);
+                    y += altoFoto + 14;
+                } else {
+                    y += 10;
                 }
-                y += alto + 4;
             }
         }
 
@@ -951,7 +1002,7 @@ async function generarPDF() {
         doc.text(`Operador Zippy — ${valor('operador-nombre') || ''}`.slice(0, 46), ANCHO - M - 70, y + 5);
 
         const nombre = `Acta_Zippy_${ES_DEVOLUCION() ? 'devolucion' : 'recogida'}_${(valor('placa') || 'SINPLACA').toUpperCase()}_${folio}.pdf`;
-        doc.save(nombre);
+        descargar(doc.output('blob'), nombre);
         $('acciones-envio').classList.remove('hidden');
         $('nombre-pdf').textContent = nombre;
     } catch (e) {
@@ -1090,6 +1141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pintarCombustible();
     setTipoActa('recogida');
     cargarBorrador();
+    if (!valor('recogida-fecha')) $('recogida-fecha').value = ahoraLocal();
     CAMPOS_TEXTO.forEach((c) => {
         if ($(c)) $(c).addEventListener('input', guardarBorrador);
     });
