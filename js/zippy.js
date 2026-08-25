@@ -36,11 +36,12 @@
        progreso del scroll DENTRO de ese carril: 0 cuando el carril toca el
        borde de arriba de la pantalla, 1 cuando termina de despegarse.
 
-       De ese progreso salen dos cosas:
+       De ese progreso salen tres cosas, todas del mismo número:
        - el paso activo, que es el cuarto de recorrido en el que estás;
        - la posición del carro, que es CONTINUA: si bajas despacio el carro
          avanza despacio, y si subes, retrocede. No son cuatro posiciones
-         fijas con saltos entre medias.
+         fijas con saltos entre medias;
+       - el relleno de la línea de tiempo, tramo a tramo.
 
        El gesto no se secuestra nunca: no hay preventDefault ni scroll
        forzado. El usuario baja normal y, cuando el carril se acaba, la
@@ -76,6 +77,7 @@
     var caja = null;    // último rect del carril, leído en el evento scroll
     var cuadro = 0;
     var activo = -1;
+    var relleno = [];   // último --f escrito en cada paso, para no repetir
 
     // Todas las lecturas de layout viven aquí, y aquí no se pinta nada.
     function medir() {
@@ -122,6 +124,25 @@
         car.style.setProperty('--car-dir', p < .5 ? '1' : '-1');
         car.style.setProperty('--wheel', (camino(p) * largo * vuelta) + 'deg');
 
+        // La línea de tiempo sale del MISMO p que acaba de colocar el carro:
+        // un solo cálculo, así que no pueden desincronizarse. El tramo que
+        // sale del paso s se llena mientras ese paso es el actual, o sea
+        // mientras p va de s/4 a (s+1)/4. Por eso el tramo termina de
+        // llenarse justo cuando se enciende la tarjeta siguiente, y su nodo
+        // con ella.
+        //
+        // Solo se escribe cuando el valor cambia: una vez pegado a 0 o a 1,
+        // la mayoría de los cuadros no tocan nada. Y --f solo alimenta un
+        // scaleY/scaleX, que no obliga a recalcular la maqueta.
+        for (var s = 0; s < steps.length; s++) {
+            var f = p * steps.length - s;
+            f = f < 0 ? 0 : (f > 1 ? 1 : f);
+            if (f !== relleno[s]) {
+                relleno[s] = f;
+                steps[s].style.setProperty('--f', f);
+            }
+        }
+
         var i = Math.floor(p * steps.length);
         if (i > steps.length - 1) i = steps.length - 1;
         if (i < 0) i = 0;
@@ -130,6 +151,8 @@
 
         steps.forEach(function (b, n) {
             b.classList.toggle('is-active', n === i);
+            // Recorrido: el nodo se queda encendido una vez alcanzado.
+            b.classList.toggle('is-done', n <= i);
             b.setAttribute('aria-selected', n === i ? 'true' : 'false');
         });
 
@@ -149,7 +172,22 @@
         cuadro = 0;
         if (!caja) return;
         var recorrido = caja.height - altoEscena;
-        var p = recorrido > 0 ? (-caja.top) / recorrido : 0;
+        // Sin carril que recorrer (el CSS despega la sección en pantallas muy
+        // bajas) se pinta el ESTADO FINAL, no el inicial: línea completa y los
+        // cuatro nodos encendidos. Una barra vacía que no va a moverla nadie
+        // es peor que no tenerla.
+        if (recorrido <= 0) {
+            pintar(1);
+            // Y sin recorrido tampoco hay un paso "actual": están los cuatro a
+            // la vista con su frase, igual que con movimiento reducido.
+            steps.forEach(function (b) {
+                b.classList.remove('is-active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            activo = -1;   // si vuelve a haber carril (girar el teléfono), repinta
+            return;
+        }
+        var p = (-caja.top) / recorrido;
         pintar(p < 0 ? 0 : (p > 1 ? 1 : p));
     }
 
@@ -165,6 +203,8 @@
     // uno "actual": están los cuatro a la vista.
     if (reduce) {
         medir();
+        // La línea no se toca: sin .js-anima el CSS ya la deja completa y con
+        // los cuatro nodos encendidos.
         cab.style.setProperty('--car-x', '0px');
         car.style.setProperty('--car-dir', '-1');
         casa.classList.add('is-active');

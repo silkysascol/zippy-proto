@@ -1081,12 +1081,29 @@ body {
     position: relative;
 }
 
-/* Los pasos: en columna por defecto —que es como se leen sin JS y con
-   movimiento reducido— y en rejilla solo cuando hay recorrido. */
+/* Los pasos van SIEMPRE en una columna en el teléfono: una línea de tiempo de
+   cuatro nodos no se lee en una rejilla de 2x2, y en columna la línea cae
+   vertical por la izquierda, que es como se leen las líneas de tiempo en un
+   teléfono. La rejilla de cuatro, con la línea en horizontal, entra en
+   escritorio. Sin JS y con movimiento reducido se queda en columna a
+   cualquier ancho. */
 .z-steps {
+    /* Las dos medidas de las que cuelga la línea, en variables para poder
+       apretarlas de una pieza en pantallas bajas sin recalcular offsets a
+       mano: el hueco de la rejilla (que es lo que mide cada tramo de más
+       para llegar al nodo siguiente) y la altura del nodo dentro de su
+       tarjeta (alineado con el numeral 01/02/03/04). */
+    --hueco: .75rem;
+    --nodo-y: 14px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: .75rem;
+    gap: var(--hueco);
+    /* Carril de la línea, a la izquierda. Va aquí y no detrás de .js-anima
+       porque en columna la línea existe SIEMPRE —también sin JS y con
+       movimiento reducido—, y sin este hueco los nodos se salen por el borde
+       izquierdo de la pantalla. Solo la rejilla de cuatro lo cambia por el
+       carril de arriba. */
+    padding-left: 1.75rem;
 }
 
 /* Lo pegajoso vive entero detrás de .js-anima. Sin JS, este carril mediría
@@ -1116,13 +1133,12 @@ body {
     padding-bottom: 1.5rem;
 }
 
-:root.js-anima .z-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 @media (min-width: 768px) {
     :root.js-anima .z-steps {
         grid-template-columns: repeat(4, minmax(0, 1fr));
+        /* El carril pasa de la izquierda a la franja de arriba. */
+        padding-left: 0;
+        padding-top: 2rem;
     }
 }
 
@@ -1260,7 +1276,190 @@ body {
     display: block;
 }
 
+/* ---------- línea de tiempo de los pasos ----------
+   Cuatro nodos unidos por tres tramos. El relleno de cada tramo sale de la
+   MISMA variable de progreso que mueve el carro: el rAF escribe --f en cada
+   paso a partir del mismo p. No hay un segundo observador ni un segundo
+   cálculo, así que línea y carro no se pueden desincronizar.
+
+   Cada tramo se llena mientras su paso es el actual, de modo que un nodo se
+   enciende exactamente en el mismo instante en que se enciende su tarjeta.
+   Nada de dos señales para lo mismo en dos momentos distintos.
+
+   La geometría vive en cada paso y no en un carril global: el tramo mide su
+   propia tarjeta más el hueco de la rejilla, así que llega justo al centro
+   del nodo siguiente sin que nadie mida nada por JS, y da igual cuántas
+   columnas haya o que las tarjetas no midan lo mismo.
+
+   Por defecto —sin JS o con movimiento reducido— la línea está COMPLETA y
+   los cuatro nodos encendidos: nunca una barra a medio llenar que no mueve
+   nadie. Es .js-anima quien autoriza a vaciarla para que la llene el scroll. */
+
+.z-step__dot,
+.z-step__seg {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Vertical. Es lo del teléfono, y también lo que se ve sin JS y con
+   movimiento reducido, donde los pasos van en columna a cualquier ancho. */
+.z-step__dot {
+    left: -23px;
+    top: var(--nodo-y);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--accent);
+    transition: background-color .3s, border-color .3s, transform .3s var(--ease);
+}
+
+.z-step__seg {
+    left: -18px;
+    /* +6 px: el tramo arranca en el CENTRO del nodo, no en su borde. */
+    top: calc(var(--nodo-y) + 6px);
+    width: 2px;
+    /* 100% es la caja de relleno de la tarjeta, 2 px menos que su caja de
+       borde. Sumando esos 2 px y el hueco de la rejilla, el tramo termina
+       exactamente en el centro del nodo siguiente. */
+    height: calc(100% + 2px + var(--hueco));
+    background: var(--line-strong);
+    border-radius: 100px;
+}
+
+/* El último no une con nada. */
+.z-step:last-child .z-step__seg {
+    display: none;
+}
+
+.z-step__fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    background: var(--accent);
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+/* Con recorrido, los nodos nacen apagados y los tramos vacíos. */
+:root.js-anima .z-step__dot {
+    background: var(--bg);
+    border-color: var(--line-strong);
+}
+
+:root.js-anima .z-step.is-done .z-step__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+/* "Estás aquí": el nodo del paso actual crece un punto. Sin halos ni
+   parpadeos — se nota sin gritar, que la página es sobria. */
+:root.js-anima .z-step.is-active .z-step__dot {
+    transform: scale(1.4);
+}
+
+:root.js-anima .z-step__fill {
+    transform: scaleY(var(--f, 0));
+}
+
+/* Horizontal, en escritorio. Va detrás de .js-anima igual que la rejilla de
+   cuatro: sin JS los pasos siguen en columna a cualquier ancho, y ahí la
+   línea tiene que seguir cayendo vertical. */
+@media (min-width: 768px) {
+    :root.js-anima .z-step__dot {
+        left: 50%;
+        top: -24px;
+        /* margen y no translate: el translate lo gasta el nodo activo. */
+        margin-left: -6px;
+    }
+
+    :root.js-anima .z-step__seg {
+        left: 50%;
+        top: -19px;
+        width: calc(100% + 2px + var(--hueco));
+        height: 2px;
+    }
+
+    :root.js-anima .z-step__fill {
+        transform: scaleX(var(--f, 0));
+        transform-origin: left;
+    }
+}
+
+/* Teléfono corto (un iPhone SE, un 8): con los pasos en columna el escenario
+   pide ~744 px y ahí no hay tantos. Como lo pegajoso no puede desplazarse por
+   dentro, lo que sobra no se ve nunca: se comería justo la frase del paso. Se
+   aprieta todo el conjunto —hueco del header, escena, tarjetas y línea— en vez
+   de dejar que recorte. Solo en teléfono: en un escritorio bajo no hace falta
+   y sería un recorte gratis. */
+@media (max-width: 767px) and (max-height: 760px) {
+    :root.js-anima .z-journey__stage {
+        padding-top: 3.5rem;
+        padding-bottom: .5rem;
+    }
+
+    :root.js-anima .z-scene {
+        height: clamp(180px, 46vw, 230px);
+    }
+
+    :root.js-anima .z-steps {
+        --hueco: .5rem;
+        --nodo-y: 10px;
+    }
+
+    :root.js-anima .z-step {
+        padding: .55rem .9rem;
+    }
+}
+
+/* Y por debajo de eso —un teléfono en horizontal— no hay recorrido que valga:
+   la sección se despega y pasa a ser la misma lista que se ve sin JS. El JS lo
+   detecta solo, porque el carril deja de tener recorrido, y pinta el estado
+   final: línea completa y los cuatro nodos encendidos. */
+@media (max-width: 900px) and (max-height: 585px) {
+    :root.js-anima .z-journey {
+        height: auto;
+    }
+
+    :root.js-anima .z-journey__stage {
+        position: static;
+        display: block;
+        min-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    :root.js-anima .z-steps {
+        grid-template-columns: 1fr;
+        padding-left: 1.75rem;
+        padding-top: 0;
+    }
+
+    :root.js-anima .z-step__c {
+        display: block;
+    }
+
+    :root.js-anima .z-journey .z-step__panel {
+        display: none;
+    }
+
+    :root.js-anima .z-step__dot {
+        left: -23px;
+        top: var(--nodo-y);
+        margin-left: 0;
+    }
+
+    :root.js-anima .z-step__seg {
+        left: -18px;
+        top: calc(var(--nodo-y) + 6px);
+        width: 2px;
+        height: calc(100% + 2px + var(--hueco));
+    }
+}
+
 .z-step {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: .3rem;
@@ -2112,6 +2311,33 @@ input:focus-visible {
 
     :root.js-anima .z-steps {
         grid-template-columns: 1fr;
+        padding-left: 1.75rem;
+        padding-top: 0;
+    }
+
+    /* La línea, completa y con los cuatro nodos encendidos: nunca una barra a
+       medio llenar sin contexto. Y de vuelta a vertical, porque los pasos
+       vuelven a la columna a cualquier ancho. */
+    .z-step__dot,
+    :root.js-anima .z-step__dot {
+        left: -23px;
+        top: var(--nodo-y);
+        margin-left: 0;
+        background: var(--accent);
+        border-color: var(--accent);
+        transform: none;
+        transition: none;
+    }
+
+    :root.js-anima .z-step__seg {
+        left: -18px;
+        top: calc(var(--nodo-y) + 6px);
+        width: 2px;
+        height: calc(100% + 2px + var(--hueco));
+    }
+
+    :root.js-anima .z-step__fill {
+        transform: none;
     }
 
     :root.js-anima .z-step__c {

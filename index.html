@@ -334,25 +334,34 @@
                     </div>
                 </div>
 
-                <!-- La frase de cada paso vive DENTRO del paso, no en un data-attribute:
+                <!-- Línea de tiempo: cada paso lleva su nodo y el tramo que lo une con
+                     el siguiente. La geometría va en el propio paso, no en un carril
+                     aparte, así encaja sola tanto en columna (teléfono) como en
+                     rejilla de cuatro (escritorio) sin medir nada por JS.
+
+                     La frase de cada paso vive DENTRO del paso, no en un data-attribute:
                      así está en el marcado aunque el JS no llegue, y con movimiento
                      reducido se lee bajo su paso sin necesidad del panel. -->
                 <div class="z-steps mt-6" role="tablist"
                     aria-label="Pasos del recorrido">
                     <button type="button" class="z-step" data-step="0" role="tab" aria-selected="true">
+                        <span class="z-step__seg" aria-hidden="true"><span class="z-step__fill"></span></span><span class="z-step__dot" aria-hidden="true"></span>
                         <span class="z-step__n">01</span><span class="z-step__t">Recogemos</span>
                         <span class="z-step__c">Acta con fotos y tu firma antes de mover el carro.</span>
                     </button>
                     <button type="button" class="z-step" data-step="1" role="tab" aria-selected="false">
+                        <span class="z-step__seg" aria-hidden="true"><span class="z-step__fill"></span></span><span class="z-step__dot" aria-hidden="true"></span>
                         <span class="z-step__n">02</span><span class="z-step__t">Llevamos</span>
                         <span class="z-step__c">Al taller que elijas, el tuyo o uno de nuestra red, conducido por un
                             operador de Zippy.</span>
                     </button>
                     <button type="button" class="z-step" data-step="2" role="tab" aria-selected="false">
+                        <span class="z-step__seg" aria-hidden="true"><span class="z-step__fill"></span></span><span class="z-step__dot" aria-hidden="true"></span>
                         <span class="z-step__n">03</span><span class="z-step__t">El taller trabaja</span>
                         <span class="z-step__c">Le pagas directo al taller. Ahí no nos metemos.</span>
                     </button>
                     <button type="button" class="z-step" data-step="3" role="tab" aria-selected="false">
+                        <span class="z-step__seg" aria-hidden="true"><span class="z-step__fill"></span></span><span class="z-step__dot" aria-hidden="true"></span>
                         <span class="z-step__n">04</span><span class="z-step__t">Devolvemos</span>
                         <span class="z-step__c">Segunda acta y te lo entregamos donde estés.</span>
                     </button>
