@@ -249,19 +249,19 @@ function alternarTallerOtro() {
 function pintarSlots() {
     $('grid-fotos').innerHTML = ANGULOS.map((ang) => `
         <div>
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-2">${ang.label}</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-2">${ang.label}</p>
             <div class="slot-foto ${estado.fotos[ang.id] ? 'con-foto' : ''}" id="slot-${ang.id}"
                  onclick="tocarSlot('${ang.id}', event)">
                 ${estado.fotos[ang.id]
             ? `<img src="${estado.fotos[ang.id].src}" alt="${ang.label}">` +
             estado.fotos[ang.id].marcas.map((m, i) =>
                 `<span class="marca" style="left:${m.x * 100}%;top:${m.y * 100}%">${numeroBaseDe(ang.id) + i + 1}</span>`).join('')
-            : `<span class="text-slate-500 text-sm flex flex-col items-center gap-2">
+            : `<span class="r-text-dim text-sm flex flex-col items-center gap-2">
                        <i data-lucide="camera" class="w-7 h-7"></i> Tomar foto</span>`}
             </div>
             ${estado.fotos[ang.id]
             ? `<button type="button" onclick="repetirFoto('${ang.id}', event)"
-                     class="text-xs text-slate-400 hover:text-white mt-2 transition-colors">Repetir foto</button>`
+                     class="text-xs r-link mt-2">Repetir foto</button>`
             : ''}
         </div>
     `).join('');
@@ -302,24 +302,24 @@ function pintarMarcas() {
     $('lista-detalles').innerHTML = lista.map((m) => {
         const ang = ANGULOS.find((a) => a.label === m.angulo).id;
         return `
-        <div class="p-4 bg-white/5 rounded-2xl border border-white/5" id="detalle-${m.numero}">
+        <div class="p-4 r-card-detalle rounded-2xl" id="detalle-${m.numero}">
             <div class="flex items-center gap-3 mb-3">
-                <span class="w-7 h-7 shrink-0 rounded-full bg-blue-500 text-white text-xs font-semibold flex items-center justify-center">${m.numero}</span>
-                <span class="flex-1 text-xs uppercase tracking-wider text-slate-500">${m.angulo}</span>
+                <span class="w-7 h-7 shrink-0 rounded-full r-badge-accent text-xs font-semibold flex items-center justify-center">${m.numero}</span>
+                <span class="flex-1 text-xs uppercase tracking-wider r-eyebrow">${m.angulo}</span>
                 <button type="button" onclick="borrarMarca('${ang}', ${m.indice})"
-                        class="shrink-0 w-8 h-8 rounded-full text-slate-400 hover:text-white hover:bg-white/10 text-xl leading-none transition-colors"
+                        class="shrink-0 w-8 h-8 rounded-full r-icon-btn text-xl leading-none"
                         title="Quitar detalle">&times;</button>
             </div>
             <input type="text" value="${(m.nota || '').replace(/"/g, '&quot;')}"
                    oninput="anotarMarca('${ang}', ${m.indice}, this.value)"
                    placeholder="Rayón, abolladura, vidrio..."
-                   class="w-full bg-slate-950/50 border border-slate-500/20 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-white/40 mb-3">
+                   class="w-full r-input-flat rounded-xl px-4 py-3 text-sm outline-none mb-3">
             <div class="flex items-center gap-3">
                 <button type="button" onclick="fotoDeDetalle('${ang}', ${m.indice})"
-                        class="flex-1 border border-slate-400/20 hover:border-white/40 text-white rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 transition-colors">
+                        class="flex-1 r-btn-ghost rounded-xl py-2.5 text-sm flex items-center justify-center gap-2">
                     <i data-lucide="camera" class="w-4 h-4"></i>${m.foto ? 'Cambiar foto' : 'Acercamiento'}
                 </button>
-                ${m.foto ? `<img src="${m.foto}" class="w-11 h-11 shrink-0 rounded-lg object-cover border border-white/10">` : ''}
+                ${m.foto ? `<img src="${m.foto}" class="w-11 h-11 shrink-0 rounded-lg object-cover r-card-detalle">` : ''}
             </div>
         </div>`;
     }).join('');
@@ -385,10 +385,10 @@ function pintarInventario() {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"
                      stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </span>
-            <span class="text-[0.95rem] text-slate-300 flex-1">${escapar(item)}</span>
+            <span class="text-[0.95rem] r-text-soft flex-1">${escapar(item)}</span>
             ${i >= INVENTARIO.length
             ? `<button type="button" onclick="quitarItem(event, ${i})"
-                     class="text-slate-500 hover:text-white text-lg leading-none px-1 transition-colors"
+                     class="r-link text-lg leading-none px-1"
                      title="Quitar ítem">&times;</button>`
             : ''}
         </div>
@@ -452,9 +452,9 @@ function pintarResumen() {
         ['Combustible', FRACCIONES[nivelCombustible()]],
     ];
     $('tabla-resumen').innerHTML = filas.map(([k, v]) => `
-        <div class="flex justify-between gap-4 py-3 border-b border-white/5">
-            <span class="text-slate-500">${k}</span>
-            <span class="text-white text-right font-medium">${v}</span>
+        <div class="flex justify-between gap-4 py-3 r-summary-row">
+            <span class="r-text-dim">${k}</span>
+            <span class="r-text text-right font-medium">${v}</span>
         </div>`).join('');
 }
 
@@ -471,10 +471,10 @@ function setTipoActa(tipo) {
     estado.tipo = tipo;
     const devolucion = ES_DEVOLUCION();
     $('indicador-tipo').style.transform = devolucion ? 'translateX(100%)' : 'translateX(0)';
-    $('btn-tipo-recogida').classList.toggle('text-white', !devolucion);
-    $('btn-tipo-recogida').classList.toggle('text-slate-400', devolucion);
-    $('btn-tipo-devolucion').classList.toggle('text-white', devolucion);
-    $('btn-tipo-devolucion').classList.toggle('text-slate-400', !devolucion);
+    $('btn-tipo-recogida').classList.toggle('r-text', !devolucion);
+    $('btn-tipo-recogida').classList.toggle('r-text-muted', devolucion);
+    $('btn-tipo-devolucion').classList.toggle('r-text', devolucion);
+    $('btn-tipo-devolucion').classList.toggle('r-text-muted', !devolucion);
     $('titulo-paso1').textContent = devolucion ? 'Datos de la devolución' : 'Datos de la recogida';
     $('texto-terminos').textContent = devolucion
         ? 'El cliente recibe el vehículo a conformidad, según el estado registrado en esta acta.'
@@ -527,24 +527,27 @@ function pintarCombustible() {
         const a = puntoArco(cx, cy, r - 3, v);
         const b = puntoArco(cx, cy, r - (v % 0.5 === 0 ? 16 : 11), v);
         return `<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"
-                      stroke="#64748b" stroke-width="2" stroke-linecap="round"/>`;
+                      stroke="var(--gauge-tick)" stroke-width="2" stroke-linecap="round"/>`;
     }).join('');
 
+    /* Colores por var(--token): el navegador resuelve las custom properties
+       en atributos de presentación SVG igual que en CSS, así el arco, las
+       marcas y la aguja se leen sobre fondo claro y oscuro. */
     $('cluster').innerHTML = `
         <svg viewBox="0 0 220 118" class="w-full max-w-[230px]" xmlns="http://www.w3.org/2000/svg">
             <path d="M ${ini.x.toFixed(1)} ${ini.y.toFixed(1)} A ${r} ${r} 0 0 1 ${fin.x.toFixed(1)} ${fin.y.toFixed(1)}"
-                  fill="none" stroke="rgba(148,163,184,0.25)" stroke-width="7" stroke-linecap="round"/>
+                  fill="none" stroke="var(--gauge-track)" stroke-width="7" stroke-linecap="round"/>
             ${t > 0 ? `<path d="M ${ini.x.toFixed(1)} ${ini.y.toFixed(1)} A ${r} ${r} 0 0 1 ${hasta.x.toFixed(1)} ${hasta.y.toFixed(1)}"
-                  fill="none" stroke="#3b82f6" stroke-width="7" stroke-linecap="round"/>` : ''}
+                  fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>` : ''}
             ${marcas}
-            <text x="${(ini.x + 6).toFixed(1)}" y="${(ini.y + 18).toFixed(1)}" fill="#94a3b8"
+            <text x="${(ini.x + 6).toFixed(1)}" y="${(ini.y + 18).toFixed(1)}" fill="var(--gauge-label)"
                   font-size="15" font-weight="600" text-anchor="middle">E</text>
-            <text x="${(fin.x - 6).toFixed(1)}" y="${(fin.y + 18).toFixed(1)}" fill="#94a3b8"
+            <text x="${(fin.x - 6).toFixed(1)}" y="${(fin.y + 18).toFixed(1)}" fill="var(--gauge-label)"
                   font-size="15" font-weight="600" text-anchor="middle">F</text>
             <line x1="${cx}" y1="${cy}" x2="${aguja.x.toFixed(1)}" y2="${aguja.y.toFixed(1)}"
-                  stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="${cx}" cy="${cy}" r="6" fill="#f8fafc"/>
-            <circle cx="${cx}" cy="${cy}" r="2.5" fill="#020617"/>
+                  stroke="var(--gauge-needle)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="${cx}" cy="${cy}" r="6" fill="var(--gauge-needle)"/>
+            <circle cx="${cx}" cy="${cy}" r="2.5" fill="var(--input-bg)"/>
         </svg>`;
     guardarBorrador();
 }
@@ -1045,6 +1048,37 @@ function nuevaActa() {
     location.reload();
 }
 
+/* ---------- Tema (claro / oscuro) ----------
+   Misma clave de localStorage que la web pública, zippy-tema, con los
+   mismos valores: quien elige tema en index.html lo encuentra igual aquí.
+   El atributo data-tema ya lo puso el script en línea del <head> antes de
+   pintar; esta parte solo atiende el clic de los dos interruptores (el de
+   la compuerta y el del encabezado) y mantiene sus aria-label al día. */
+
+const CLAVE_TEMA = 'zippy-tema';
+
+function temaEfectivo() {
+    const manual = document.documentElement.getAttribute('data-tema');
+    if (manual === 'claro' || manual === 'oscuro') return manual;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro';
+}
+
+function sincronizarBotonesTema() {
+    const claro = temaEfectivo() === 'claro';
+    const etiqueta = claro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
+    ['btn-tema', 'btn-tema-compuerta'].forEach((id) => {
+        const boton = $(id);
+        if (boton) boton.setAttribute('aria-label', etiqueta);
+    });
+}
+
+function alternarTema() {
+    const siguiente = temaEfectivo() === 'claro' ? 'oscuro' : 'claro';
+    document.documentElement.setAttribute('data-tema', siguiente);
+    try { localStorage.setItem(CLAVE_TEMA, siguiente); } catch (e) { /* modo privado */ }
+    sincronizarBotonesTema();
+}
+
 /* ---------- Compuerta de acceso ----------
    Candado de cortesía: la página es estática, así que el hash viaja en el código.
    Esconde el acta de un visitante casual, no de alguien que lea el fuente.
@@ -1148,6 +1182,11 @@ document.addEventListener('DOMContentLoaded', () => {
     $('clave').addEventListener('keydown', (e) => { if (e.key === 'Enter') intentarEntrar(); });
     $('clave').addEventListener('input', () => $('error-clave').classList.add('hidden'));
     $('btn-toggle-clave').addEventListener('click', alternarVisibilidadClave);
+    sincronizarBotonesTema();
+    ['btn-tema', 'btn-tema-compuerta'].forEach((id) => $(id) && $(id).addEventListener('click', alternarTema));
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', sincronizarBotonesTema);
+    }
     $('taller').innerHTML = TALLERES.map((t) => `<option value="${t}">${t}</option>`).join('');
     $('servicio').innerHTML = SERVICIOS.map((s) => `<option value="${s}">${s}</option>`).join('');
     pintarSlots();

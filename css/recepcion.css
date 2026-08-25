@@ -1,13 +1,248 @@
-/* Zippy — Acta de recepción. Tokens heredados de index.html (slate-950, Plus Jakarta Sans). */
+/* Zippy — Acta de recepción.
+
+   Paleta tokenizada, mismo patrón que css/zippy.css (leído aquí solo como
+   referencia, sin tocarlo). TODOS los colores viven en tres bloques con los
+   mismos tokens:
+   1. :root                                  — paleta por defecto (oscura).
+   2. @media (prefers-color-scheme: light)   — reemplaza :root cuando el
+      sistema pide claro y no hay elección manual guardada.
+   3. :root[data-tema="oscuro"] / [data-tema="claro"] — elección manual
+      (guardada por js/recepcion.js en localStorage, clave "zippy-tema",
+      la MISMA que usa la web pública). Gana siempre por especificidad de
+      atributo, en los dos sentidos.
+   Ningún color tiene su única definición dentro de un @media.
+
+   --marker-fixed-* y --sign-bg quedan CONSTANTES en los tres bloques a
+   propósito: el pin de detalle vive sobre una fotografía real (no sobre el
+   fondo de la página) y el lienzo de firma es papel para firmar, no una
+   superficie de interfaz — igual que --traffic-* y --lamp-* en zippy.css. */
+
+:root {
+    color-scheme: dark;
+
+    /* superficies */
+    --bg: #020617;
+    --chrome-bg: rgba(2, 6, 23, .82);
+    --panel-1: rgba(255, 255, 255, .05);
+    --panel-2: rgba(255, 255, 255, .1);
+    --input-bg: rgba(2, 6, 23, .5);
+    --input-bg-focus: rgba(2, 6, 23, .8);
+    --resumen-bg: rgba(15, 23, 42, .3);
+
+    /* líneas */
+    --line: rgba(255, 255, 255, .05);
+    --line-strong: rgba(148, 163, 184, .2);
+    --line-hover: rgba(255, 255, 255, .4);
+
+    /* texto */
+    --txt: rgba(255, 255, 255, .9);
+    --txt-soft: #cbd5e1;
+    --muted: #94a3b8;
+    --muted-dim: #7e8ea8;
+
+    /* acento (progreso, marcas activas, insignia de detalle) */
+    --accent: #3b82f6;
+    --accent-strong: #2563eb;
+    --on-accent: #ffffff;
+    --accent-soft-bg: rgba(59, 130, 246, .12);
+    --accent-border: rgba(59, 130, 246, .5);
+
+    /* ámbar: solo avisos, nunca rojo */
+    --amber-bg: rgba(245, 158, 11, .15);
+    --amber-border: rgba(251, 191, 36, .3);
+    --amber-ink: #fde68a;
+
+    /* botón primario: el más fuerte de la pantalla, invertido sobre el fondo */
+    --btn-primary-bg: #ffffff;
+    --btn-primary-bg-hover: #e2e8f0;
+    --btn-primary-text: #020617;
+
+    /* medidor de combustible */
+    --gauge-track: rgba(148, 163, 184, .25);
+    --gauge-tick: #94a3b8;
+    --gauge-label: #94a3b8;
+    --gauge-needle: #f8fafc;
+
+    /* deslizador de combustible */
+    --slider-track: rgba(148, 163, 184, .25);
+    --slider-thumb: #ffffff;
+    --slider-thumb-shadow: rgba(2, 6, 23, .6);
+
+    /* icono del selector de fecha nativo */
+    --calendar-invert: 0.7;
+
+    /* pin de detalle sobre foto: constante en los dos temas */
+    --marker-fixed-bg: #3b82f6;
+    --marker-fixed-ring: rgba(255, 255, 255, .9);
+    --marker-fixed-shadow: rgba(2, 6, 23, .6);
+
+    /* lienzo de firma: constante en los dos temas, es papel, no interfaz */
+    --sign-bg: #ffffff;
+    --sign-border: rgba(148, 163, 184, .2);
+}
+
+/* Tema claro por preferencia del sistema, sin elección manual guardada. */
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+
+        --bg: #f3f6fb;
+        --chrome-bg: rgba(243, 246, 251, .85);
+        --panel-1: rgba(15, 23, 42, .04);
+        --panel-2: rgba(15, 23, 42, .08);
+        --input-bg: #ffffff;
+        --input-bg-focus: #ffffff;
+        --resumen-bg: #eef2f8;
+
+        --line: rgba(15, 23, 42, .1);
+        --line-strong: rgba(15, 23, 42, .18);
+        --line-hover: rgba(15, 23, 42, .5);
+
+        --txt: #0f172a;
+        --txt-soft: #1e293b;
+        --muted: #46566b;
+        --muted-dim: #55677d;
+
+        --accent: #1d4ed8;
+        --accent-strong: #1e40af;
+        --on-accent: #ffffff;
+        --accent-soft-bg: rgba(29, 78, 216, .1);
+        --accent-border: rgba(29, 78, 216, .45);
+
+        --amber-bg: #fdf1de;
+        --amber-border: rgba(180, 83, 9, .35);
+        --amber-ink: #7c3a0a;
+
+        --btn-primary-bg: #0f172a;
+        --btn-primary-bg-hover: #1e293b;
+        --btn-primary-text: #ffffff;
+
+        --gauge-track: rgba(15, 23, 42, .16);
+        --gauge-tick: #55677d;
+        --gauge-label: #46566b;
+        --gauge-needle: #0f172a;
+
+        --slider-track: rgba(15, 23, 42, .16);
+        --slider-thumb: #0f172a;
+        --slider-thumb-shadow: rgba(15, 23, 42, .3);
+
+        --calendar-invert: 0;
+
+        --sign-border: rgba(15, 23, 42, .35);
+    }
+}
+
+/* Elección manual (recepcion.js la guarda en localStorage, clave
+   "zippy-tema"): gana siempre sobre el sistema, en los dos sentidos, por
+   especificidad de atributo. */
+:root[data-tema="oscuro"] {
+    color-scheme: dark;
+
+    --bg: #020617;
+    --chrome-bg: rgba(2, 6, 23, .82);
+    --panel-1: rgba(255, 255, 255, .05);
+    --panel-2: rgba(255, 255, 255, .1);
+    --input-bg: rgba(2, 6, 23, .5);
+    --input-bg-focus: rgba(2, 6, 23, .8);
+    --resumen-bg: rgba(15, 23, 42, .3);
+
+    --line: rgba(255, 255, 255, .05);
+    --line-strong: rgba(148, 163, 184, .2);
+    --line-hover: rgba(255, 255, 255, .4);
+
+    --txt: rgba(255, 255, 255, .9);
+    --txt-soft: #cbd5e1;
+    --muted: #94a3b8;
+    --muted-dim: #7e8ea8;
+
+    --accent: #3b82f6;
+    --accent-strong: #2563eb;
+    --on-accent: #ffffff;
+    --accent-soft-bg: rgba(59, 130, 246, .12);
+    --accent-border: rgba(59, 130, 246, .5);
+
+    --amber-bg: rgba(245, 158, 11, .15);
+    --amber-border: rgba(251, 191, 36, .3);
+    --amber-ink: #fde68a;
+
+    --btn-primary-bg: #ffffff;
+    --btn-primary-bg-hover: #e2e8f0;
+    --btn-primary-text: #020617;
+
+    --gauge-track: rgba(148, 163, 184, .25);
+    --gauge-tick: #94a3b8;
+    --gauge-label: #94a3b8;
+    --gauge-needle: #f8fafc;
+
+    --slider-track: rgba(148, 163, 184, .25);
+    --slider-thumb: #ffffff;
+    --slider-thumb-shadow: rgba(2, 6, 23, .6);
+
+    --calendar-invert: 0.7;
+
+    --sign-border: rgba(148, 163, 184, .2);
+}
+
+:root[data-tema="claro"] {
+    color-scheme: light;
+
+    --bg: #f3f6fb;
+    --chrome-bg: rgba(243, 246, 251, .85);
+    --panel-1: rgba(15, 23, 42, .04);
+    --panel-2: rgba(15, 23, 42, .08);
+    --input-bg: #ffffff;
+    --input-bg-focus: #ffffff;
+    --resumen-bg: #eef2f8;
+
+    --line: rgba(15, 23, 42, .1);
+    --line-strong: rgba(15, 23, 42, .18);
+    --line-hover: rgba(15, 23, 42, .5);
+
+    --txt: #0f172a;
+    --txt-soft: #1e293b;
+    --muted: #46566b;
+    --muted-dim: #55677d;
+
+    --accent: #1d4ed8;
+    --accent-strong: #1e40af;
+    --on-accent: #ffffff;
+    --accent-soft-bg: rgba(29, 78, 216, .1);
+    --accent-border: rgba(29, 78, 216, .45);
+
+    --amber-bg: #fdf1de;
+    --amber-border: rgba(180, 83, 9, .35);
+    --amber-ink: #7c3a0a;
+
+    --btn-primary-bg: #0f172a;
+    --btn-primary-bg-hover: #1e293b;
+    --btn-primary-text: #ffffff;
+
+    --gauge-track: rgba(15, 23, 42, .16);
+    --gauge-tick: #55677d;
+    --gauge-label: #46566b;
+    --gauge-needle: #0f172a;
+
+    --slider-track: rgba(15, 23, 42, .16);
+    --slider-thumb: #0f172a;
+    --slider-thumb-shadow: rgba(15, 23, 42, .3);
+
+    --calendar-invert: 0;
+
+    --sign-border: rgba(15, 23, 42, .35);
+}
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #020617;
-    color: rgba(255, 255, 255, 0.9);
+    background-color: var(--bg);
+    color: var(--txt);
+    transition: background-color .25s ease;
 }
 
+/* Tailwind pinta text-white a blanco puro; conservamos la clase por
+   compatibilidad con marcado antiguo, pero ya no se usa en el HTML: las
+   piezas nuevas usan .r-text. */
 .text-white {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: var(--txt) !important;
 }
 
 /* Pasos del wizard */
@@ -41,12 +276,12 @@ body {
 .campo select,
 .campo textarea {
     width: 100%;
-    background-color: rgba(2, 6, 23, 0.5);
-    border: 1px solid rgba(100, 116, 139, 0.2);
+    background-color: var(--input-bg);
+    border: 1px solid var(--line-strong);
     border-radius: 1rem;
     padding: 1.75rem 1.25rem 0.75rem;
     font-size: 1.05rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--txt);
     transition: all 0.3s ease;
     outline: none;
     appearance: none;
@@ -65,8 +300,8 @@ body {
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
-    border-color: rgba(255, 255, 255, 0.4);
-    background-color: rgba(2, 6, 23, 0.8);
+    border-color: var(--line-hover);
+    background-color: var(--input-bg-focus);
 }
 
 .campo label {
@@ -75,7 +310,7 @@ body {
     top: 1.1rem;
     font-size: 1rem;
     font-weight: 300;
-    color: #94a3b8;
+    color: var(--muted);
     pointer-events: none;
     transform-origin: left;
     transition: all 0.3s ease;
@@ -87,7 +322,7 @@ body {
 .campo textarea:not(:placeholder-shown)~label,
 .campo select~label {
     transform: translateY(-0.65rem) scale(0.8);
-    color: #94a3b8;
+    color: var(--muted);
 }
 
 /* Slot de foto por ángulo */
@@ -95,19 +330,19 @@ body {
     position: relative;
     aspect-ratio: 4 / 3;
     border-radius: 1.25rem;
-    border: 1px dashed rgba(148, 163, 184, 0.3);
-    background-color: rgba(2, 6, 23, 0.5);
+    border: 1px dashed var(--line-strong);
+    background-color: var(--input-bg);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color .25s ease;
 }
 
 .slot-foto.con-foto {
     border-style: solid;
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--line-strong);
     cursor: crosshair;
 }
 
@@ -118,22 +353,23 @@ body {
     display: block;
 }
 
-/* Marcador de detalle sobre la foto */
+/* Marcador de detalle sobre la foto: constante en los dos temas, porque
+   vive encima de una fotografía real, no del fondo de la página. */
 .marca {
     position: absolute;
     width: 1.75rem;
     height: 1.75rem;
     margin: -0.875rem 0 0 -0.875rem;
     border-radius: 999px;
-    background-color: #3b82f6;
-    border: 2px solid rgba(255, 255, 255, 0.9);
+    background-color: var(--marker-fixed-bg);
+    border: 2px solid var(--marker-fixed-ring);
     color: #fff;
     font-size: 0.8rem;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.6);
+    box-shadow: 0 4px 12px var(--marker-fixed-shadow);
     pointer-events: none;
 }
 
@@ -144,16 +380,16 @@ body {
     gap: 0.75rem;
     padding: 0.9rem 1rem;
     border-radius: 1rem;
-    border: 1px solid rgba(100, 116, 139, 0.15);
-    background-color: rgba(2, 6, 23, 0.4);
+    border: 1px solid var(--line-strong);
+    background-color: var(--panel-1);
     cursor: pointer;
     transition: all 0.25s ease;
     user-select: none;
 }
 
 .item-inv.activo {
-    border-color: rgba(59, 130, 246, 0.5);
-    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-border);
+    background-color: var(--accent-soft-bg);
 }
 
 .caja-check {
@@ -161,7 +397,7 @@ body {
     height: 1.35rem;
     flex-shrink: 0;
     border-radius: 0.45rem;
-    border: 1px solid rgba(148, 163, 184, 0.4);
+    border: 1px solid var(--line-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -169,8 +405,8 @@ body {
 }
 
 .item-inv.activo .caja-check {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 
 .caja-check svg {
@@ -190,7 +426,7 @@ body {
 }
 
 .campo-clave input::placeholder {
-    color: #64748b;
+    color: var(--muted-dim);
 }
 
 /* Ojo para mostrar/ocultar la clave. Botón real dentro del campo, área táctil 44x44. */
@@ -208,14 +444,14 @@ body {
     border: none;
     padding: 0;
     margin: 0;
-    color: #94a3b8;
+    color: var(--muted);
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .btn-toggle-clave:hover,
 .btn-toggle-clave:focus-visible {
-    color: #ffffff;
+    color: var(--txt);
 }
 
 .btn-toggle-clave svg {
@@ -227,28 +463,28 @@ body {
 .campo-fecha span {
     display: block;
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: var(--muted);
     margin: 0 0 0.4rem 0.35rem;
 }
 
 .campo-fecha input {
     width: 100%;
-    background-color: rgba(2, 6, 23, 0.5);
-    border: 1px solid rgba(100, 116, 139, 0.2);
+    background-color: var(--input-bg);
+    border: 1px solid var(--line-strong);
     border-radius: 1rem;
     padding: 0.85rem 1rem;
     font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--txt);
     outline: none;
     transition: all 0.3s ease;
 }
 
 .campo-fecha input:focus {
-    border-color: rgba(255, 255, 255, 0.4);
+    border-color: var(--line-hover);
 }
 
 .campo-fecha input::-webkit-calendar-picker-indicator {
-    filter: invert(0.7);
+    filter: invert(var(--calendar-invert));
     cursor: pointer;
 }
 
@@ -258,7 +494,7 @@ body {
     appearance: none;
     height: 4px;
     border-radius: 999px;
-    background: rgba(148, 163, 184, 0.25);
+    background: var(--slider-track);
     outline: none;
 }
 
@@ -268,17 +504,242 @@ body {
     width: 1.6rem;
     height: 1.6rem;
     border-radius: 999px;
-    background: #ffffff;
+    background: var(--slider-thumb);
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.6);
+    box-shadow: 0 4px 12px var(--slider-thumb-shadow);
 }
 
 .deslizador::-moz-range-thumb {
     width: 1.6rem;
     height: 1.6rem;
     border-radius: 999px;
-    background: #ffffff;
+    background: var(--slider-thumb);
     border: none;
     cursor: pointer;
+}
+
+/* ---------- interruptor de tema ----------
+   Dos botones (compuerta y encabezado) comparten esta clase. Los dos
+   iconos viven siempre en el DOM; cuál se ve lo decide la cascada de
+   arriba, no JS — así los dos botones quedan sincronizados sin código
+   extra cuando cambia data-tema. */
+.r-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--panel-1);
+    border: 1px solid var(--line-strong);
+    color: var(--txt);
+    cursor: pointer;
+    transition: background-color .25s ease, border-color .25s ease;
+}
+
+.r-theme-toggle:hover,
+.r-theme-toggle:focus-visible {
+    background: var(--panel-2);
+}
+
+.r-theme-toggle svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* Por defecto (oscuro): luna visible, sol oculto. */
+.r-theme-toggle__sol {
+    display: none;
+}
+
+.r-theme-toggle__luna {
+    display: block;
+}
+
+/* Sistema en claro, sin elección manual: se invierte. */
+@media (prefers-color-scheme: light) {
+    .r-theme-toggle__sol {
+        display: block;
+    }
+
+    .r-theme-toggle__luna {
+        display: none;
+    }
+}
+
+/* Elección manual: gana siempre, en los dos sentidos. */
+:root[data-tema="oscuro"] .r-theme-toggle__sol {
+    display: none;
+}
+
+:root[data-tema="oscuro"] .r-theme-toggle__luna {
+    display: block;
+}
+
+:root[data-tema="claro"] .r-theme-toggle__sol {
+    display: block;
+}
+
+:root[data-tema="claro"] .r-theme-toggle__luna {
+    display: none;
+}
+
+/* ---------- componentes que reemplazan utilidades de color de Tailwind ----------
+   El marcado sigue usando utilidades de Tailwind para layout (flex, grid,
+   padding, radios...); solo el COLOR sale de aquí. */
+
+.r-text {
+    color: var(--txt);
+}
+
+.r-text-soft {
+    color: var(--txt-soft);
+}
+
+.r-text-muted {
+    color: var(--muted);
+}
+
+.r-text-dim {
+    color: var(--muted-dim);
+}
+
+.r-eyebrow {
+    color: var(--muted-dim);
+}
+
+.r-icon-box {
+    background: var(--panel-1);
+    border: 1px solid var(--line-strong);
+    color: var(--muted);
+}
+
+.r-link {
+    color: var(--muted-dim);
+    transition: color .2s ease;
+}
+
+.r-link:hover,
+.r-link:focus-visible {
+    color: var(--txt);
+}
+
+.r-link--soft:hover,
+.r-link--soft:focus-visible {
+    color: var(--txt-soft);
+}
+
+.r-icon-btn {
+    color: var(--muted-dim);
+    transition: color .2s ease, background-color .2s ease;
+}
+
+.r-icon-btn:hover,
+.r-icon-btn:focus-visible {
+    color: var(--txt);
+    background: var(--panel-2);
+}
+
+.r-btn-primary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    transition: background-color .3s ease, transform .3s ease;
+}
+
+.r-btn-primary:hover {
+    background: var(--btn-primary-bg-hover);
+}
+
+.r-btn-ghost {
+    border: 1px solid var(--line-strong);
+    color: var(--txt);
+    transition: border-color .3s ease, transform .3s ease;
+}
+
+.r-btn-ghost:hover,
+.r-btn-ghost:focus-visible {
+    border-color: var(--line-hover);
+}
+
+.r-header,
+.r-nav {
+    background: var(--chrome-bg);
+    transition: background-color .25s ease;
+}
+
+.r-progress-track {
+    background: var(--line-strong);
+}
+
+.r-progress-fill {
+    background: var(--accent);
+}
+
+.r-aviso {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    color: var(--amber-ink);
+}
+
+.r-error-clave {
+    color: var(--amber-ink);
+}
+
+.r-segmented {
+    background: var(--input-bg);
+    border: 1px solid var(--line-strong);
+}
+
+.r-segmented__indicador {
+    background: var(--panel-2);
+}
+
+.r-fuel-card {
+    background: var(--input-bg);
+    border: 1px solid var(--line-strong);
+}
+
+.r-card-detalle {
+    background: var(--panel-1);
+    border: 1px solid var(--line);
+}
+
+.r-badge-accent {
+    background: var(--accent-strong);
+    color: var(--on-accent);
+}
+
+.r-input-flat {
+    background: var(--input-bg);
+    border: 1px solid var(--line-strong);
+    color: var(--txt);
+    transition: border-color .3s ease;
+}
+
+.r-input-flat:focus {
+    border-color: var(--line-hover);
+}
+
+.r-summary-card {
+    background: var(--resumen-bg);
+    border: 1px solid var(--line-strong);
+}
+
+.r-summary-row {
+    border-bottom: 1px solid var(--line);
+}
+
+.r-sign-card {
+    background: var(--sign-bg);
+    border: 1px solid var(--sign-border);
+}
+
+.r-info-box {
+    background: var(--panel-1);
+}
+
+.r-border-line {
+    border-color: var(--line);
 }

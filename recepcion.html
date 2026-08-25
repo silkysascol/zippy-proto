@@ -4,6 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- Aplica la elección de tema guardada antes de pintar, para que no haya
+         destello. Misma clave de localStorage que la web pública: zippy-tema. -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('zippy-tema');
+                if (t === 'claro' || t === 'oscuro') document.documentElement.setAttribute('data-tema', t);
+            } catch (e) { /* modo privado: se queda con la preferencia del sistema */ }
+        })();
+    </script>
     <title>Zippy | Acta de recogida de vehículo</title>
     <meta name="robots" content="noindex">
     <link rel="icon" type="image/png" href="assets/Adobe Express - file.png">
@@ -13,19 +23,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/recepcion.css?v=5">
+    <link rel="stylesheet" href="css/recepcion.css?v=6">
 </head>
 
 <body class="min-h-screen">
 
     <!-- Compuerta de acceso -->
     <section id="compuerta" class="min-h-screen flex items-center justify-center px-6">
+        <button type="button" id="btn-tema-compuerta" class="r-theme-toggle" style="position:fixed;top:1.25rem;right:1.25rem"
+            aria-label="Cambiar a modo claro">
+            <i data-lucide="sun" class="r-theme-toggle__sol"></i>
+            <i data-lucide="moon" class="r-theme-toggle__luna"></i>
+        </button>
         <div class="w-full max-w-sm text-center">
-            <div class="w-14 h-14 mx-auto mb-8 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                <i data-lucide="lock" class="w-6 h-6 text-slate-400"></i>
+            <div class="w-14 h-14 mx-auto mb-8 rounded-2xl r-icon-box flex items-center justify-center">
+                <i data-lucide="lock" class="w-6 h-6"></i>
             </div>
-            <h1 class="text-3xl font-medium tracking-tight text-white mb-2">Acta de recogida</h1>
-            <p class="text-slate-400 font-light mb-10">Uso interno. Ingresa la clave para abrirla.</p>
+            <h1 class="text-3xl font-medium tracking-tight r-text mb-2">Acta de recogida</h1>
+            <p class="r-text-muted font-light mb-10">Uso interno. Ingresa la clave para abrirla.</p>
 
             <div class="campo campo-clave mb-4">
                 <input type="password" id="clave" placeholder="Clave" autocomplete="current-password">
@@ -34,13 +49,13 @@
                     <i data-lucide="eye" class="w-5 h-5"></i>
                 </button>
             </div>
-            <p id="error-clave" class="hidden text-amber-300/90 text-sm mb-4">Clave incorrecta.</p>
+            <p id="error-clave" class="hidden r-error-clave text-sm mb-4">Clave incorrecta.</p>
 
             <button type="button" onclick="intentarEntrar()"
-                class="w-full bg-white text-slate-950 hover:bg-slate-200 rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95">
+                class="w-full r-btn-primary rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95">
                 Abrir acta
             </button>
-            <a href="index.html" class="block text-slate-500 hover:text-slate-300 text-sm mt-6 transition-colors">Volver
+            <a href="index.html" class="block r-link r-link--soft text-sm mt-6">Volver
                 al sitio</a>
         </div>
     </section>
@@ -48,22 +63,26 @@
     <div id="app" class="hidden">
 
     <!-- Encabezado -->
-    <header class="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-xl border-b border-white/5">
+    <header class="sticky top-0 z-30 r-header r-border-line border-b">
         <div class="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2 text-white">
-                <i data-lucide="chevron-left" class="w-5 h-5 text-slate-400"></i>
+            <a href="index.html" class="flex items-center gap-2 r-text">
+                <i data-lucide="chevron-left" class="w-5 h-5 r-text-muted"></i>
                 <span class="text-lg font-medium tracking-tight">Zippy</span>
             </a>
-            <div class="flex items-center gap-4">
-                <span id="etiqueta-paso" class="text-sm text-slate-400 font-light">Paso 1 de 4</span>
+            <div class="flex items-center gap-3">
+                <span id="etiqueta-paso" class="text-sm r-text-muted font-light">Paso 1 de 4</span>
+                <button type="button" id="btn-tema" class="r-theme-toggle" aria-label="Cambiar a modo claro">
+                    <i data-lucide="sun" class="r-theme-toggle__sol"></i>
+                    <i data-lucide="moon" class="r-theme-toggle__luna"></i>
+                </button>
                 <button type="button" id="btn-cerrar-sesion" onclick="cerrarSesion()"
-                    class="hidden text-slate-500 hover:text-white transition-colors" title="Cerrar acceso">
+                    class="hidden r-icon-btn rounded-full w-11 h-11 flex items-center justify-center" title="Cerrar acceso">
                     <i data-lucide="lock" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
-        <div class="h-[2px] bg-white/5">
-            <div id="barra-progreso" class="h-full bg-blue-500 transition-all duration-500 ease-out" style="width:25%">
+        <div class="h-[2px] r-progress-track">
+            <div id="barra-progreso" class="h-full r-progress-fill transition-all duration-500 ease-out" style="width:25%">
             </div>
         </div>
     </header>
@@ -71,25 +90,25 @@
     <main class="max-w-3xl mx-auto px-5 py-10 pb-40">
 
         <div id="aviso"
-            class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-40 bg-amber-500/15 border border-amber-400/30 text-amber-200 px-5 py-3 rounded-2xl text-sm backdrop-blur-xl">
+            class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-40 r-aviso px-5 py-3 rounded-2xl text-sm backdrop-blur-xl">
         </div>
 
         <!-- Paso 1: datos -->
         <section class="paso">
-            <h1 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-2" id="titulo-paso1">Datos de la recogida</h1>
-            <p class="text-slate-400 font-light mb-10">Quién es el cliente, qué vehículo y a dónde va.</p>
+            <h1 class="text-3xl md:text-4xl font-medium tracking-tight r-text mb-2" id="titulo-paso1">Datos de la recogida</h1>
+            <p class="r-text-muted font-light mb-10">Quién es el cliente, qué vehículo y a dónde va.</p>
 
-            <div class="relative bg-slate-950/50 p-1.5 rounded-2xl flex mb-10 border border-slate-500/10">
+            <div class="relative r-segmented p-1.5 rounded-2xl flex mb-10">
                 <div id="indicador-tipo"
-                    class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 bg-white/10 rounded-xl transition-all duration-300 ease-out z-0 w-[calc(50%-6px)]">
+                    class="absolute h-[calc(100%-12px)] top-1.5 left-1.5 r-segmented__indicador rounded-xl transition-all duration-300 ease-out z-0 w-[calc(50%-6px)]">
                 </div>
                 <button type="button" onclick="setTipoActa('recogida')" id="btn-tipo-recogida"
-                    class="relative z-10 flex-1 py-3 text-sm font-medium text-white transition-colors">Recogida</button>
+                    class="relative z-10 flex-1 py-3 text-sm font-medium r-text transition-colors">Recogida</button>
                 <button type="button" onclick="setTipoActa('devolucion')" id="btn-tipo-devolucion"
-                    class="relative z-10 flex-1 py-3 text-sm font-medium text-slate-400 transition-colors">Devolución</button>
+                    class="relative z-10 flex-1 py-3 text-sm font-medium r-text-muted transition-colors">Devolución</button>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Operador Zippy</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Operador Zippy</p>
             <div class="grid grid-cols-2 gap-4 mb-10">
                 <div class="campo">
                     <input type="text" id="operador-nombre" placeholder="Nombre">
@@ -101,7 +120,7 @@
                 </div>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Cliente</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Cliente</p>
             <div class="space-y-4 mb-10">
                 <div class="campo">
                     <input type="text" id="cliente-nombre" placeholder="Nombre del cliente">
@@ -118,13 +137,13 @@
                 <div class="campo-fecha">
                     <span class="flex items-center justify-between">Fecha y hora
                         <button type="button" onclick="fecharAhora()"
-                            class="text-slate-400 hover:text-white transition-colors">Ahora</button>
+                            class="r-link">Ahora</button>
                     </span>
                     <input type="datetime-local" id="recogida-fecha">
                 </div>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Vehículo</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Vehículo</p>
             <div class="grid grid-cols-2 gap-4 mb-10">
                 <div class="campo col-span-2">
                     <input type="text" id="placa" placeholder="Placa" style="text-transform:uppercase">
@@ -152,10 +171,10 @@
                     <input type="text" id="kilometraje" inputmode="numeric" placeholder="Kilometraje">
                     <label for="kilometraje">Kilometraje</label>
                 </div>
-                <div class="col-span-2 bg-slate-950/50 border border-slate-500/20 rounded-2xl px-5 pt-4 pb-5">
+                <div class="col-span-2 r-fuel-card rounded-2xl px-5 pt-4 pb-5">
                     <div class="flex items-baseline justify-between mb-1">
-                        <span class="text-sm text-slate-400 font-light">Combustible</span>
-                        <span id="texto-combustible" class="text-lg text-white font-medium">1/2</span>
+                        <span class="text-sm r-text-muted font-light">Combustible</span>
+                        <span id="texto-combustible" class="text-lg r-text font-medium">1/2</span>
                     </div>
                     <div id="cluster" class="flex justify-center"></div>
                     <input type="range" id="combustible" min="0" max="8" step="1" value="4"
@@ -163,7 +182,7 @@
                 </div>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Seguro</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Seguro</p>
             <div class="space-y-4 mb-4">
                 <div class="campo">
                     <input type="text" id="aseguradora" placeholder="Aseguradora" list="sugerencias-aseguradoras"
@@ -187,7 +206,7 @@
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </span>
-                <span class="text-[0.95rem] text-slate-300 leading-relaxed">
+                <span class="text-[0.95rem] r-text-soft leading-relaxed">
                     SOAT y revisión tecnomecánica vigentes.
                 </span>
             </div>
@@ -198,12 +217,12 @@
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </span>
-                <span class="text-[0.95rem] text-slate-300 leading-relaxed">
+                <span class="text-[0.95rem] r-text-soft leading-relaxed">
                     Póliza todo riesgo vigente y ampara conductores autorizados.
                 </span>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Destino</p>
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Destino</p>
             <div class="space-y-4">
                 <div class="campo">
                     <select id="taller"></select>
@@ -226,14 +245,14 @@
 
         <!-- Paso 2: fotos -->
         <section class="paso oculto">
-            <h1 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-2">Estado del vehículo</h1>
-            <p class="text-slate-400 font-light mb-10">Una foto por ángulo. Después toca sobre la foto para señalar un
+            <h1 class="text-3xl md:text-4xl font-medium tracking-tight r-text mb-2">Estado del vehículo</h1>
+            <p class="r-text-muted font-light mb-10">Una foto por ángulo. Después toca sobre la foto para señalar un
                 detalle.</p>
 
             <div id="grid-fotos" class="grid grid-cols-2 gap-4 mb-12"></div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-4">Detalles señalados</p>
-            <p id="sin-marcas" class="text-slate-500 font-light text-sm mb-4">
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-4">Detalles señalados</p>
+            <p id="sin-marcas" class="r-text-dim font-light text-sm mb-4">
                 Aún no hay detalles. Toca sobre cualquier foto para marcar uno.
             </p>
             <div id="lista-detalles" class="space-y-4"></div>
@@ -244,16 +263,16 @@
 
         <!-- Paso 3: inventario -->
         <section class="paso oculto">
-            <h1 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-2">Inventario</h1>
-            <p class="text-slate-400 font-light mb-10">Marca lo que sí viene con el vehículo.</p>
+            <h1 class="text-3xl md:text-4xl font-medium tracking-tight r-text mb-2">Inventario</h1>
+            <p class="r-text-muted font-light mb-10">Marca lo que sí viene con el vehículo.</p>
 
             <div id="grid-inventario" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"></div>
 
             <div class="flex gap-3 mb-10">
                 <input type="text" id="nuevo-item" placeholder="Añadir otro ítem"
-                    class="flex-1 bg-slate-950/50 border border-slate-500/20 rounded-2xl px-5 py-3.5 text-white text-[0.95rem] outline-none focus:border-white/40 transition-all duration-300">
+                    class="flex-1 r-input-flat rounded-2xl px-5 py-3.5 text-[0.95rem] outline-none transition-all duration-300">
                 <button type="button" onclick="agregarItem()"
-                    class="shrink-0 border border-slate-400/20 hover:border-white/40 text-white rounded-2xl px-5 transition-all duration-300 active:scale-95"
+                    class="shrink-0 r-btn-ghost rounded-2xl px-5 transition-all duration-300 active:scale-95"
                     title="Añadir ítem">
                     <i data-lucide="plus" class="w-5 h-5"></i>
                 </button>
@@ -267,35 +286,35 @@
 
         <!-- Paso 4: acta -->
         <section class="paso oculto">
-            <h1 class="text-3xl md:text-4xl font-medium tracking-tight text-white mb-2">Acta lista</h1>
-            <p class="text-slate-400 font-light mb-10">Revisa y genera el PDF para el cliente y para Drive.</p>
+            <h1 class="text-3xl md:text-4xl font-medium tracking-tight r-text mb-2">Acta lista</h1>
+            <p class="r-text-muted font-light mb-10">Revisa y genera el PDF para el cliente y para Drive.</p>
 
-            <div class="bg-slate-900/30 border border-slate-400/20 rounded-[2rem] p-6 md:p-8 mb-8">
+            <div class="r-summary-card rounded-[2rem] p-6 md:p-8 mb-8">
                 <div id="tabla-resumen" class="text-[0.95rem]"></div>
                 <button type="button" onclick="irAPaso(1)"
-                    class="w-full mt-6 border border-slate-400/20 hover:border-white/40 text-white rounded-2xl px-6 py-3 text-sm transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                    class="w-full mt-6 r-btn-ghost rounded-2xl px-6 py-3 text-sm transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
                     <i data-lucide="pencil" class="w-4 h-4"></i> Corregir datos
                 </button>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-3">Firma del cliente</p>
-            <div class="rounded-2xl border border-slate-500/20 bg-white overflow-hidden mb-3">
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-3">Firma del cliente</p>
+            <div class="rounded-2xl r-sign-card overflow-hidden mb-3">
                 <canvas id="lienzo-firma" class="block w-full touch-none" style="height:170px"></canvas>
             </div>
             <div class="flex items-center justify-between mb-8">
-                <span class="text-xs text-slate-500">Firma con el dedo.</span>
+                <span class="text-xs r-text-dim">Firma con el dedo.</span>
                 <button type="button" onclick="limpiarFirma('lienzo-firma')"
-                    class="text-sm text-slate-400 hover:text-white transition-colors">Borrar</button>
+                    class="text-sm r-link">Borrar</button>
             </div>
 
-            <p class="text-xs uppercase tracking-wider text-slate-500 mb-3">Firma del operador</p>
-            <div class="rounded-2xl border border-slate-500/20 bg-white overflow-hidden mb-3">
+            <p class="text-xs uppercase tracking-wider r-eyebrow mb-3">Firma del operador</p>
+            <div class="rounded-2xl r-sign-card overflow-hidden mb-3">
                 <canvas id="lienzo-firma-operador" class="block w-full touch-none" style="height:170px"></canvas>
             </div>
             <div class="flex items-center justify-between mb-8">
-                <span class="text-xs text-slate-500">Firma con el dedo.</span>
+                <span class="text-xs r-text-dim">Firma con el dedo.</span>
                 <button type="button" onclick="limpiarFirma('lienzo-firma-operador')"
-                    class="text-sm text-slate-400 hover:text-white transition-colors">Borrar</button>
+                    class="text-sm r-link">Borrar</button>
             </div>
 
             <!-- Aceptación del cliente. El texto y el enlace quedan pendientes de los términos definitivos. -->
@@ -306,32 +325,32 @@
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </span>
-                <span class="text-[0.95rem] text-slate-300 leading-relaxed" id="texto-terminos">
+                <span class="text-[0.95rem] r-text-soft leading-relaxed" id="texto-terminos">
                     El cliente entrega el vehículo y acepta los Términos y Condiciones de Zippy.
                 </span>
             </div>
 
             <button type="button" id="btn-pdf" onclick="generarPDF()"
-                class="w-full bg-white text-slate-950 hover:bg-slate-200 rounded-2xl px-8 py-5 text-lg font-medium transition-all duration-300 active:scale-95 disabled:opacity-50">
+                class="w-full r-btn-primary rounded-2xl px-8 py-5 text-lg font-medium transition-all duration-300 active:scale-95 disabled:opacity-50">
                 Generar acta en PDF
             </button>
 
             <div id="acciones-envio" class="hidden mt-8 space-y-4">
-                <div class="flex items-start gap-3 text-sm text-slate-400 font-light bg-white/5 rounded-2xl p-5">
-                    <i data-lucide="download" class="w-5 h-5 shrink-0 mt-0.5 text-slate-500"></i>
-                    <p>Se descargó <span id="nombre-pdf" class="text-white"></span>. WhatsApp y Drive no dejan adjuntar
+                <div class="flex items-start gap-3 text-sm r-text-muted font-light r-info-box rounded-2xl p-5">
+                    <i data-lucide="download" class="w-5 h-5 shrink-0 mt-0.5 r-text-dim"></i>
+                    <p>Se descargó <span id="nombre-pdf" class="r-text"></span>. WhatsApp y Drive no dejan adjuntar
                         el archivo desde la web: abre cada uno y adjunta el PDF desde tus descargas.</p>
                 </div>
                 <button type="button" onclick="enviarPorWhatsApp()"
-                    class="w-full border border-slate-400/20 hover:border-white/40 text-white rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                    class="w-full r-btn-ghost rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
                     <i data-lucide="message-circle" class="w-5 h-5"></i> Abrir WhatsApp del cliente
                 </button>
                 <button type="button" onclick="abrirDrive()"
-                    class="w-full border border-slate-400/20 hover:border-white/40 text-white rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                    class="w-full r-btn-ghost rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
                     <i data-lucide="folder-up" class="w-5 h-5"></i> Abrir Google Drive
                 </button>
                 <button type="button" onclick="nuevaActa()"
-                    class="w-full text-slate-500 hover:text-slate-300 py-3 text-sm transition-colors">
+                    class="w-full r-link r-link--soft py-3 text-sm transition-colors">
                     Empezar un acta nueva
                 </button>
             </div>
@@ -339,14 +358,14 @@
     </main>
 
     <!-- Navegación -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-slate-950/85 backdrop-blur-xl border-t border-white/5">
+    <nav class="fixed bottom-0 left-0 right-0 z-30 r-nav r-border-line border-t">
         <div class="max-w-3xl mx-auto px-5 py-4 flex items-center gap-4">
             <button type="button" id="btn-atras" onclick="irAPaso(pasoActual - 1)"
-                class="invisible px-6 py-3.5 rounded-2xl border border-slate-400/20 text-white text-base transition-all duration-300 active:scale-95">
+                class="invisible px-6 py-3.5 rounded-2xl r-btn-ghost text-base transition-all duration-300 active:scale-95">
                 Atrás
             </button>
             <button type="button" id="btn-siguiente" onclick="irAPaso(pasoActual + 1)"
-                class="flex-1 bg-white text-slate-950 hover:bg-slate-200 rounded-2xl px-8 py-3.5 text-base font-medium transition-all duration-300 active:scale-95">
+                class="flex-1 r-btn-primary rounded-2xl px-8 py-3.5 text-base font-medium transition-all duration-300 active:scale-95">
                 Siguiente
             </button>
         </div>
@@ -354,7 +373,7 @@
 
     </div><!-- /app -->
 
-    <script src="js/recepcion.js?v=5"></script>
+    <script src="js/recepcion.js?v=6"></script>
     <script>lucide.createIcons();</script>
 </body>
 
