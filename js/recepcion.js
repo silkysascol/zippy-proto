@@ -212,7 +212,6 @@ function irAPaso(n) {
     $('btn-siguiente').classList.toggle('hidden', pasoActual === TOTAL_PASOS);
     if (pasoActual === TOTAL_PASOS) { pintarResumen(); dimensionarFirmas(); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    lucide.createIcons();
 }
 
 function validarPaso(n) {
@@ -257,7 +256,7 @@ function pintarSlots() {
             estado.fotos[ang.id].marcas.map((m, i) =>
                 `<span class="marca" style="left:${m.x * 100}%;top:${m.y * 100}%">${numeroBaseDe(ang.id) + i + 1}</span>`).join('')
             : `<span class="r-text-dim text-sm flex flex-col items-center gap-2">
-                       <i data-lucide="camera" class="w-7 h-7"></i> Tomar foto</span>`}
+                       <svg class="r-icon w-7 h-7" aria-hidden="true"><use href="#i-camera" /></svg> Tomar foto</span>`}
             </div>
             ${estado.fotos[ang.id]
             ? `<button type="button" onclick="repetirFoto('${ang.id}', event)"
@@ -266,7 +265,6 @@ function pintarSlots() {
         </div>
     `).join('');
     pintarMarcas();
-    lucide.createIcons();
 }
 
 function tocarSlot(anguloId, evento) {
@@ -317,13 +315,12 @@ function pintarMarcas() {
             <div class="flex items-center gap-3">
                 <button type="button" onclick="fotoDeDetalle('${ang}', ${m.indice})"
                         class="flex-1 r-btn-ghost rounded-xl py-2.5 text-sm flex items-center justify-center gap-2">
-                    <i data-lucide="camera" class="w-4 h-4"></i>${m.foto ? 'Cambiar foto' : 'Acercamiento'}
+                    <svg class="r-icon w-4 h-4" aria-hidden="true"><use href="#i-camera" /></svg>${m.foto ? 'Cambiar foto' : 'Acercamiento'}
                 </button>
                 ${m.foto ? `<img src="${m.foto}" class="w-11 h-11 shrink-0 rounded-lg object-cover r-card-detalle">` : ''}
             </div>
         </div>`;
     }).join('');
-    lucide.createIcons();
 }
 
 function anotarMarca(anguloId, indice, texto) {
@@ -1014,7 +1011,6 @@ async function generarPDF() {
     } finally {
         boton.disabled = false;
         boton.textContent = 'Generar acta en PDF';
-        lucide.createIcons();
     }
 }
 
@@ -1143,8 +1139,7 @@ function alternarVisibilidadClave() {
     input.type = mostrar ? 'text' : 'password';
     boton.setAttribute('aria-pressed', String(mostrar));
     boton.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
-    boton.innerHTML = `<i data-lucide="${mostrar ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
-    lucide.createIcons();
+    boton.innerHTML = `<svg class="r-icon w-5 h-5" aria-hidden="true"><use href="#i-${mostrar ? 'eye-off' : 'eye'}" /></svg>`;
     input.focus();
     try { input.setSelectionRange(inicio, fin); } catch (e) { /* algunos navegadores no lo permiten */ }
 }
@@ -1165,7 +1160,6 @@ function abrirActa() {
     $('compuerta').classList.add('hidden');
     $('app').classList.remove('hidden');
     $('btn-cerrar-sesion').classList.remove('hidden');
-    lucide.createIcons();
 }
 
 function cerrarSesion() {

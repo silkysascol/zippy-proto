@@ -231,18 +231,188 @@
     --sign-border: rgba(15, 23, 42, .35);
 }
 
+/* ---------- reset: lo que antes traía Preflight de Tailwind ----------
+   Esta página cargaba https://cdn.tailwindcss.com. Eso NO es una hoja de
+   estilo: es un compilador que se descarga como JavaScript, lee el DOM y
+   fabrica las reglas en el momento. Cuando no corre o llega tarde —el
+   teléfono del operador, en la calle, con mala señal— el marcado se queda
+   sin sus utilidades y la maqueta se desarma: enlaces subrayados y en azul
+   de sistema, el encabezado descolgado en dos filas. En el escritorio, con
+   red buena, siempre llegaba a tiempo; de ahí que el mismo ancho se viera
+   bien en el navegador y roto en el móvil. El propio Tailwind avisa de que
+   ese CDN no es para producción.
+
+   Se ha quitado. El reset (esto) y las utilidades que usa el marcado (al
+   final de la hoja) están escritas a mano aquí, con los mismos valores que
+   css/zippy.css usa para la web pública, para que las dos páginas no se
+   contradigan. El acta ya no depende de ninguna llamada externa para
+   maquetarse; lo único que queda fuera es la tipografía. */
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+html {
+    line-height: 1.5;
+    /* Safari en iOS y Chrome en Android agrandan por su cuenta el texto de
+       los bloques que consideran anchos. Eso descuadra la maqueta en el
+       teléfono aunque en el escritorio, al mismo ancho, se vea perfecta.
+       100% = respeta el tamaño que pide la hoja. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+hr,
+pre {
+    margin: 0;
+}
+
+/* Los títulos toman su tamaño de las utilidades (.text-3xl, .md:text-4xl);
+   sin esto, un <h1> suelto sale con el tamaño y el peso del navegador. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* El fallo más visible en el teléfono: sin esto el navegador pinta los
+   enlaces subrayados y en su azul de origen. */
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+b,
+strong {
+    font-weight: bolder;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe,
+embed,
+object {
+    display: block;
+    vertical-align: middle;
+}
+
+img,
+svg,
+video {
+    max-width: 100%;
+}
+
+img,
+video {
+    height: auto;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+    border: 0;
+}
+
+button,
+[role='button'] {
+    cursor: pointer;
+}
+
+textarea {
+    resize: vertical;
+}
+
+::placeholder {
+    opacity: 1;
+    color: var(--muted-dim);
+}
+
+:disabled {
+    cursor: default;
+}
+
+[hidden] {
+    display: none;
+}
+
+/* ---------- iconos ----------
+   Eran lucide desde unpkg. Ahora son <symbol> dentro del propio
+   recepcion.html, igual que en la web pública, y el trazo se define aquí:
+   fill, stroke, grosor y remates se heredan hacia dentro del <use>, así que
+   el mismo dibujo sirve a todos los tamaños sin duplicar geometría. Una
+   llamada externa menos que puede fallar en la calle. */
+
+.r-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.r-icon {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--bg);
     color: var(--txt);
     transition: background-color .25s ease;
-}
-
-/* Tailwind pinta text-white a blanco puro; conservamos la clase por
-   compatibilidad con marcado antiguo, pero ya no se usa en el HTML: las
-   piezas nuevas usan .r-text. */
-.text-white {
-    color: var(--txt) !important;
 }
 
 /* Pasos del wizard */
@@ -742,4 +912,200 @@ body {
 
 .r-border-line {
     border-color: var(--line);
+}
+
+/* ---------- utilidades ----------
+   Las clases de Tailwind que usa el marcado (recepcion.html y las plantillas
+   que arma js/recepcion.js), escritas a mano. Van al final, que es donde el
+   CDN inyectaba las suyas, para no cambiar el orden de la cascada respecto a
+   lo que ya estaba probado. Valores de la escala por defecto de Tailwind v3,
+   y los cortes responsivos en sus 640 px (sm) y 768 px (md), para no mover
+   ni un pixel de la maqueta.
+
+   El orden dentro del bloque de "disposición" importa: .hidden va después de
+   .block, .flex y .grid porque hay nodos que llevan las dos clases —
+   #compuerta y #btn-cerrar-sesion son `flex hidden` y el JS alterna
+   `hidden`— y con igual especificidad gana la última escrita. Es el mismo
+   orden que emite Tailwind.
+
+   Si aparece una utilidad nueva en el marcado, hay que añadirla aquí: ya no
+   hay nadie fabricándolas al vuelo. */
+
+/* disposición */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+.block { display: block; }
+.flex { display: flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+.invisible { visibility: hidden; }
+
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1 1 0%; }
+.shrink-0 { flex-shrink: 0; }
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.col-span-2 { grid-column: span 2 / span 2; }
+
+.overflow-hidden { overflow: hidden; }
+.object-cover { object-fit: cover; }
+.touch-none { touch-action: none; }
+.scroll-smooth { scroll-behavior: smooth; }
+
+/* anclajes y capas */
+.top-0 { top: 0; }
+.top-1\.5 { top: .375rem; }
+.top-24 { top: 6rem; }
+.bottom-0 { bottom: 0; }
+.left-0 { left: 0; }
+.left-1\.5 { left: .375rem; }
+.left-1\/2 { left: 50%; }
+.right-0 { right: 0; }
+.-translate-x-1\/2 { transform: translateX(-50%); }
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+
+/* huecos */
+.gap-2 { gap: .5rem; }
+.gap-3 { gap: .75rem; }
+.gap-4 { gap: 1rem; }
+
+/* el hueco entre hermanos de una lista */
+.space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+
+/* tamaños */
+.w-4 { width: 1rem; }
+.w-5 { width: 1.25rem; }
+.w-6 { width: 1.5rem; }
+.w-7 { width: 1.75rem; }
+.w-8 { width: 2rem; }
+.w-11 { width: 2.75rem; }
+.w-14 { width: 3.5rem; }
+.w-full { width: 100%; }
+.w-\[calc\(50\%-6px\)\] { width: calc(50% - 6px); }
+.h-4 { height: 1rem; }
+.h-5 { height: 1.25rem; }
+.h-6 { height: 1.5rem; }
+.h-7 { height: 1.75rem; }
+.h-8 { height: 2rem; }
+.h-11 { height: 2.75rem; }
+.h-14 { height: 3.5rem; }
+.h-full { height: 100%; }
+.h-\[2px\] { height: 2px; }
+.h-\[calc\(100\%-12px\)\] { height: calc(100% - 12px); }
+.min-h-screen { min-height: 100vh; }
+.max-w-sm { max-width: 24rem; }
+.max-w-3xl { max-width: 48rem; }
+.max-w-\[230px\] { max-width: 230px; }
+
+/* márgenes */
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mt-0\.5 { margin-top: .125rem; }
+.mt-2 { margin-top: .5rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mb-1 { margin-bottom: .25rem; }
+.mb-2 { margin-bottom: .5rem; }
+.mb-3 { margin-bottom: .75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+.mb-12 { margin-bottom: 3rem; }
+
+/* rellenos */
+.p-1\.5 { padding: .375rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.px-1 { padding-left: .25rem; padding-right: .25rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
+.py-2\.5 { padding-top: .625rem; padding-bottom: .625rem; }
+.py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+.py-3\.5 { padding-top: .875rem; padding-bottom: .875rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+.py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.pt-4 { padding-top: 1rem; }
+.pb-5 { padding-bottom: 1.25rem; }
+.pb-40 { padding-bottom: 10rem; }
+
+/* radios */
+.rounded-lg { border-radius: .5rem; }
+.rounded-xl { border-radius: .75rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+.rounded-\[2rem\] { border-radius: 2rem; }
+
+/* bordes: solo el ancho y el estilo; el color lo pone .r-border-line */
+.border-t { border-top-width: 1px; border-top-style: solid; }
+.border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+
+/* texto */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.uppercase { text-transform: uppercase; }
+.font-light { font-weight: 300; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.leading-none { line-height: 1; }
+.leading-relaxed { line-height: 1.625; }
+.tracking-tight { letter-spacing: -.025em; }
+.tracking-wider { letter-spacing: .05em; }
+.text-xs { font-size: .75rem; line-height: 1rem; }
+.text-sm { font-size: .875rem; line-height: 1.25rem; }
+.text-\[0\.95rem\] { font-size: 0.95rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+
+/* varios */
+.outline-none { outline: 2px solid transparent; outline-offset: 2px; }
+.backdrop-blur-xl { -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.disabled\:opacity-50:disabled { opacity: .5; }
+
+/* transiciones */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: 150ms;
+}
+
+.transition-colors {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: 150ms;
+}
+
+.duration-300 { transition-duration: 300ms; }
+.duration-500 { transition-duration: 500ms; }
+.ease-out { transition-timing-function: cubic-bezier(0, 0, .2, 1); }
+
+/* Al pulsar encoge: sólo aquí se usa transform sobre estos nodos, así que no
+   hace falta la maquinaria de variables con la que Tailwind compone varias
+   transformaciones sobre el mismo elemento. */
+.active\:scale-95:active { transform: scale(.95); }
+
+/* sm: a partir de 640 px */
+@media (min-width: 640px) {
+    .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* md: a partir de 768 px */
+@media (min-width: 768px) {
+    .md\:p-8 { padding: 2rem; }
+    .md\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
 }

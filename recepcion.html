@@ -18,26 +18,87 @@
     <meta name="robots" content="noindex">
     <link rel="icon" type="image/png" href="assets/Adobe Express - file.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/recepcion.css?v=6">
+    <link rel="stylesheet" href="css/recepcion.css?v=7">
 </head>
 
 <body class="min-h-screen">
+    <!-- Iconos. Venían de una llamada externa a unpkg; ahora viven aquí como
+         <symbol>, igual que en la web pública. Si la red falla, el acta
+         conserva sus iconos. El trazo (fill, stroke, grosor, remates) lo pone
+         .r-icon en el CSS y se hereda hacia dentro del <use>. -->
+    <svg class="r-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="i-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </symbol>
+        <symbol id="i-eye" viewBox="0 0 24 24">
+            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+            <circle cx="12" cy="12" r="3" />
+        </symbol>
+        <symbol id="i-eye-off" viewBox="0 0 24 24">
+            <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+            <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+            <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+            <path d="m2 2 20 20" />
+        </symbol>
+        <symbol id="i-chevron-left" viewBox="0 0 24 24">
+            <path d="m15 18-6-6 6-6" />
+        </symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24">
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+        </symbol>
+        <symbol id="i-pencil" viewBox="0 0 24 24">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+            <path d="m15 5 4 4" />
+        </symbol>
+        <symbol id="i-camera" viewBox="0 0 24 24">
+            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+            <circle cx="12" cy="13" r="3" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M12 15V3" />
+        </symbol>
+        <symbol id="i-message-circle" viewBox="0 0 24 24">
+            <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+        </symbol>
+        <symbol id="i-folder-up" viewBox="0 0 24 24">
+            <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+            <path d="M12 10v6" />
+            <path d="m9 13 3-3 3 3" />
+        </symbol>
+    </svg>
+
 
     <!-- Compuerta de acceso -->
     <section id="compuerta" class="min-h-screen flex items-center justify-center px-6">
         <button type="button" id="btn-tema-compuerta" class="r-theme-toggle" style="position:fixed;top:1.25rem;right:1.25rem"
             aria-label="Cambiar a modo claro">
-            <i data-lucide="sun" class="r-theme-toggle__sol"></i>
-            <i data-lucide="moon" class="r-theme-toggle__luna"></i>
+            <svg class="r-icon r-theme-toggle__sol" aria-hidden="true"><use href="#i-sun" /></svg>
+            <svg class="r-icon r-theme-toggle__luna" aria-hidden="true"><use href="#i-moon" /></svg>
         </button>
         <div class="w-full max-w-sm text-center">
             <div class="w-14 h-14 mx-auto mb-8 rounded-2xl r-icon-box flex items-center justify-center">
-                <i data-lucide="lock" class="w-6 h-6"></i>
+                <svg class="r-icon w-6 h-6" aria-hidden="true"><use href="#i-lock" /></svg>
             </div>
             <h1 class="text-3xl font-medium tracking-tight r-text mb-2">Acta de recogida</h1>
             <p class="r-text-muted font-light mb-10">Uso interno. Ingresa la clave para abrirla.</p>
@@ -46,7 +107,7 @@
                 <input type="password" id="clave" placeholder="Clave" autocomplete="current-password">
                 <button type="button" id="btn-toggle-clave" class="btn-toggle-clave"
                     aria-label="Mostrar contraseña" aria-pressed="false">
-                    <i data-lucide="eye" class="w-5 h-5"></i>
+                    <svg class="r-icon w-5 h-5" aria-hidden="true"><use href="#i-eye" /></svg>
                 </button>
             </div>
             <p id="error-clave" class="hidden r-error-clave text-sm mb-4">Clave incorrecta.</p>
@@ -66,18 +127,18 @@
     <header class="sticky top-0 z-30 r-header r-border-line border-b">
         <div class="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2 r-text">
-                <i data-lucide="chevron-left" class="w-5 h-5 r-text-muted"></i>
+                <svg class="r-icon w-5 h-5 r-text-muted" aria-hidden="true"><use href="#i-chevron-left" /></svg>
                 <span class="text-lg font-medium tracking-tight">Zippy</span>
             </a>
             <div class="flex items-center gap-3">
                 <span id="etiqueta-paso" class="text-sm r-text-muted font-light">Paso 1 de 4</span>
                 <button type="button" id="btn-tema" class="r-theme-toggle" aria-label="Cambiar a modo claro">
-                    <i data-lucide="sun" class="r-theme-toggle__sol"></i>
-                    <i data-lucide="moon" class="r-theme-toggle__luna"></i>
+                    <svg class="r-icon r-theme-toggle__sol" aria-hidden="true"><use href="#i-sun" /></svg>
+                    <svg class="r-icon r-theme-toggle__luna" aria-hidden="true"><use href="#i-moon" /></svg>
                 </button>
                 <button type="button" id="btn-cerrar-sesion" onclick="cerrarSesion()"
                     class="hidden r-icon-btn rounded-full w-11 h-11 flex items-center justify-center" title="Cerrar acceso">
-                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <svg class="r-icon w-4 h-4" aria-hidden="true"><use href="#i-lock" /></svg>
                 </button>
             </div>
         </div>
@@ -274,7 +335,7 @@
                 <button type="button" onclick="agregarItem()"
                     class="shrink-0 r-btn-ghost rounded-2xl px-5 transition-all duration-300 active:scale-95"
                     title="Añadir ítem">
-                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <svg class="r-icon w-5 h-5" aria-hidden="true"><use href="#i-plus" /></svg>
                 </button>
             </div>
 
@@ -293,7 +354,7 @@
                 <div id="tabla-resumen" class="text-[0.95rem]"></div>
                 <button type="button" onclick="irAPaso(1)"
                     class="w-full mt-6 r-btn-ghost rounded-2xl px-6 py-3 text-sm transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="pencil" class="w-4 h-4"></i> Corregir datos
+                    <svg class="r-icon w-4 h-4" aria-hidden="true"><use href="#i-pencil" /></svg> Corregir datos
                 </button>
             </div>
 
@@ -337,17 +398,17 @@
 
             <div id="acciones-envio" class="hidden mt-8 space-y-4">
                 <div class="flex items-start gap-3 text-sm r-text-muted font-light r-info-box rounded-2xl p-5">
-                    <i data-lucide="download" class="w-5 h-5 shrink-0 mt-0.5 r-text-dim"></i>
+                    <svg class="r-icon w-5 h-5 shrink-0 mt-0.5 r-text-dim" aria-hidden="true"><use href="#i-download" /></svg>
                     <p>Se descargó <span id="nombre-pdf" class="r-text"></span>. WhatsApp y Drive no dejan adjuntar
                         el archivo desde la web: abre cada uno y adjunta el PDF desde tus descargas.</p>
                 </div>
                 <button type="button" onclick="enviarPorWhatsApp()"
                     class="w-full r-btn-ghost rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="message-circle" class="w-5 h-5"></i> Abrir WhatsApp del cliente
+                    <svg class="r-icon w-5 h-5" aria-hidden="true"><use href="#i-message-circle" /></svg> Abrir WhatsApp del cliente
                 </button>
                 <button type="button" onclick="abrirDrive()"
                     class="w-full r-btn-ghost rounded-2xl px-8 py-4 text-base font-medium transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="folder-up" class="w-5 h-5"></i> Abrir Google Drive
+                    <svg class="r-icon w-5 h-5" aria-hidden="true"><use href="#i-folder-up" /></svg> Abrir Google Drive
                 </button>
                 <button type="button" onclick="nuevaActa()"
                     class="w-full r-link r-link--soft py-3 text-sm transition-colors">
@@ -373,8 +434,7 @@
 
     </div><!-- /app -->
 
-    <script src="js/recepcion.js?v=6"></script>
-    <script>lucide.createIcons();</script>
+    <script src="js/recepcion.js?v=7"></script>
 </body>
 
 </html>
