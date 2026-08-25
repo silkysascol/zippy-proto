@@ -296,8 +296,162 @@
     --highway-fade: var(--road);
 }
 
+/* ---------- reset y utilidades: lo que antes traía Tailwind ----------
+   La página cargaba https://cdn.tailwindcss.com. Eso NO es una hoja de
+   estilo: es un compilador que se descarga como JavaScript, lee el DOM y
+   fabrica las reglas en el momento. En el teléfono del fundador no llegaba a
+   correr —enlaces subrayados y azules, el header descolgado en dos filas—
+   mientras que en el escritorio, con red buena, siempre llegaba a tiempo. De
+   ahí que el mismo ancho se viera bien en el navegador y roto en el móvil.
+
+   El propio Tailwind avisa de que ese CDN no es para producción. Se ha
+   quitado: el reset (esto) y las 84 utilidades que usa el marcado (al final
+   de la hoja) están escritas a mano aquí. La página ya no depende de ninguna
+   llamada externa para maquetarse; lo único que queda fuera es la
+   tipografía. */
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+hr,
+pre {
+    margin: 0;
+}
+
+/* Los títulos toman su tamaño de .z-title / .z-h2 / .z-svc__name o de las
+   utilidades; sin esto, un <h3> suelto sale con el tamaño del navegador. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Este era el fallo más visible en el teléfono: sin esto el navegador pinta
+   los enlaces subrayados y en su azul de origen. */
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+b,
+strong {
+    font-weight: bolder;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe,
+embed,
+object {
+    display: block;
+    vertical-align: middle;
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+    border: 0;
+}
+
+button,
+[role='button'] {
+    cursor: pointer;
+}
+
+:disabled {
+    cursor: default;
+}
+
+[hidden] {
+    display: none;
+}
+
+/* ---------- iconos ----------
+   Eran lucide desde unpkg. Ahora son <symbol> dentro del propio HTML, y el
+   trazo se define aquí: fill, stroke, grosor y remates se heredan hacia
+   dentro del <use>, así que el mismo dibujo sirve a todos los tamaños sin
+   duplicar geometría. Una llamada externa menos que puede fallar. */
+
+.z-icon {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.z-icon--fino {
+    stroke-width: 1.6;
+}
+
 html {
     scroll-behavior: smooth;
+    line-height: 1.5;
+    /* Safari en iOS y Chrome en Android agrandan por su cuenta los párrafos
+       de los bloques que consideran anchos. Eso descuadra la maqueta en el
+       teléfono aunque en el escritorio a ancho estrecho se vea perfecta, y
+       es lo que hacía que dos botones con la misma caja midieran distinto.
+       100% = respeta el tamaño que pide la hoja. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -305,6 +459,11 @@ body {
     background-color: var(--bg);
     color: var(--txt);
     -webkit-font-smoothing: antialiased;
+    /* Con viewport-fit=cover el lienzo llega al borde físico de la pantalla.
+       En vertical estos valores son 0 y no cambia nada; en horizontal, sobre
+       un teléfono con muesca, evitan que el texto se meta debajo de ella. */
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* Tailwind pinta text-white a blanco puro; en fondo tan oscuro quema. */
@@ -409,8 +568,13 @@ body {
     color: var(--on-accent);
 }
 
-.z-btn--primary:hover {
-    background: var(--accent-soft);
+/* En un táctil no existe el puntero: el navegador aplica :hover al tocar y
+   lo deja pegado hasta que tocas otra cosa. Todo lo de hover va dentro de
+   @media (hover: hover) para que en el teléfono sencillamente no exista. */
+@media (hover: hover) {
+    .z-btn--primary:hover {
+        background: var(--accent-soft);
+    }
 }
 
 /* Botón de solo borde. El borde lleva token propio porque --line-strong es
@@ -422,8 +586,10 @@ body {
     border: 1px solid var(--btn-outline);
 }
 
-.z-btn--ghost:hover {
-    background: var(--surface-raised);
+@media (hover: hover) {
+    .z-btn--ghost:hover {
+        background: var(--surface-raised);
+    }
 }
 
 /* Segundo CTA de igual peso que el primario: mismo tamaño, igual de sólido,
@@ -456,7 +622,9 @@ body {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ffffff;
+    /* Era el único #hex suelto de la hoja. La onda solo existe en el botón de
+       Silky, así que es exactamente el mismo blanco de su etiqueta. */
+    background: var(--on-silky);
     opacity: 0;
     pointer-events: none;
     transform: translate(-50%, -50%) scale(0);
@@ -479,8 +647,10 @@ body {
     }
 }
 
-.z-btn--silky:hover {
-    background: var(--silky-hover);
+@media (hover: hover) {
+    .z-btn--silky:hover {
+        background: var(--silky-hover);
+    }
 }
 
 /* Logo de Silky: alto fijo, ancho por proporción, y sigue al tema por
@@ -566,8 +736,10 @@ body {
     transition: color .25s;
 }
 
-.z-link-inline:hover {
-    color: var(--accent-soft);
+@media (hover: hover) {
+    .z-link-inline:hover {
+        color: var(--accent-soft);
+    }
 }
 
 .z-link-dim {
@@ -575,8 +747,10 @@ body {
     transition: color .3s;
 }
 
-.z-link-dim:hover {
-    color: var(--txt);
+@media (hover: hover) {
+    .z-link-dim:hover {
+        color: var(--txt);
+    }
 }
 
 /* ---------- header ---------- */
@@ -597,8 +771,15 @@ body {
     border-bottom-color: var(--line);
 }
 
+/* 34 px -> 51 px por decisión del fundador (2026-08-24): el rayo es una
+   diagonal muy fina y a 34 px casi no se leía. Medido antes de escalar: al
+   contrario que la marca de Silky, este viewBox NO está medio vacío —el
+   trazo ocupa el 94% del alto y el 88% del ancho de la caja—, así que no hay
+   nada que recortar y subir el tamaño es lo único que da tinta de verdad.
+   El header tiene alto fijo (h-16 / h-20, 64 y 80 px) y el logo va centrado:
+   a 51 px sigue holgado dentro de los 64 px del móvil y no mueve nada. */
 .z-logo {
-    height: 34px;
+    height: 51px;
     width: auto;
     fill: var(--txt);
 }
@@ -607,8 +788,8 @@ body {
     height: 3.5rem;
 }
 
-/* El logo del pie recibe toques repetidos; que no se seleccione ni salte el
-   menú contextual al mantenerlo pulsado en el teléfono. */
+/* El logo del pie se mantiene pulsado; que no se seleccione ni salte el
+   menú contextual al hacerlo en el teléfono. */
 .z-footmark {
     /* El logo mide 26 px de ancho: sin este relleno el objetivo queda por
        debajo de lo que un dedo acierta. El relleno es transparente y los
@@ -621,9 +802,21 @@ body {
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-    /* Sin esto el navegador espera por si el toque doble es un zoom, y los
-       toques seguidos llegan tarde o se pierden. */
+    /* manipulation quita la espera del doble toque para hacer zoom, pero deja
+       pasar el desplazamiento: si el usuario baja con el dedo apoyado aquí,
+       el navegador se lleva el puntero y la pulsación se cancela sola. */
     touch-action: manipulation;
+    transition: opacity .35s var(--ease);
+}
+
+/* La única señal, y solo cuando el dedo ya lleva 1,5 s encima: el logo sube
+   de opacidad durante los 3,5 s que quedan y llega al máximo justo al
+   cumplirse los cinco segundos. Antes de tocar no hay pista de nada. La
+   clase la pone zippy.js; gana a la utilidad opacity-40 del marcado por
+   especificidad, sin necesidad de !important. */
+.z-footmark.is-holding {
+    opacity: 1;
+    transition: opacity 3.5s linear;
 }
 
 /* ---------- interruptor de tema ---------- */
@@ -642,8 +835,10 @@ body {
     transition: background-color .25s, border-color .25s;
 }
 
-.z-theme-toggle:hover {
-    background: var(--surface-hover);
+@media (hover: hover) {
+    .z-theme-toggle:hover {
+        background: var(--surface-hover);
+    }
 }
 
 .z-theme-toggle__icon {
@@ -693,18 +888,34 @@ body {
     pointer-events: none;
 }
 
-/* ---------- reveal al hacer scroll ---------- */
+/* ---------- reveal al hacer scroll ----------
+   El estado por defecto es VISIBLE. Quien oculta es el JS: el script del
+   <head> pone .js-anima en el <html> (y solo si no hay movimiento
+   reducido), y es esa clase la que autoriza a esconder para revelar
+   después. Si el JS no llega, si falla, o si el IntersectionObserver no
+   dispara, no hay nada oculto y la página se lee entera.
+
+   El escalonado se pide desde el marcado con transition-delay, en pasos de
+   90 ms: más que eso y el usuario ya terminó de leer mientras la pieza
+   sigue subiendo. */
 
 .z-reveal {
+    transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+
+:root.js-anima .z-reveal {
     opacity: 0;
     transform: translate3d(0, 26px, 0);
-    transition: opacity 1s var(--ease), transform 1s var(--ease);
     will-change: transform, opacity;
 }
 
-.z-reveal.is-visible {
+/* Al terminar se suelta el will-change: dejar dos docenas de capas de
+   composición vivas para siempre es memoria de vídeo regalada, y en un
+   teléfono modesto se nota. */
+:root.js-anima .z-reveal.is-visible {
     opacity: 1;
     transform: none;
+    will-change: auto;
 }
 
 /* ---------- carro de perfil ---------- */
@@ -852,6 +1063,69 @@ body {
     }
 }
 
+/* ---------- recorrido: sección pegajosa ----------
+   .z-journey es un carril alto y vacío; .z-journey__stage se queda pegado
+   a la pantalla y lo recorre. El progreso del scroll dentro del carril es
+   lo único que decide el paso activo y dónde está el carro (zippy.js).
+
+   El alto del carril: una pantalla la ocupa el escenario pegado, y las dos
+   restantes son el recorrido de verdad — media pantalla por paso. Con menos
+   los cuatro pasos se atropellan en un gesto; con más la sección se hace
+   eterna y el usuario se pierde. En un teléfono son ~3 deslizamientos para
+   pasarla entera, en escritorio ~4 golpes de rueda por paso.
+
+   Nada de scroll-jacking: aquí no hay preventDefault ni saltos forzados. El
+   usuario baja a su ritmo y al acabarse el carril la escena se despega. */
+
+.z-journey {
+    position: relative;
+}
+
+/* Los pasos: en columna por defecto —que es como se leen sin JS y con
+   movimiento reducido— y en rejilla solo cuando hay recorrido. */
+.z-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+
+/* Lo pegajoso vive entero detrás de .js-anima. Sin JS, este carril mediría
+   tres pantallas de vacío con un escenario clavado que nadie mueve: por eso
+   el alto y el sticky solo existen cuando hay quien los conduzca. */
+:root.js-anima .z-journey {
+    /* En vh a propósito, no en dvh: es un separador que NO debe cambiar de
+       tamaño cuando la barra del navegador entra y sale, que es justo lo que
+       pasa mientras se baja. */
+    height: 300vh;
+}
+
+:root.js-anima .z-journey__stage {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* vh primero como respaldo para navegadores sin unidades dinámicas.
+       Manda svh, que es la altura CON la barra puesta: así la escena nunca
+       queda cortada. Se descarta dvh justamente porque cambia en pleno
+       recorrido y redimensionaría el escenario mientras el dedo baja. */
+    min-height: 100vh;
+    min-height: 100svh;
+    /* Hueco para el header pegajoso, que va por encima. */
+    padding-top: 5rem;
+    padding-bottom: 1.5rem;
+}
+
+:root.js-anima .z-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+    :root.js-anima .z-steps {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
 /* ---------- escena del recorrido ---------- */
 
 .z-scene {
@@ -922,23 +1196,9 @@ body {
     background: repeating-linear-gradient(90deg, var(--lane-mark) 0 26px, transparent 26px 58px);
 }
 
-.z-scene.is-driving .z-scene__lane {
-    animation: z-lane-scene 1.1s linear infinite;
-}
-
-.z-scene.is-driving[data-dir="-1"] .z-scene__lane {
-    animation-direction: reverse;
-}
-
-@keyframes z-lane-scene {
-    from {
-        transform: translate3d(0, 0, 0);
-    }
-
-    to {
-        transform: translate3d(-84px, 0, 0);
-    }
-}
+/* Las rayas del carril se quedan quietas: ahora el que se desplaza por la
+   escena es el carro, así que mover también el asfalto contaría dos veces
+   el mismo movimiento. */
 
 .z-scene__rail {
     position: absolute;
@@ -947,26 +1207,58 @@ body {
     top: 6%;
 }
 
-.z-scene__car {
-    /* mismo motivo: el haz vive fuera del viewBox */
-    overflow: visible;
-    width: clamp(84px, 22vw, 132px);
-    transform: translate3d(var(--car-x, 0px), 0, 0) scaleX(var(--car-dir, 1));
-    transition: transform 1.9s cubic-bezier(.55, .05, .3, 1);
+/* El avance: lo escribe el requestAnimationFrame a partir del scroll, y por
+   eso NO lleva transición — una transición encima iría siempre un paso por
+   detrás del dedo y se sentiría como un tirón. */
+.z-scene__cab {
+    transform: translate3d(var(--car-x, 0px), 0, 0);
     will-change: transform;
 }
 
-.z-scene.is-driving .z-scene__car .car-hub {
-    animation: z-spin .45s linear infinite;
+.z-scene__car {
+    /* mismo motivo: el haz vive fuera del viewBox */
+    overflow: visible;
+    display: block;
+    width: clamp(84px, 22vw, 132px);
+    /* El volteo sí se anima: el carro tarda un momento en darse la vuelta en
+       el taller, y hacerlo de golpe se lee como un salto. Va en una capa
+       aparte del avance justamente para poder animarse solo él. */
+    transform: scaleX(var(--car-dir, 1));
+    transition: transform .45s var(--ease);
 }
 
-@keyframes z-spin {
-    to {
-        transform: rotate(360deg);
-    }
+/* Las ruedas ruedan de verdad: el ángulo sale de los píxeles recorridos, no
+   de un temporizador, así que si el scroll se para, se paran. */
+.z-scene__car .car-hub {
+    transform: rotate(var(--wheel, 0deg));
 }
 
 /* pasos */
+
+/* La frase de cada paso vive dentro del propio paso: el marcado la tiene
+   aunque el JS no llegue, y por defecto se VE. Solo se esconde cuando hay
+   recorrido, porque entonces la misma frase la pinta el panel de abajo. */
+.z-step__c {
+    display: block;
+    font-size: .9rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: .35rem;
+}
+
+:root.js-anima .z-step__c {
+    display: none;
+}
+
+/* Y al revés con el panel: solo tiene sentido si hay un paso "actual". */
+.z-journey .z-step__panel {
+    display: none;
+}
+
+:root.js-anima .z-journey .z-step__panel {
+    display: block;
+}
 
 .z-step {
     display: flex;
@@ -982,8 +1274,10 @@ body {
     width: 100%;
 }
 
-.z-step:hover {
-    border-color: var(--line-strong);
+@media (hover: hover) {
+    .z-step:hover {
+        border-color: var(--line-strong);
+    }
 }
 
 .z-step__n {
@@ -1438,7 +1732,10 @@ body {
 
 .z-fab {
     position: fixed;
-    right: 1rem;
+    /* Las dos zonas seguras: abajo el indicador de inicio, a la derecha la
+       muesca en horizontal. Hasta ahora estos cálculos no hacían nada porque
+       al <meta viewport> le faltaba viewport-fit=cover. */
+    right: calc(1rem + env(safe-area-inset-right, 0px));
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     z-index: 60;
     display: flex;
@@ -1463,8 +1760,10 @@ body {
     transform: none;
 }
 
-.z-fab:hover {
-    background: var(--surface-hover);
+@media (hover: hover) {
+    .z-fab:hover {
+        background: var(--surface-hover);
+    }
 }
 
 .z-fab__icon {
@@ -1480,6 +1779,8 @@ body {
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    /* Que el rebote del diálogo no arrastre la página de detrás. */
+    overscroll-behavior: contain;
 }
 
 .z-wiz.is-open {
@@ -1498,9 +1799,14 @@ body {
     position: relative;
     width: 100%;
     max-width: 30rem;
+    /* vh como respaldo; manda svh. Con vh a secas, en iOS la barra del
+       navegador se come el final de la tarjeta y el botón de WhatsApp queda
+       fuera de la pantalla. */
     max-height: min(88vh, 44rem);
+    max-height: min(88svh, 44rem);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     background: var(--surface);
     border: 1px solid var(--line-strong);
     border-radius: 24px;
@@ -1523,8 +1829,10 @@ body {
     transition: color .25s;
 }
 
-.z-wiz__close:hover {
-    color: var(--txt);
+@media (hover: hover) {
+    .z-wiz__close:hover {
+        color: var(--txt);
+    }
 }
 
 .z-wiz__q {
@@ -1657,8 +1965,10 @@ body {
     transition: color .25s, opacity .25s;
 }
 
-.z-wiz__back:hover {
-    color: var(--txt);
+@media (hover: hover) {
+    .z-wiz__back:hover {
+        color: var(--txt);
+    }
 }
 
 .z-wiz__back[hidden] {
@@ -1765,9 +2075,7 @@ input:focus-visible {
 
     .z-highway__lane,
     .z-highway__car,
-    .z-scene__lane,
-    .z-acta__dot,
-    .z-scene .car-hub {
+    .z-acta__dot {
         animation: none !important;
     }
 
@@ -1780,14 +2088,51 @@ input:focus-visible {
         transform: translate3d(var(--static-x), 0, 0);
     }
 
+    /* Sin sección pegajosa y sin recorrido con el scroll: el carril se
+       encoge a lo que ocupa el escenario, la escena se queda en su estado
+       final (el carro ya volvió a tu puerta) y los cuatro pasos se leen uno
+       debajo de otro, cada uno con su frase. El panel de abajo sobra: sería
+       la misma frase repetida.
+
+       Normalmente aquí no hay nada que deshacer, porque con movimiento
+       reducido el script del <head> ni siquiera pone .js-anima y el recorrido
+       nace ya como lista. Esto cubre el caso de que la preferencia se active
+       con la página ya abierta. */
+    :root.js-anima .z-journey {
+        height: auto;
+    }
+
+    :root.js-anima .z-journey__stage {
+        position: static;
+        display: block;
+        min-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    :root.js-anima .z-steps {
+        grid-template-columns: 1fr;
+    }
+
+    :root.js-anima .z-step__c {
+        display: block;
+    }
+
+    :root .z-journey .z-step__panel {
+        display: none;
+    }
+
+    .z-scene__cab,
     .z-scene__car {
         transition: none;
     }
 
-    .z-reveal {
+    :root .z-reveal,
+    :root.js-anima .z-reveal {
         opacity: 1;
         transform: none;
         transition: none;
+        will-change: auto;
     }
 
     .z-fab {
@@ -1833,4 +2178,124 @@ input:focus-visible {
     .z-svc.is-live .z-svc__scan {
         animation: none !important;
     }
+}
+
+
+/* ---------- utilidades ----------
+   Las 84 clases de Tailwind que usa el marcado, escritas a mano. Van al
+   final, que es donde el CDN inyectaba las suyas, para no cambiar el orden
+   de la cascada respecto a lo que ya estaba probado. Valores de la escala
+   por defecto de Tailwind v3, y los cortes responsivos en sus 640 px (sm) y
+   768 px (md), para no mover ni un pixel de la maqueta de escritorio.
+
+   Si aparece una utilidad nueva en el marcado, hay que añadirla aquí: ya no
+   hay nadie fabricándolas al vuelo. */
+
+/* disposición */
+.relative { position: relative; }
+.flex { display: flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* huecos */
+.gap-2 { gap: .5rem; }
+.gap-2\.5 { gap: .625rem; }
+.gap-3 { gap: .75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-7 { gap: 1.75rem; }
+.gap-12 { gap: 3rem; }
+.gap-x-6 { column-gap: 1.5rem; }
+.gap-y-3\.5 { row-gap: .875rem; }
+
+/* el hueco entre hermanos de una lista */
+.space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+
+/* tamaños */
+.w-4 { width: 1rem; }
+.w-5 { width: 1.25rem; }
+.w-6 { width: 1.5rem; }
+.w-full { width: 100%; }
+.h-4 { height: 1rem; }
+.h-5 { height: 1.25rem; }
+.h-6 { height: 1.5rem; }
+.h-16 { height: 4rem; }
+.h-auto { height: auto; }
+.max-w-lg { max-width: 32rem; }
+.max-w-xl { max-width: 36rem; }
+.max-w-2xl { max-width: 42rem; }
+.max-w-3xl { max-width: 48rem; }
+.max-w-4xl { max-width: 56rem; }
+.max-w-6xl { max-width: 72rem; }
+
+/* márgenes */
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mt-3 { margin-top: .75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-9 { margin-top: 2.25rem; }
+.mt-10 { margin-top: 2.5rem; }
+.mt-14 { margin-top: 3.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+
+/* rellenos */
+.p-6 { padding: 1.5rem; }
+.p-7 { padding: 1.75rem; }
+.px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+.py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+.pt-8 { padding-top: 2rem; }
+.pt-14 { padding-top: 3.5rem; }
+.pt-16 { padding-top: 4rem; }
+.pt-20 { padding-top: 5rem; }
+.pb-12 { padding-bottom: 3rem; }
+.pb-20 { padding-bottom: 5rem; }
+
+/* texto */
+.text-center { text-align: center; }
+.uppercase { text-transform: uppercase; }
+.font-light { font-weight: 300; }
+.font-semibold { font-weight: 600; }
+.leading-relaxed { line-height: 1.625; }
+.tracking-tight { letter-spacing: -.025em; }
+.tracking-\[\.18em\] { letter-spacing: .18em; }
+.text-xs { font-size: .75rem; line-height: 1rem; }
+.text-sm { font-size: .875rem; line-height: 1.25rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.opacity-40 { opacity: .4; }
+
+/* sm: a partir de 640 px */
+@media (min-width: 640px) {
+    .sm\:inline { display: inline; }
+    .sm\:flex-row { flex-direction: row; }
+    .sm\:flex-1 { flex: 1 1 0%; }
+    .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sm\:mx-auto { margin-left: auto; margin-right: auto; }
+    .sm\:max-w-xl { max-width: 36rem; }
+}
+
+/* md: a partir de 768 px */
+@media (min-width: 768px) {
+    .md\:flex-row { flex-direction: row; }
+    .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .md\:gap-3 { gap: .75rem; }
+    .md\:gap-16 { gap: 4rem; }
+    .md\:h-20 { height: 5rem; }
+    .md\:mt-20 { margin-top: 5rem; }
+    .md\:p-9 { padding: 2.25rem; }
+    .md\:p-10 { padding: 2.5rem; }
+    .md\:p-12 { padding: 3rem; }
+    .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .md\:py-28 { padding-top: 7rem; padding-bottom: 7rem; }
+    .md\:pt-24 { padding-top: 6rem; }
+    .md\:pt-28 { padding-top: 7rem; }
+    .md\:pb-28 { padding-bottom: 7rem; }
 }

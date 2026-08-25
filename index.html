@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- viewport-fit=cover: sin esto, env(safe-area-inset-*) vale 0 en iOS y
+         los cálculos de zona segura que ya había en la hoja (el botón
+         flotante) no hacían nada. Con esto sí, y el body compensa la muesca
+         en horizontal con su propio relleno. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Zippy | Llevamos tu carro al taller y te lo devolvemos</title>
 
     <!-- Tema: se aplica ANTES de pintar, para no destellar. Si hay elección
@@ -19,6 +23,18 @@
                 var esClaro = t === 'claro' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches);
                 var meta = document.querySelector('meta[name="theme-color"]');
                 if (meta) meta.setAttribute('content', esClaro ? '#f3f6fb' : '#020617');
+
+                // Esta clase significa "hay JS vivo Y el movimiento está
+                // permitido", y es la que autoriza al CSS a montar lo que sin
+                // JS no tendría sentido: el reveal al hacer scroll y la
+                // sección pegajosa del recorrido. Sin ella, el reveal no
+                // esconde nada y el recorrido es una lista de cuatro pasos con
+                // su frase, legible tal cual. Va aquí, antes de pintar, para
+                // que no haya un parpadeo de contenido que se esconde solo al
+                // llegar zippy.js.
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.classList.add('js-anima');
+                }
             } catch (e) {}
         })();
     </script>
@@ -44,7 +60,6 @@
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 434 940'%3E%3Cstyle%3E.zbg%7Bfill:%23020617%7D.zmark%7Bfill:%23fff%7D@media(prefers-color-scheme:light)%7B.zbg%7Bfill:%23f3f6fb%7D.zmark%7Bfill:%230f172a%7D%7D%3C/style%3E%3Crect width='434' height='940' class='zbg'/%3E%3Cpath class='zmark' d='M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z'/%3E%3Cpath class='zmark' d='M350.163818,45.120281 C355.516754,35.635025 359.719818,25.880741 365.715393,17.220781 C366.287933,17.532200 366.860443,17.843618 367.432983,18.155037 C321.593140,125.217972 275.753265,232.280914 229.529541,340.240387 C253.881790,338.560364 277.485321,336.931976 302.421021,335.211700 C300.803162,338.129700 300.055359,340.329773 298.630493,341.925140 C252.065964,394.060791 205.443527,446.144745 158.814255,498.222534 C117.732735,544.104309 76.636284,589.972595 35.523399,635.826294 C34.313927,637.175171 32.845715,638.292114 31.498152,639.517151 C30.959866,639.123718 30.421579,638.730225 29.883295,638.336792 C136.571518,440.698334 243.259750,243.059921 350.163818,45.120281 z'/%3E%3C/svg%3E">
 
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
@@ -149,6 +164,27 @@
             </clipPath>
         </defs>
 
+
+        <!-- Iconos: eran lucide desde un CDN. Ahora van aquí dentro, dibujados
+             una vez y reutilizados con <use>. Los trazos (grosor, remates,
+             color) los pone .z-icon desde el CSS, así que el símbolo solo
+             guarda la geometría. Una llamada externa menos que puede fallar. -->
+        <symbol id="i-badge-check" viewBox="0 0 24 24"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-calculator" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></symbol>
+        <symbol id="i-camera" viewBox="0 0 24 24"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></symbol>
+        <symbol id="i-check-circle-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+        <symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+        <symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></symbol>
+        <symbol id="i-minus-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></symbol>
+        <symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol>
+        <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+
         <symbol id="silkymark" viewBox="160 290 423 441">
             <path fill="currentColor" d="M324.696777,721.902344 C284.752991,733.226379 247.405563,728.561707 213.115921,705.433289 C188.045975,688.523499 172.553391,664.544983 164.521866,635.579407 C164.309738,634.814331 163.835434,634.009888 164.600113,633.212158 C166.356903,632.846863 166.727753,634.408203 167.478043,635.377502 C185.753036,658.985718 209.226959,673.979797 239.184906,677.314697 C264.471069,680.129517 287.781219,674.006836 308.790283,659.510254 C341.932983,636.641296 353.006012,604.122620 348.938477,565.554932 C345.694855,534.799194 339.617767,504.424774 335.263367,473.812653 C332.852051,456.861023 330.214386,439.869965 331.695343,422.661743 C335.983246,372.836426 355.739532,332.221527 401.589600,307.792084 C417.658997,299.230103 435.152161,295.346710 453.413147,294.514252 C475.463257,293.509033 496.667511,296.895447 516.422180,306.726501 C544.691406,320.795044 564.002563,343.127136 574.765930,372.819244 C575.188477,373.984894 576.079590,375.194977 575.028809,376.597534 C572.908386,376.281036 572.315430,374.303711 571.208496,372.985657 C557.445923,356.597595 540.698547,344.581909 519.777039,339.409882 C485.785797,331.006836 456.161804,340.024231 431.014557,363.753693 C412.988892,380.763031 405.136444,402.543121 404.233215,426.933289 C403.440887,448.329895 407.106842,469.350983 410.214264,490.417236 C413.950226,515.744324 419.003662,540.927307 420.733765,566.489624 C423.425140,606.255066 417.007996,643.970215 391.742767,676.370789 C374.452606,698.544006 351.931305,713.438477 324.696777,721.902344 z" />
             <path fill="currentColor" d="M191.640198,645.389038 C162.901978,618.523743 156.617401,578.767029 175.799469,543.678711 C193.655472,511.016052 221.988678,491.558502 256.917877,480.726807 C265.066833,478.199829 273.414307,476.164551 281.864227,475.906586 C296.255768,475.467255 312.695435,483.377075 318.785980,501.928741 C323.771362,517.114136 317.191437,534.807983 303.520660,543.333740 C297.470276,547.107117 290.741882,548.783691 283.895111,550.374207 C268.418976,553.969604 255.408890,561.451721 246.690613,575.225891 C227.434967,605.648132 246.252762,645.180542 281.971863,649.837280 C289.139465,650.771729 296.123718,650.083862 303.381195,649.964966 C291.069885,658.708801 277.538574,664.454834 262.600983,666.270691 C236.171829,669.483643 212.366196,663.138367 191.640198,645.389038 z" />
@@ -176,10 +212,8 @@
                     <span class="z-ripple" aria-hidden="true"></span>
                 </a>
                 <button type="button" class="z-theme-toggle" id="temaToggle">
-                    <i data-lucide="sun" class="z-theme-toggle__icon z-theme-toggle__icon--sun"
-                        aria-hidden="true"></i>
-                    <i data-lucide="moon" class="z-theme-toggle__icon z-theme-toggle__icon--moon"
-                        aria-hidden="true"></i>
+                    <svg class="z-icon z-theme-toggle__icon z-theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun" /></svg>
+                    <svg class="z-icon z-theme-toggle__icon z-theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon" /></svg>
                 </button>
             </div>
         </div>
@@ -201,8 +235,8 @@
                     style="transition-delay:.24s">
                     <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
                         target="_blank" rel="noopener noreferrer" class="z-btn sm:flex-1 z-btn--ghost">
-                        <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
-                        Pedir un traslado
+                        <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-message-circle" /></svg>
+                        <span class="z-btn__label">Pedir un traslado</span>
                     </a>
                     <a href="https://www.silkyapp.co/descargar" target="_blank" rel="noopener noreferrer"
                         class="z-btn sm:flex-1 z-btn--silky" id="silkyHero">
@@ -224,12 +258,28 @@
             </div>
         </section>
 
-        <!-- ============ RECORRIDO (animación principal) ============ -->
-        <section id="recorrido" class="py-20 md:py-28 px-5 md:px-8">
+        <!-- ============ RECORRIDO (animación principal) ============
+             Sección pegajosa: .z-journey es un carril alto y .z-journey__stage
+             se queda pegado a la pantalla mientras el carril pasa por debajo.
+             El progreso del scroll dentro del carril decide el paso activo y
+             la posición del carro (zippy.js). No se secuestra el gesto: el
+             usuario baja normal y al acabarse el carril la escena se despega.
+
+             La cadena de ancestros del elemento pegajoso (section > body) no
+             puede llevar overflow ni transform, o sticky deja de pegar: por
+             eso el título va en su propio contenedor y ni el carril ni el
+             escenario llevan .z-reveal. -->
+        <section id="recorrido" class="pt-20 md:pt-28 px-5 md:px-8">
             <div class="max-w-6xl mx-auto">
                 <p class="z-eyebrow z-reveal">El recorrido</p>
-                <h2 class="z-h2 mt-3 max-w-2xl z-reveal">Casa, taller y de vuelta a casa.</h2>
-                <div class="z-scene mt-10 z-reveal" id="scene" data-dir="1" role="img"
+                <h2 class="z-h2 mt-3 max-w-2xl z-reveal" style="transition-delay:.09s">Casa, taller y de vuelta a
+                    casa.</h2>
+            </div>
+
+            <div class="z-journey" id="journey">
+                <div class="z-journey__stage" id="journeyStage">
+                    <div class="max-w-6xl mx-auto w-full">
+                <div class="z-scene z-reveal" id="scene" role="img"
                     aria-label="Animación: un carro sale de tu casa, llega al taller y regresa.">
                     <div class="z-scene__place z-scene__place--home">
                         <svg viewBox="0 0 64 56" fill="none" stroke="currentColor" stroke-width="2.6"
@@ -254,6 +304,11 @@
                     <div class="z-scene__road">
                         <span class="z-scene__lane"></span>
                         <div class="z-scene__rail" id="rail">
+                            <!-- Dos capas a propósito: la de fuera lleva el avance, que va
+                                 pegado al scroll y no puede llevar transición; la de dentro
+                                 lleva el volteo, que sí se anima porque darse la vuelta de
+                                 golpe se ve como un salto. -->
+                            <div class="z-scene__cab" id="journeyCab">
                             <!-- Carro del recorrido: inline para poder girar las ruedas por CSS. -->
                             <svg class="z-scene__car z-car" id="journeyCar" viewBox="0 0 140 56" aria-hidden="true">
                                 <path class="z-beam" d="M134 30.5 L166 22 L166 46 L134 35.5 Z" fill="url(#zbeam)" />
@@ -274,34 +329,44 @@
                                     <rect class="car-hub__spoke" x="107.1" y="38.6" width="1.8" height="10.8" rx=".9" />
                                 </g>
                             </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3" role="tablist" aria-label="Pasos del recorrido">
-                    <button type="button" class="z-step" data-step="0" role="tab" aria-selected="true"
-                        data-copy="Acta con fotos y tu firma antes de mover el carro.">
+                <!-- La frase de cada paso vive DENTRO del paso, no en un data-attribute:
+                     así está en el marcado aunque el JS no llegue, y con movimiento
+                     reducido se lee bajo su paso sin necesidad del panel. -->
+                <div class="z-steps mt-6" role="tablist"
+                    aria-label="Pasos del recorrido">
+                    <button type="button" class="z-step" data-step="0" role="tab" aria-selected="true">
                         <span class="z-step__n">01</span><span class="z-step__t">Recogemos</span>
+                        <span class="z-step__c">Acta con fotos y tu firma antes de mover el carro.</span>
                     </button>
-                    <button type="button" class="z-step" data-step="1" role="tab" aria-selected="false"
-                        data-copy="Al taller que elijas, el tuyo o uno de nuestra red, conducido por un operador de Zippy.">
+                    <button type="button" class="z-step" data-step="1" role="tab" aria-selected="false">
                         <span class="z-step__n">02</span><span class="z-step__t">Llevamos</span>
+                        <span class="z-step__c">Al taller que elijas, el tuyo o uno de nuestra red, conducido por un
+                            operador de Zippy.</span>
                     </button>
-                    <button type="button" class="z-step" data-step="2" role="tab" aria-selected="false"
-                        data-copy="Le pagas directo al taller. Ahí no nos metemos.">
+                    <button type="button" class="z-step" data-step="2" role="tab" aria-selected="false">
                         <span class="z-step__n">03</span><span class="z-step__t">El taller trabaja</span>
+                        <span class="z-step__c">Le pagas directo al taller. Ahí no nos metemos.</span>
                     </button>
-                    <button type="button" class="z-step" data-step="3" role="tab" aria-selected="false"
-                        data-copy="Segunda acta y te lo entregamos donde estés.">
+                    <button type="button" class="z-step" data-step="3" role="tab" aria-selected="false">
                         <span class="z-step__n">04</span><span class="z-step__t">Devolvemos</span>
+                        <span class="z-step__c">Segunda acta y te lo entregamos donde estés.</span>
                     </button>
                 </div>
 
-                <div class="z-step__panel mt-6 max-w-2xl" id="stepPanel" aria-live="polite">
+                <div class="z-step__panel mt-6 max-w-2xl" id="stepPanel" role="tabpanel" aria-live="polite">
                     <p class="z-lead"></p>
                 </div>
+                    </div>
+                </div>
+            </div>
 
-                <p class="mt-8 max-w-2xl text-sm z-ink-dim font-light leading-relaxed">
+            <div class="max-w-6xl mx-auto pb-20 md:pb-28">
+                <p class="max-w-2xl text-sm z-ink-dim font-light leading-relaxed z-reveal">
                     El recorrido se contrata completo, ida y vuelta, o por un solo trayecto. Si solo necesitas que lo
                     lleven, o solo que te lo traigan, también se puede.
                 </p>
@@ -311,13 +376,17 @@
         <!-- ============ QUÉ SÍ / QUÉ NO ============ -->
         <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
             <div class="max-w-6xl mx-auto">
+                <!-- Entra escalonado al asomarse: 90 ms entre elemento y elemento.
+                     Más que eso y el usuario ya está leyendo mientras la pieza
+                     sigue subiendo. El retardo es lo único que va aquí; ocultar y
+                     revelar lo decide el JS con .z-reveal. -->
                 <p class="z-eyebrow z-reveal">Sin ambigüedades</p>
-                <h2 class="z-h2 mt-3 max-w-2xl z-reveal">Hacemos una sola cosa.</h2>
+                <h2 class="z-h2 mt-3 max-w-2xl z-reveal" style="transition-delay:.09s">Hacemos una sola cosa.</h2>
 
                 <div class="mt-10 grid md:grid-cols-2 gap-4">
-                    <div class="z-card p-7 md:p-9 z-reveal">
+                    <div class="z-card p-7 md:p-9 z-reveal" style="transition-delay:.18s">
                         <div class="flex items-center gap-2.5 z-ink-accent">
-                            <i data-lucide="check-circle-2" class="w-5 h-5" stroke-width="2"></i>
+                            <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check-circle-2" /></svg>
                             <h3 class="font-semibold tracking-tight">Lo que hace Zippy</h3>
                         </div>
                         <ul class="mt-6 space-y-4 z-ink-soft font-light leading-relaxed">
@@ -329,9 +398,9 @@
                             <li>Paga los comparendos del operador.</li>
                         </ul>
                     </div>
-                    <div class="z-card p-7 md:p-9 z-reveal" style="transition-delay:.1s">
+                    <div class="z-card p-7 md:p-9 z-reveal" style="transition-delay:.27s">
                         <div class="flex items-center gap-2.5 z-ink-dim">
-                            <i data-lucide="minus-circle" class="w-5 h-5" stroke-width="2"></i>
+                            <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-minus-circle" /></svg>
                             <h3 class="font-semibold tracking-tight">Lo que no hace Zippy</h3>
                         </div>
                         <ul class="mt-6 space-y-4 z-ink-muted font-light leading-relaxed">
@@ -469,18 +538,12 @@
                         primera acta y sí en la segunda, lo asumimos nosotros.
                     </p>
                     <ul class="mt-8 grid sm:grid-cols-2 gap-x-6 gap-y-3.5 text-sm z-ink-muted font-light">
-                        <li class="flex items-center gap-2.5"><i data-lucide="camera" class="w-4 h-4 z-ink-accent"
-                                stroke-width="2"></i>Seis ángulos</li>
-                        <li class="flex items-center gap-2.5"><i data-lucide="clipboard-list"
-                                class="w-4 h-4 z-ink-accent" stroke-width="2"></i>Daños e inventario</li>
-                        <li class="flex items-center gap-2.5"><i data-lucide="gauge" class="w-4 h-4 z-ink-accent"
-                                stroke-width="2"></i>Kilometraje y combustible</li>
-                        <li class="flex items-center gap-2.5"><i data-lucide="pen-line" class="w-4 h-4 z-ink-accent"
-                                stroke-width="2"></i>Tu firma</li>
-                        <li class="flex items-center gap-2.5"><i data-lucide="badge-check" class="w-4 h-4 z-ink-accent"
-                                stroke-width="2"></i>Operador identificado</li>
-                        <li class="flex items-center gap-2.5"><i data-lucide="send" class="w-4 h-4 z-ink-accent"
-                                stroke-width="2"></i>Copia por WhatsApp</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-camera" /></svg>Seis ángulos</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clipboard-list" /></svg>Daños e inventario</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gauge" /></svg>Kilometraje y combustible</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pen-line" /></svg>Tu firma</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-badge-check" /></svg>Operador identificado</li>
+                        <li class="flex items-center gap-2.5"><svg class="z-icon w-4 h-4 z-ink-accent" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send" /></svg>Copia por WhatsApp</li>
                     </ul>
                 </div>
 
@@ -520,7 +583,7 @@
         <section class="py-20 md:py-28 px-5 md:px-8 z-rule">
             <div class="max-w-4xl mx-auto z-card z-card--warn p-7 md:p-12 z-reveal">
                 <div class="flex items-center gap-2.5 z-ink-warn">
-                    <i data-lucide="shield-check" class="w-5 h-5" stroke-width="2"></i>
+                    <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield-check" /></svg>
                     <p class="z-eyebrow z-eyebrow--warn">Requisito</p>
                 </div>
                 <h2 class="z-h2 mt-4">Solo trasladamos carros con póliza de todo riesgo vigente.</h2>
@@ -542,49 +605,41 @@
 
                 <div class="mt-10 z-reveal">
                     <details class="z-faq">
-                        <summary>¿Qué cobra Zippy?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Qué cobra Zippy?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">La tarifa del traslado, que te decimos antes de recogerlo. Al taller le
                             pagas tú, directo.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Quién elige el taller?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Quién elige el taller?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">Tú, siempre. Si ya tienes taller, allá lo llevamos. Si no lo
                             tienes, te pasamos los de nuestra red y escoges. Nosotros no decidimos por ti.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Responden por la reparación?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Responden por la reparación?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">No. Respondemos por el traslado y por el estado del carro mientras está
                             con nosotros.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Quién conduce mi carro?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Quién conduce mi carro?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">Un operador de Zippy con licencia vigente, con nombre y cédula en el
                             acta. No cede el volante ni lleva pasajeros.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Y si el carro no arranca?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Y si el carro no arranca?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">No es un impedimento. Si no arranca o no puede rodar, coordinamos la
                             grúa nosotros. Es otro servicio y se cotiza aparte: dinos antes de la recogida.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Puedo contratar solo un trayecto?<i data-lucide="chevron-down"
-                                class="z-faq__chev w-5 h-5" stroke-width="2"></i></summary>
+                        <summary>¿Puedo contratar solo un trayecto?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">Sí. Completo es ida y vuelta, pero puedes pedir solo la ida o solo la
                             vuelta. La tarifa cambia según lo que pidas y te la decimos antes.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Y si le ponen un comparendo?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Y si le ponen un comparendo?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">Si es del operador durante el trayecto, lo paga Zippy.</div>
                     </details>
                     <details class="z-faq">
-                        <summary>¿Puedo cancelar?<i data-lucide="chevron-down" class="z-faq__chev w-5 h-5"
-                                stroke-width="2"></i></summary>
+                        <summary>¿Puedo cancelar?<svg class="z-icon z-faq__chev w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron-down" /></svg></summary>
                         <div class="z-faq__body">Sin costo hasta dos horas antes de la recogida.</div>
                     </details>
                 </div>
@@ -596,6 +651,12 @@
             <div class="max-w-3xl mx-auto z-reveal">
                 <h2 class="z-h2">Dinos dónde está el carro y a qué taller va.</h2>
                 <p class="z-lead mt-5 max-w-lg mx-auto">Te cotizamos por WhatsApp.</p>
+                <!-- Los dos del cierre comparten caja con los del hero: mismo
+                     contenedor (max-w-xl), mismo reparto (flex-1) y misma
+                     estructura por dentro, icono + .z-btn__label. La etiqueta va
+                     en su span y no suelta para que el texto sea un bloque
+                     medible igual en los dos, sin nodos de texto sueltos que
+                     Safari pueda tratar distinto al inflar tipografía. -->
                 <div class="mt-9 flex flex-col sm:flex-row gap-3 sm:max-w-xl sm:mx-auto">
                     <a href="https://www.silkyapp.co/descargar" target="_blank" rel="noopener noreferrer"
                         class="z-btn sm:flex-1 z-btn--silky">
@@ -605,8 +666,8 @@
                     </a>
                     <a href="https://wa.me/573117055495?text=Hola%20Zippy%2C%20quiero%20cotizar%20un%20traslado"
                         target="_blank" rel="noopener noreferrer" class="z-btn sm:flex-1 z-btn--primary">
-                        <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
-                        Escribir a Zippy
+                        <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-message-circle" /></svg>
+                        <span class="z-btn__label">Escribir a Zippy</span>
                     </a>
                 </div>
             </div>
@@ -639,7 +700,7 @@
                 </a>
                 <a href="https://wa.me/573117055495" target="_blank" rel="noopener noreferrer"
                     aria-label="WhatsApp de Zippy" class="z-link-dim">
-                    <i data-lucide="message-circle" class="w-6 h-6" stroke-width="1.6"></i>
+                    <svg class="z-icon z-icon--fino w-6 h-6" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-message-circle" /></svg>
                 </a>
             </div>
 
@@ -662,7 +723,7 @@
 
     <!-- ============ ENCUESTA FLOTANTE ============ -->
     <button type="button" class="z-fab" id="fab" aria-haspopup="dialog" aria-controls="wiz">
-        <i data-lucide="calculator" class="z-fab__icon w-5 h-5" stroke-width="2"></i>
+        <svg class="z-icon z-fab__icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calculator" /></svg>
         ¿Cuánto te cuesta?
     </button>
 
@@ -671,7 +732,7 @@
 
         <div class="z-wiz__card" id="wizCard" tabindex="-1">
             <button type="button" class="z-wiz__close" data-wiz-close aria-label="Cerrar">
-                <i data-lucide="x" class="w-5 h-5" stroke-width="2"></i>
+                <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x" /></svg>
             </button>
 
             <p class="z-eyebrow" id="wizHeading">Tu tiempo, en plata</p>
@@ -741,7 +802,7 @@
                 <p class="z-wiz__fine">Es una estimación hecha con lo que acabas de responder, no un diagnóstico.</p>
                 <a class="z-btn z-btn--primary w-full mt-6" id="wizWa" href="https://wa.me/573117055495"
                     target="_blank" rel="noopener noreferrer">
-                    <i data-lucide="message-circle" class="w-5 h-5" stroke-width="2"></i>
+                    <svg class="z-icon w-5 h-5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-message-circle" /></svg>
                     Escribir a Zippy
                 </a>
                 <button type="button" class="z-wiz__back mt-5" data-wiz-close>Cerrar</button>
@@ -761,7 +822,6 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/zippy.js"></script>
 </body>
 
